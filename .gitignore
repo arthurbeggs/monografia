@@ -1,0 +1,5 @@
+# LaTeX build files
+**/output
+*.fdb_latexmk
+*.synctex.gz
+
