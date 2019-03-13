@@ -35,8 +35,7 @@
 \usepackage{import}
 \usepackage{enumitem}
 
-% Escolher um dos seguintes formatos: (ft1unb) ou (ft2unb)
-\usepackage{ft2unb} % ft2unb segue padrão de fontes do LaTeX;
+\usepackage{ft2unb}
 
 \makeindex
 
@@ -92,7 +91,7 @@
 
 
 % Ficha Catalográfica
-\include{ficha_catalografica}
+\include{src/ficha_catalografica}
 
 
 % Dedicatória
@@ -139,7 +138,7 @@ Keywords: RISC-V
 
 
 % Lista de Símbolos
-\include{simbolos}
+\include{src/simbolos}
 
 
 % Corpo Principal
@@ -148,11 +147,11 @@ Keywords: RISC-V
 \pagenumbering{arabic}
 \pagestyle{plain}
 
-\include{cap_Introducao}
-\include{cap_Arquitetura}
-\include{cap_Implementacao}
-\include{cap_Resultados}
-\include{cap_Conclusoes}
+\include{src/cap_Introducao}
+\include{src/cap_Arquitetura}
+\include{src/cap_Implementacao}
+\include{src/cap_Resultados}
+\include{src/cap_Conclusoes}
 
 
 % Bibliografia
@@ -160,7 +159,7 @@ Keywords: RISC-V
 \addcontentsline{toc}{chapter}{REFERÊNCIAS BIBLIOGRÁFICAS}
 
 \bibliographystyle{abnt-num}
-\bibliography{bibliography}
+\bibliography{src/relatorio}
 
 
 % Anexos
@@ -178,13 +177,13 @@ Keywords: RISC-V
 
 
 % Anexo I: Descrição do CD
-\include{anexo_CD}
+\include{src/anexo_CD}
 
 \refstepcounter{noAnexo}
 
 
 % Anexo II: Programas Utilizados
-\include{anexo_Codigos}
+\include{src/anexo_Codigos}
 
 \refstepcounter{noAnexo}
 

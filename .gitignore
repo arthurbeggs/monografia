@@ -1,4 +1,5 @@
 # LaTeX build files
+build/
 **/output
 *.fdb_latexmk
 *.synctex.gz
