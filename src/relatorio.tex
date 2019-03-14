@@ -81,8 +81,8 @@
 
 
 % Data de defesa
-\mes{Dezembro}
-\ano{2018}
+\mes{Julho}
+\ano{2019}
 
 
 % Comandos para criar a capa e a página de assinaturas
@@ -158,6 +158,7 @@ Keywords: RISC-V
 \renewcommand{\bibname}{REFERÊNCIAS BIBLIOGRÁFICAS}
 \addcontentsline{toc}{chapter}{REFERÊNCIAS BIBLIOGRÁFICAS}
 
+
 \bibliographystyle{abnt-num}
 \bibliography{src/relatorio}
 
@@ -165,13 +166,10 @@ Keywords: RISC-V
 % Anexos
 \anexos{}
 \makeatletter
-% não retirar estes comandos
-\renewcommand{\@makechapterhead}[1]{%
-  {\parindent \z@ \raggedleft \setfontarial\bfseries
-\LARGE \thechapter. \space\space
-\uppercase{#1}\par
-\vskip 40\p@
-}
+\renewcommand{\@makechapterhead}[1]{
+  { \parindent\z@ \raggedleft\setfontarial\bfseries
+    \LARGE \thechapter. \space\space \uppercase{#1}\par \vskip 40\p@
+  }
 }
 \makeatother
 
