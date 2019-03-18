@@ -1,5 +1,6 @@
-\documentclass[a4paper,oneside,brazil,11pt,a4paper,openright,titlepage,usenames,dvipsnames]{book}
-% Classe alternativa, apropriada para impressão frente-verso. Inclui páginas em branco de forma que capítulos sempre tenham início na página à direita:
+\documentclass[a4paper,oneside,brazil,11pt,a4paper,openright,titlepage,
+                usenames,dvipsnames]{book}
+% Classe alternativa, apropriada para impressão frente-verso.
 % \documentclass[11pt,a4paper,openright,titlepage]{book}
 
 \usepackage[utf8]{inputenc}
@@ -56,12 +57,10 @@
 \titulolinhaiii{}
 \titulolinhaiv{}
 
-
 % Autores
 \autori{Arthur de Matos Beggs}
 \autorii{}
 \autoriii{}
-
 
 % Membros da banca
 \membrodabancai{Prof.\ Marcus Vinicius Lamar, CIC/UnB}
@@ -79,56 +78,56 @@
 \membrodabancav{}
 \membrodabancavfuncao{}
 
-
 % Data de defesa
 \mes{Julho}
 \ano{2019}
-
 
 % Comandos para criar a capa e a página de assinaturas
 \capaprincipal{}
 \capaassinaturas{}
 
-
 % Ficha Catalográfica
 \include{src/ficha_catalografica}
-
 
 % Dedicatória
 \frontmatter
 
-\dedicatoriaautori{Dedico ao pato de borracha especialista em TI que sempre me ajuda a depurar meus códigos.}
+\dedicatoriaautori
+{
+    Dedico ao pato de borracha especialista em TI que sempre me ajuda a depurar meus códigos.
+}
 \dedicatoriaautorii{}
 \dedicatoriaautoriii{}
-
 \dedicatoria{}
 
-
 % Agradecimentos
-\agradecimentosautori{Agradecimentos!}
+\agradecimentosautori
+{
+    Agradecimentos!
+}
 \agradecimentosautorii{}
 \agradecimentosautoriii{}
-
 \agradecimentos{}
 
-
-\resumo{resumo}{Resumo!
+\resumo{resumo}{
+{ 
+    Resumo.
+}
 
 \medskip{}
 
-
 Palavras Chave: RISC-V
-
 }\vspace*{2cm}
 
 
-\resumo{Abstract}{Abstract!
+\resumo{Abstract}{
+{
+    Abstract.
+}
 
 \medskip{}
 
-
 Keywords: RISC-V
-
 }
 
 % Listas de conteúdo, figuras e tabelas
@@ -136,10 +135,8 @@ Keywords: RISC-V
 \listadefiguras{}
 \listadetabelas{}
 
-
 % Lista de Símbolos
 \include{src/simbolos}
-
 
 % Corpo Principal
 \mainmatter{}
@@ -153,15 +150,12 @@ Keywords: RISC-V
 \include{src/cap_Resultados}
 \include{src/cap_Conclusoes}
 
-
 % Bibliografia
 \renewcommand{\bibname}{REFERÊNCIAS BIBLIOGRÁFICAS}
 \addcontentsline{toc}{chapter}{REFERÊNCIAS BIBLIOGRÁFICAS}
 
-
 \bibliographystyle{abnt-num}
 \bibliography{src/relatorio}
-
 
 % Anexos
 \anexos{}
@@ -173,19 +167,15 @@ Keywords: RISC-V
 }
 \makeatother
 
-
 % Anexo I: Descrição do CD
 \include{src/anexo_CD}
 
 \refstepcounter{noAnexo}
-
 
 % Anexo II: Programas Utilizados
 \include{src/anexo_Codigos}
 
 \refstepcounter{noAnexo}
 
-
-% Acrescente mais anexos conforme julgar necessário.
-
 \end{document}
+
