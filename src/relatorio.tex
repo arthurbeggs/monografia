@@ -87,13 +87,12 @@
 \capaassinaturas{}
 
 % Ficha Catalográfica
-\include{src/ficha_catalografica}
+\include{ficha_catalografica}
 
 % Dedicatória
 \frontmatter
 
-\dedicatoriaautori
-{
+\dedicatoriaautori{
     Dedico ao pato de borracha especialista em TI que sempre me ajuda a depurar meus códigos.
 }
 \dedicatoriaautorii{}
@@ -101,8 +100,7 @@
 \dedicatoria{}
 
 % Agradecimentos
-\agradecimentosautori
-{
+\agradecimentosautori{
     Agradecimentos!
 }
 \agradecimentosautorii{}
@@ -111,7 +109,12 @@
 
 \resumo{resumo}{
 { 
-        Desenvolvimento de um processador com arquitetura do conjunto de instruções RISC-V em Verilog sintetizável em FPGA para ser utilizado como recurso de laboratório para a disciplina de Organização e Arquitetura de Computadores da Universidade de Brasília. O processador contará com perifericos e.g. saída de vídeo para proporcionar um ambiente completo de desenvolvimento de hardware e software.
+    Desenvolvimento de um processador com arquitetura do conjunto de instruções
+    RISC-V em Verilog sintetizável em FPGA para ser utilizado como recurso de
+    laboratório para a disciplina de Organização e Arquitetura de Computadores
+    da Universidade de Brasília. O processador contará com perifericos e.g.
+    saída de vídeo para proporcionar um ambiente completo de desenvolvimento
+    de hardware e software.
 }
 
 \medskip{}
@@ -136,7 +139,7 @@ Keywords: RISC-V
 \listadetabelas{}
 
 % Lista de Símbolos
-\include{src/simbolos}
+\include{simbolos}
 
 % Corpo Principal
 \mainmatter{}
@@ -144,18 +147,18 @@ Keywords: RISC-V
 \pagenumbering{arabic}
 \pagestyle{plain}
 
-\include{src/cap_Introducao}
-\include{src/cap_Arquitetura}
-\include{src/cap_Implementacao}
-\include{src/cap_Resultados}
-\include{src/cap_Conclusoes}
+\include{cap_Introducao}
+\include{cap_Arquitetura}
+\include{cap_Implementacao}
+\include{cap_Resultados}
+\include{cap_Conclusoes}
 
 % % Bibliografia
 % \renewcommand{\bibname}{REFERÊNCIAS BIBLIOGRÁFICAS}
 % \addcontentsline{toc}{chapter}{REFERÊNCIAS BIBLIOGRÁFICAS}
 
-% \bibliographystyle{src/abnt-num}
-% \bibliography{src/relatorio}
+% \bibliographystyle{abnt-num}
+% \bibliography{relatorio}
 
 % Anexos
 \anexos{}
@@ -168,12 +171,12 @@ Keywords: RISC-V
 \makeatother
 
 % Anexo I: Descrição do CD
-\include{src/anexo_CD}
+\include{anexo_CD}
 
 \refstepcounter{noAnexo}
 
 % Anexo II: Programas Utilizados
-\include{src/anexo_Codigos}
+\include{anexo_Codigos}
 
 \refstepcounter{noAnexo}
 
