@@ -1,0 +1,1105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" version="1.1" i:viewOrigin="23.7642 624.2168" i:rulerOrigin="-23.7642 -215.752" i:pageBounds="23.7642 624.2168 620.2959 215.752" x="0px" y="0px" width="596.532px" height="408.465px" viewBox="0 18.579 596.532 408.465" style="enable-background:new 0 18.579 596.532 408.465;" xml:space="preserve" preserveAspectRatio="xMidYMid meet" zoomAndPan="magnify" contentScriptType="application/ecmascript" contentStyleType="text/css"><script xmlns="">
+				(function(){
+					let tz = {};
+					let properties = {"name":[{"obj":"window","prop":"name","value":""}],"nav":[{"obj":"window.navigator","prop":"userAgent","value":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0"},{"obj":"window.navigator","prop":"platform","value":"Linux x86_64"},{"obj":"window.navigator","prop":"productSub","value":"20010725"},{"obj":"window.navigator","prop":"hardwareConcurrency","value":4},{"obj":"window.navigator","prop":"oscpu","value":"Linux x86_64"},{"obj":"window.navigator","prop":"vendor"},{"obj":"window.navigator","prop":"vendorSub","value":""},{"obj":"window.navigator","prop":"appVersion","value":"5.0 (X11)"},{"obj":"window.navigator","prop":"buildID","value":"20181001000000"}],"screen":[{"obj":"window","prop":"innerWidth","value":1920},{"obj":"window","prop":"innerHeight","value":1080},{"obj":"window","prop":"outerWidth","value":1920},{"obj":"window","prop":"outerHeight","value":1080},{"obj":"window.screen","prop":"availWidth","value":1920},{"obj":"window.screen","prop":"availHeight","value":1080},{"obj":"window.screen","prop":"top","value":0},{"obj":"window.screen","prop":"left","value":0},{"obj":"window.screen","prop":"availTop","value":0},{"obj":"window.screen","prop":"availLeft","value":0},{"obj":"window.screen","prop":"width","value":1920},{"obj":"window.screen","prop":"height","value":1080},{"obj":"window.screen","prop":"colorDepth","value":24},{"obj":"window.screen","prop":"pixelDepth","value":24},{"obj":"window.document.documentElement","prop":"clientWidth","value":1920},{"obj":"window.document.documentElement","prop":"clientHeight","value":1080}],"dnt":[{"obj":"window.navigator","prop":"doNotTrack","value":true}],"lang":[{"obj":"window.navigator","prop":"language","value":"en-US"},{"obj":"window.navigator","prop":"languages","value":["en-US","en"]}]};
+					let wlOptions = {"name":false,"timezone":false};
+					let urlOK = false;
+
+					if (window["0.j9z13ztc7wj"]) {
+						return;
+					} else {
+						window["0.j9z13ztc7wj"] = true;
+					}
+
+					let settings = {"name":true};
+
+					// check if older firefox for time spoof
+					let _oldFF = false;
+					if (properties.nav) {
+						let navUA =  properties.nav.find(p =&gt; p.prop == "userAgent");
+						if (navUA) {
+							_oldFF = /60.0/.test(navUA.value);
+						}
+					} else {
+						_oldFF = /60.0/.test(navigator.userAgent);
+					}
+
+					(function(props, tz){
+						let override = ((window, injection, inFrame, tz) =&gt; {
+							if (!urlOK) {
+								
+								
+		var _getBoundingClientRect = window.Element.prototype.getBoundingClientRect;
+		var _rgetBoundingClientRect = window.Range.prototype.getBoundingClientRect;
+		var _getClientRects = window.Element.prototype.getClientRects;
+		var _rgetClientRects = window.Range.prototype.getClientRects;
+
+		if (!window.parent["_0.jqdiuduw2k"]) {
+			window["_0.jqdiuduw2k"] = Math.random() * 0.00000001;
+		}
+
+		let _fuzzer = (val) =&gt; {
+			return Number.isInteger(val) ? val : val + (!window.parent["_0.jqdiuduw2k"] ? window["_0.jqdiuduw2k"] : window.parent["_0.jqdiuduw2k"]);
+		};
+
+		window.Element.prototype.getBoundingClientRect = function (...args) {
+			let c = _getBoundingClientRect.apply(this, args);
+
+			c.x = c.left = _fuzzer(c.x);
+			c.y = c.top = _fuzzer(c.y);
+			c.width = _fuzzer(c.width);
+			c.height = _fuzzer(c.height);
+			c.right = c.x + c.width;
+			c.bottom = c.y + c.height;
+
+			return c;
+		}
+
+		window.Element.prototype.getClientRects = function () {
+			let a = _getClientRects.bind(this)();
+			let b = this.getBoundingClientRect();
+			
+			for (var p in a[0]) {
+		        a[0][p] = b[p];
+			}
+
+			return a;
+		}
+
+		window.Range.prototype.getBoundingClientRect = function (...args) {
+			let r = _rgetBoundingClientRect.apply(this, args);
+
+			r.x = r.left = _fuzzer(r.x);
+			r.y = r.top = _fuzzer(r.y);
+			r.width = _fuzzer(r.width);
+			r.height = _fuzzer(r.height);
+			r.right = r.x + r.width;
+			r.bottom = r.y + r.height;
+
+			return r;
+		}
+
+		window.Range.prototype.getClientRects = function () {
+			let a = _rgetClientRects.bind(this)();
+			let b = this.getBoundingClientRect();
+			
+			for (var p in a[0]) {
+		        a[0][p] = b[p];
+			}
+
+			return a;
+		}
+
+		Object.defineProperty(window.Element.prototype.getClientRects, "name", { value: "getClientRects" });
+		Object.defineProperty(window.Element.prototype.getBoundingClientRect, "name", { value: "getBoundingClientRect" });
+
+		window.Element.prototype.getClientRects.toString =
+		window.Element.prototype.getClientRects.toSource =
+		window.Element.prototype.getClientRects.toLocaleString =
+		window.Range.prototype.getClientRects.toString =
+		window.Range.prototype.getClientRects.toSource =
+		window.Range.prototype.getClientRects.toLocaleString = function () {
+			return `function getClientRects() {
+    [native code]
+}`;
+			};
+
+		window.Element.prototype.getBoundingClientRect.toString =
+		window.Element.prototype.getBoundingClientRect.toSource =
+		window.Element.prototype.getBoundingClientRect.toLocaleString =
+		window.Range.prototype.getBoundingClientRect.toString =
+		window.Range.prototype.getBoundingClientRect.toSource =
+		window.Range.prototype.getBoundingClientRect.toLocaleString = function () {
+			return `function getBoundingClientRect() {
+    [native code]
+}`;
+			};
+	
+								
+
+								if (!inFrame) {
+									let offset = tz.offset;
+									let tzAbbr = tz.abbr;
+									let tzName = tz.name;
+									
+								}
+							} else {
+								if (wlOptions.timezone &amp;&amp; !inFrame) {
+									let offset = tz.offset;
+									let tzAbbr = tz.abbr;
+									let tzName = tz.name;
+									
+								}
+							}
+
+							for (let k in injection) {
+								injection[k].forEach(i =&gt; {
+									if (i.obj == "window") {
+										window[i.prop] = i.value;
+									} else {
+										if (i.value == "undef") {
+											i.value = undefined;
+										}
+
+										Object.defineProperty(i.obj.split('.').reduce((p,c)=&gt;p&amp;&amp;p[c]||null, window), i.prop, {
+											configurable: true,
+											value: i.value
+										});
+									}
+								});
+							}
+						});
+
+						// fix window.name issues
+						let {name, ...bypassProps} = props;
+						
+						// remove options
+						if (urlOK) {
+							if (!wlOptions.winName) props.name = [];
+						} else {
+							if (!settings.name) props.name = [];
+						}
+
+						// Override window properties
+						override(window, props, false, tz);
+
+						// Prevent leakage through properties of trusted iframes
+						let observer = new MutationObserver((mutations) =&gt; {
+							for(let mutation of mutations) {
+								for(let node of mutation.addedNodes) {
+									if(typeof(node.contentWindow)           !== "undefined"
+									&amp;&amp; node.contentWindow 					!== null
+									&amp;&amp; typeof(node.contentWindow.navigator) !== "undefined") {
+										if (node.src.includes("https://www.google.com/recaptcha/api2") || 
+											node.src.includes("https://disqus.com/embed/comments/")) {
+											override(node.contentWindow, bypassProps, true, tz);
+											continue;
+										}
+
+										override(node.contentWindow, props, true, tz);
+									}
+								}
+							}
+						});
+
+						observer.observe(document.documentElement, {
+							childList: true,
+							subtree: true
+						});
+					})(properties, tz);
+				})();</script><defs><style type="text/css">@import url(/etc/clientlibs/altera-www/global/css/svg-font-face.css);</style></defs><metadata>
+	<variableSets xmlns="http://ns.adobe.com/Variables/1.0/">
+		<variableSet varSetName="binding1" locked="none">
+			<variables/>
+			<v:sampleDataSets xmlns="http://ns.adobe.com/GenericCustomNamespace/1.0/" xmlns:v="http://ns.adobe.com/Variables/1.0/"/>
+		</variableSet>
+	</variableSets>
+</metadata><switch><foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1" height="1">
+		<i:pgfRef xlink:href="#adobe_illustrator_pgf">
+		</i:pgfRef>
+	</foreignObject><g i:extraneous="self"><symbol id="_x31__x__x_1_line_connection" viewBox="-1.484 -1.484 2.968 2.969" preserveAspectRatio="xMidYMid meet"><g i:knockout="Off"><path style="fill:#231F20;" d="M1.484,0C1.484-0.82,0.82-1.484,0-1.484S-1.484-0.82-1.484,0S-0.82,1.484,0,1.484      S1.484,0.82,1.484,0z"/></g></symbol><g id="Layer_1" i:layer="yes" i:dimmedPercent="50" i:rgbTrio="#4F008000FFFF"><rect x="54.098" y="40.561" style="fill:none;stroke:#231F20;stroke-miterlimit:10;stroke-dasharray:1;" width="246.001" height="163"/><rect x="54.098" y="219.545" style="fill:none;stroke:#231F20;stroke-miterlimit:10;stroke-dasharray:1;" width="246.001" height="165.5"/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="210.106" y1="123.295" x2="210.106" y2="395.76"/><g i:knockout="Off"><polygon style="fill:#221F1F;" points="204.9,394.228 210.135,403.295 215.371,394.228     "/></g><rect x="186.599" y="268.045" style="fill:#D6EFF7;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:10;" width="48" height="48"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,273.793"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>datac</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_1_"/>
+				</foreignObject><g><text id="SVGID_1_" transform="matrix(1 0 0 1 7.8105 273.7927)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">datac</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,295.043"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>datad</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_2_"/>
+				</foreignObject><g><text id="SVGID_2_" transform="matrix(1 0 0 1 6.4526 295.0427)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">datad</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,315.793"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>datae1</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_3_"/>
+				</foreignObject><g><text id="SVGID_3_" transform="matrix(1 0 0 1 1.5669 315.7927)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">datae1</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,337.043"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>dataf1</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_4_"/>
+				</foreignObject><g><text id="SVGID_4_" transform="matrix(1 0 0 1 3.4565 337.0427)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">dataf1</tspan></text></g></switch><rect x="67.849" y="69.044" style="fill:none;stroke:#231F20;stroke-width:0.5;" width="76.999" height="275.25"/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="474.562" y1="292.645" x2="234.599" y2="292.645"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M194.281,294.545"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">adder1</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_5_"/>
+				</foreignObject><text id="SVGID_5_" transform="matrix(1 0 0 1 194.2808 294.5447)" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">adder1</text></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="186.599" y1="278.545" x2="144.85" y2="278.545"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="186.599" y1="304.045" x2="144.475" y2="304.045"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,109.543"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>datae0</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_6_"/>
+				</foreignObject><g><text id="SVGID_6_" transform="matrix(1 0 0 1 1.5669 109.5427)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">datae0</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,88.044"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>dataf0</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_7_"/>
+				</foreignObject><g><text id="SVGID_7_" transform="matrix(1 0 0 1 3.4565 88.0437)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">dataf0</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,130.16"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>dataa</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_8_"/>
+				</foreignObject><g><text id="SVGID_8_" transform="matrix(1 0 0 1 6.9424 130.1599)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">dataa</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M31.26,151.17"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p style="text-align:right;text-align-last:right;"><span>datab</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_9_"/>
+				</foreignObject><g><text id="SVGID_9_" transform="matrix(1 0 0 1 6.4526 151.1697)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">datab</tspan></text></g></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.598" y1="85.17" x2="34.597" y2="85.17"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.598" y1="106.044" x2="34.597" y2="106.044"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.598" y1="127.044" x2="34.597" y2="127.044"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.598" y1="148.044" x2="34.597" y2="148.044"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.849" y1="270.545" x2="34.849" y2="270.545"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.849" y1="291.545" x2="34.849" y2="291.545"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.849" y1="312.794" x2="34.849" y2="312.794"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;" x1="67.849" y1="333.794" x2="34.849" y2="333.794"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M192.607,31.045"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>carry_in</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_10_"/>
+				</foreignObject><g><text id="SVGID_10_" transform="matrix(1 0 0 1 192.6074 31.0447)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">carry_in</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M185.586,415.296"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>carry_out</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_11_"/>
+				</foreignObject><g><text id="SVGID_11_" transform="matrix(1 0 0 1 185.5864 415.2957)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">carry_out</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M222.199,54.517"/>
+						</region>
+						<flow style="font-family:'MyriadPro-BoldCond'; font-size:14;">
+							<p><span>Combinational/ </span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_12_"/>
+				</foreignObject><g><text id="SVGID_12_" transform="matrix(1 0 0 1 222.1987 54.5173)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-BoldCond'; font-size:14px;">Combinational/ </tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M221.109,68.918"/>
+						</region>
+						<flow style="font-family:'MyriadPro-BoldCond'; font-size:14;">
+							<p><span>Memory ALUT0</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_13_"/>
+				</foreignObject><g><text id="SVGID_13_" transform="matrix(1 0 0 1 221.1089 68.9177)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-BoldCond'; font-size:14px;">Memory ALUT0</tspan></text></g></switch><rect x="78.098" y="75.67" style="fill:#CCCCCC;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:10;" width="57.75" height="48"/><rect x="77.224" y="288.295" style="fill:#CCCCCC;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:10;" width="57.75" height="48"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M92.403,97.857"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">6-Input</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_14_"/>
+				</foreignObject><text id="SVGID_14_" transform="matrix(1 0 0 1 92.4028 97.8572)" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">6-Input</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M98.429,112.258"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">LUT</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_15_"/>
+				</foreignObject><g><text id="SVGID_15_" transform="matrix(1 0 0 1 98.4287 112.2576)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">LUT</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M90.537,309.734"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">6-Input</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_16_"/>
+				</foreignObject><text id="SVGID_16_" transform="matrix(1 0 0 1 90.5371 309.7341)" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">6-Input</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M96.563,324.134"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">LUT</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_17_"/>
+				</foreignObject><g><text id="SVGID_17_" transform="matrix(1 0 0 1 96.563 324.1335)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">LUT</tspan></text></g></switch><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="105.856" y1="344.948" x2="105.856" y2="395.76"/><g i:knockout="Off"><polygon style="fill:#221F1F;" points="100.65,394.228 105.885,403.295 111.121,394.228     "/></g><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M65.619,415.296"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>shared_arith_out</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_18_"/>
+				</foreignObject><g><text id="SVGID_18_" transform="matrix(1 0 0 1 65.6191 415.2957)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">shared_arith_out</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M70.131,30.297"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>shared_arith_in</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_19_"/>
+				</foreignObject><g><text id="SVGID_19_" transform="matrix(1 0 0 1 70.1309 30.2966)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-Cond'; font-size:14px;">shared_arith_in</tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M222.199,235.251"/>
+						</region>
+						<flow style="font-family:'MyriadPro-BoldCond'; font-size:14;">
+							<p><span>Combinational/ </span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_20_"/>
+				</foreignObject><g><text id="SVGID_20_" transform="matrix(1 0 0 1 222.1987 235.2507)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-BoldCond'; font-size:14px;">Combinational/ </tspan></text></g></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M221.109,249.651"/>
+						</region>
+						<flow style="font-family:'MyriadPro-BoldCond'; font-size:14;">
+							<p><span>Memory ALUT1</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_21_"/>
+				</foreignObject><g><text id="SVGID_21_" transform="matrix(1 0 0 1 221.1089 249.6511)" style="font-family:;"><tspan x="0" y="0" style="font-family:'MyriadPro-BoldCond'; font-size:14px;">Memory ALUT1</tspan></text></g></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="104.723" y1="34.295" x2="104.723" y2="75.795"/><rect x="185.6" y="76.044" style="fill:#D6EFF7;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:10;" width="48" height="48"/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="475.25" y1="107.392" x2="342.324" y2="107.392"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M194.281,102.543"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">adder0</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_22_"/>
+				</foreignObject><text id="SVGID_22_" transform="matrix(1 0 0 1 194.2808 102.5427)" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">adder0</text></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="185.6" y1="112.044" x2="144.848" y2="112.044"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="185.6" y1="87.294" x2="144.848" y2="87.294"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="210.106" y1="34.796" x2="210.106" y2="75.795"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="144.724" y1="139.922" x2="259.098" y2="139.922"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="259.347" y1="111.889" x2="259.347" y2="208.022"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="259.065" y1="112.296" x2="321.347" y2="112.296"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="259.004" y1="207.67" x2="321.347" y2="207.67"/><polyline style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="268.481,100.92 268.481,191.795      321.324,191.795    "/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="342.324" y1="197.423" x2="475.316" y2="197.423"/><rect x="384.972" y="94.762" style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" width="41.625" height="63"/><path style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M405.785,126.262"/><polyline style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="385.347,140.363      391.347,144.863 385.347,149.363    "/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M396.066,142.761"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">reg0</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_23_"/>
+				</foreignObject><g><text id="SVGID_23_" transform="matrix(1 0 0 1 396.0659 142.7615)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">reg0</tspan></text></g></switch><path style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M363.482,107.515"/><path style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M363.482,65.764"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="352.607" y1="57.045" x2="352.607" y2="413.896"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M339.767,55.388"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>labclk</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_24_"/>
+				</foreignObject><text id="SVGID_24_" transform="matrix(1 0 0 1 339.7671 55.3884)" style="font-family:'MyriadPro-Cond'; font-size:14px;">labclk</text></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="352.847" y1="144.159" x2="385.097" y2="144.159"/><rect x="384.972" y="183.295" style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" width="41.625" height="63"/><path style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M405.785,193.795"/><polyline style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="385.347,228.896      391.347,233.396 385.347,237.896    "/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M396.066,231.295"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">reg1</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_25_"/>
+				</foreignObject><g><text id="SVGID_25_" transform="matrix(1 0 0 1 396.0659 231.2947)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">reg1</tspan></text></g></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="353.222" y1="233.534" x2="385.101" y2="233.534"/><polygon style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="321.324,91.194      342.324,97.194 342.324,116.694 321.324,122.694    "/><polygon style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="321.324,183.068      342.324,189.068 342.324,208.568 321.324,214.568    "/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="144.724" y1="330.672" x2="259.848" y2="330.672"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="268.481" y1="292.857" x2="268.481" y2="380.794"/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="268.098" y1="380.422" x2="474.316" y2="380.422"/><polygon style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="321.324,366.068      342.324,372.068 342.324,391.568 321.324,397.567    "/><polygon style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="321.324,276.694      342.324,282.694 342.324,302.194 321.324,308.194    "/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="259.848" y1="303.24" x2="259.848" y2="389.982"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="259.566" y1="303.623" x2="321.253" y2="303.623"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="259.505" y1="390.046" x2="321.347" y2="390.046"/><path style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M363.06,292.479"/><path style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M363.06,260.728"/><rect x="384.972" y="276.796" style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" width="41.625" height="63"/><path style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M405.785,287.296"/><polyline style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="385.347,324.396      391.347,328.896 385.347,333.396    "/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M396.066,326.796"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">reg2</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_26_"/>
+				</foreignObject><g><text id="SVGID_26_" transform="matrix(1 0 0 1 396.0659 326.7957)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">reg2</tspan></text></g></switch><rect x="384.972" y="363.794" style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" width="41.625" height="63"/><path style="fill:#FFFFFF;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M405.785,376.294"/><polyline style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" points="385.347,409.395      391.347,413.896 385.347,418.396    "/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M396.066,411.794"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span style="fill:#231F20;">reg3</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_27_"/>
+				</foreignObject><g><text id="SVGID_27_" transform="matrix(1 0 0 1 396.0659 411.7937)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-Cond'; font-size:14px;">reg3</tspan></text></g></switch><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="352.847" y1="328.545" x2="384.726" y2="328.545"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="352.191" y1="413.896" x2="385.101" y2="413.896"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="307.63" y1="371.534" x2="321.287" y2="371.534"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="307.669" y1="280.795" x2="320.972" y2="280.795"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="308.021" y1="371.532" x2="308.021" y2="252.167"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="307.693" y1="252.17" x2="462.16" y2="252.17"/><line style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" x1="461.771" y1="252.17" x2="461.771" y2="197.545"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 363.0483 380.4216)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 352.6069 328.5447)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 363.0601 292.8572)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 268.4819 292.4783)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M388.343,200.619"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>D</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_28_"/>
+				</foreignObject><text id="SVGID_28_" transform="matrix(1 0 0 1 388.3433 200.6189)" style="font-family:'MyriadPro-Cond'; font-size:14px;">D</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M414.939,200.619"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>Q</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_29_"/>
+				</foreignObject><text id="SVGID_29_" transform="matrix(1 0 0 1 414.939 200.6189)" style="font-family:'MyriadPro-Cond'; font-size:14px;">Q</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M388.343,296.793"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>D</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_30_"/>
+				</foreignObject><text id="SVGID_30_" transform="matrix(1 0 0 1 388.3433 296.7927)" style="font-family:'MyriadPro-Cond'; font-size:14px;">D</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M414.939,296.793"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>Q</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_31_"/>
+				</foreignObject><text id="SVGID_31_" transform="matrix(1 0 0 1 414.939 296.7927)" style="font-family:'MyriadPro-Cond'; font-size:14px;">Q</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M388.343,385.046"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>D</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_32_"/>
+				</foreignObject><text id="SVGID_32_" transform="matrix(1 0 0 1 388.3433 385.0457)" style="font-family:'MyriadPro-Cond'; font-size:14px;">D</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M414.939,385.046"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>Q</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_33_"/>
+				</foreignObject><text id="SVGID_33_" transform="matrix(1 0 0 1 414.939 385.0457)" style="font-family:'MyriadPro-Cond'; font-size:14px;">Q</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M388.871,112.857"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>D</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_34_"/>
+				</foreignObject><text id="SVGID_34_" transform="matrix(1 0 0 1 388.8706 112.8572)" style="font-family:'MyriadPro-Cond'; font-size:14px;">D</text></switch><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M415.466,112.857"/>
+						</region>
+						<flow style="font-family:'MyriadPro-Cond'; font-size:14;">
+							<p><span>Q</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_35_"/>
+				</foreignObject><text id="SVGID_35_" transform="matrix(1 0 0 1 415.4663 112.8572)" style="font-family:'MyriadPro-Cond'; font-size:14px;">Q</text></switch><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="233.6" y1="100.92" x2="321.324" y2="100.92"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 259.8481 330.6716)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 352.3472 233.3953)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 363.4819 197.4226)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 461.771 197.4226)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 363.4819 107.3914)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 352.8491 144.1589)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 259.0981 139.9216)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><use xlink:href="#_x31__x__x_1_line_connection" width="2.968" height="2.969" x="-1.484" y="-1.484" i:knockout="Off" transform="matrix(1.0001 0 0 -1.0001 268.4819 100.9197)" style="overflow:visible;" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/><switch i:objectNS="http://ns.adobe.com/Flows/1.0/" i:objectType="pointText" style="enable-background:new    ;"><foreignObject requiredExtensions="http://ns.adobe.com/Flows/1.0/" x="0" y="0" width="1" height="1" style="overflow:visible;">
+					<flowDef xmlns="http://ns.adobe.com/Flows/1.0/">
+						<region textMatrix="1 0 0 1 0 0">
+							<path d="M538.279,241.462"/>
+						</region>
+						<flow style="font-family:'MyriadPro-CondIt'; font-size:14;">
+							<p><span style="fill:#231F20;">To General or </span></p>
+							<p><span style="fill:#231F20;">Local Routing</span></p>
+						</flow>
+					</flowDef>
+					<x:targetRef xlink:href="#SVGID_36_"/>
+				</foreignObject><g><text id="SVGID_36_" transform="matrix(1 0 0 1 538.2788 241.4617)" style="font-family:;"><tspan x="0" y="0" style="fill:#231F20; font-family:'MyriadPro-CondIt'; font-size:14px;">To General or </tspan><tspan x="0" y="16.8" style="fill:#231F20; font-family:'MyriadPro-CondIt'; font-size:14px;">Local Routing</tspan></text></g></switch><path style="fill:none;stroke:#231F20;stroke-width:0.5;stroke-miterlimit:3.8636;" d="M526.84,96.762     c1.812-0.446,3.371,23.256,3.375,52.109v38.749c0.004,28.121,1.912,51.211,4.125,50.779c-2.282,0.049-4.16,24.161-4.125,52.106     v38.75c0.029,27.229-1.506,50.726-3.375,50.776"/><polygon style="fill:#FFFFFF;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="474.905,176.045      495.906,182.045 495.906,201.545 474.905,207.545    "/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="513.206" y1="191.765" x2="495.906" y2="191.765"/><polygon style="fill:#221F1F;" points="511.674,186.559 520.741,191.795 511.674,197.03    "/><polygon style="fill:#FFFFFF;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="474.905,86.654      495.906,92.654 495.906,112.154 474.905,118.154    "/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="513.206" y1="102.375" x2="495.906" y2="102.375"/><polygon style="fill:#221F1F;" points="511.674,97.169 520.741,102.404 511.674,107.639    "/><polygon style="fill:#FFFFFF;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="474.483,358.546      495.484,364.546 495.484,384.046 474.483,390.046    "/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="512.784" y1="374.266" x2="495.484" y2="374.266"/><polygon style="fill:#221F1F;" points="511.252,369.06 520.319,374.296 511.252,379.531    "/><polygon style="fill:#FFFFFF;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="474.483,271.546      495.484,277.546 495.484,297.046 474.483,303.046    "/><line style="fill:none;stroke:#221F1F;stroke-width:0.5;stroke-miterlimit:10;" x1="512.784" y1="287.266" x2="495.484" y2="287.266"/><polygon style="fill:#221F1F;" points="511.252,282.06 520.319,287.296 511.252,292.531    "/><polyline i:knockout="Off" style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="     363.482,106.944 363.482,81.296 449.236,81.296 449.236,94.762 474.905,94.762    "/><polyline i:knockout="Off" style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="     363.06,292.645 363.06,266.997 448.814,266.997 448.814,280.464 474.483,280.464    "/><polyline i:knockout="Off" style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="     363.482,197.545 363.482,171.896 449.236,171.896 449.236,185.363 474.905,185.363    "/><polyline i:knockout="Off" style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:3.8636;" points="     363.06,380.422 363.06,354.773 448.814,354.773 448.814,368.24 474.483,368.24    "/></g></g></switch><i:pgf id="adobe_illustrator_pgf">
+	
+	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
+xcr/AZozOq0=
+	
+</i:pgf><style xmlns="" id="dark-background-light-text-add-on-inline-style-override"/></svg>
