@@ -67,11 +67,11 @@
 \membrodabancai{Prof.\ Marcus Vinicius Lamar, CIC/UnB}
 \membrodabancaifuncao{Orientador}
 
-\membrodabancaii{Prof.\ Ricardo Pezzuol Jacobi, CIC/UnB}
-\membrodabancaiifuncao{Co-Orientador}
+\membrodabancaii{Profa.\ Carla M. C. C. Koike, CIC/UnB}
+\membrodabancaiifuncao{Examinador Interno}
 
-\membrodabancaiii{}
-\membrodabancaiiifuncao{}
+\membrodabancaiii{Prof.\ Marcelo Grandi Mandelli, CIC/UnB}
+\membrodabancaiiifuncao{Examinador Interno}
 
 \membrodabancaiv{}
 \membrodabancaivfuncao{}
@@ -80,7 +80,7 @@
 \membrodabancavfuncao{}
 
 % Data de defesa
-\mes{Julho}
+\mes{Dezembro}
 \ano{2019}
 
 % Comandos para criar a capa e a página de assinaturas
@@ -93,45 +93,47 @@
 % Dedicatória
 \frontmatter
 
-\dedicatoriaautori{
-    Dedico ao pato de borracha especialista em TI que sempre me ajuda a depurar meus códigos.
-}
+\dedicatoriaautori{}
 \dedicatoriaautorii{}
 \dedicatoriaautoriii{}
 \dedicatoria{}
 
 % Agradecimentos
-\agradecimentosautori{
-    Agradecimentos!
-}
+\agradecimentosautori{}
 \agradecimentosautorii{}
 \agradecimentosautoriii{}
 \agradecimentos{}
 
 \resumo{resumo}{
 {
-    Desenvolvimento de um processador com arquitetura do conjunto de instruções
-    RISC-V em Verilog sintetizável em FPGA para ser utilizado como recurso de
-    laboratório para a disciplina de Organização e Arquitetura de Computadores
-    da Universidade de Brasília. O processador contará com perifericos e.g.
-    saída de vídeo para proporcionar um ambiente completo de desenvolvimento
-    de hardware e software.
+    Desenvolvimento e documentação de uma plataforma de ensino de arquitetura
+    de computadores em \textit{Verilog} sintetizável em \textit{FPGA}, com foco
+    em um processador com arquitetura do conjunto de instruções \textit{RISC-V}
+    implementado em três microarquiteturas para ser utilizado como recurso de
+    laboratório na disciplina de Organização e Arquitetura de Computadores da
+    Universidade de Brasília.
+    A plataforma funciona em dois modelos de \textit{FPGA} disponíveis no
+    laboratório da Universidade, possui periféricos de depuração como
+    \textit{display} dos registradores do processador na saída de vídeo, além
+    de outros periféricos como \textit{drivers} de áudio e vídeo para uma
+    experiência mais completa de desenvolvimento, e permite que o processador
+    seja substituído por implementações de diversas arquiteturas de
+    \textit{32 bits} com certa facilidade.
 }
 
 \medskip{}
 
-Palavras Chave: RISC-V
+Palavras Chave: RISC-V, Verilog, FPGA
 }\vspace*{2cm}
 
 
 \resumo{Abstract}{
 {
-    Abstract.
 }
 
 \medskip{}
 
-Keywords: RISC-V
+Keywords: RISC-V, Verilog, FPGA
 }
 
 % Listas de conteúdo, figuras e tabelas
@@ -149,11 +151,11 @@ Keywords: RISC-V
 \pagestyle{plain}
 
 \include{cap_introducao}
-\include{cap_arquitetura}
-\include{cap_fpga}
-\include{cap_verilog}
-\include{cap_sintese}
-\include{cap_implementacao}
+\include{cap_revisao}
+\include{cap_proposta}
+% \include{cap_arquitetura}
+% \include{cap_fpga}
+% \include{cap_implementacao}
 \include{cap_resultados}
 \include{cap_conclusoes}
 
