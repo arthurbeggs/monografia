@@ -1,12 +1,98 @@
 \chapter{Revisão Teórica}\label{cap_revisao}
 
 \section{Arquitetura de Computadores}
-{}
+{
+    Para nos comunicarmos, necessitamos de uma linguagem, e no caso dos
+    brasileiros, essa linguagem é o português. Como toda linguagem, o português
+    possui sua gramática e dicionário que lhe dão estrutura e sentido.
+    Línguas humanas como o português, inglês e espanhol são chamadas de
+    linguagens naturais, e evoluíram naturalmente a partir do uso e
+    repetição.~\cite{lyons1991natural}
 
-    \subsection{\textit{MIPS}}
+    Por causa da excelente capacidade de interpretação e adaptação da mente
+    humana, somos capazes de criar e entender novos dialetos que não seguem as
+    regras formais das linguagens naturais que conhecemos. Porém, fora da
+    comunicação casual é importante e às vezes obrigatório que nos expressemos
+    sem ambiguidade. Línguas artificiais como a notação matemática e linguagens
+    de programação possuem semântica e sintaxe mais rígidas para garantir que
+    a mensagem transmitida seja interpretada da maneira correta. Sem essa
+    rigidez, os computadores de hoje não seriam capazes de entender nossos
+    comandos.
+}
+
+{
+    Para a comunicação com o processador de um computador, utilizamos mensagens
+    chamadas de instruções, e o conjunto dessas instruções é chamado de
+    Arquitetura do Conjunto de Instruções (\textit{ISA}). Um processador só é
+    capaz de entender as mensagens que obedecem as regras semânticas e
+    sintáticas de sua \textit{ISA}, e qualquer instrução que fuja das suas
+    regras causará um erro de execução ou realizará uma tarefa diferente da
+    pretendida. A linguagem de máquina é considerada de baixo nível pois
+    apresenta pouca ou nenhuma abstração em relação à arquitetura.
+
+    As instruções são passadas para o processador na forma de código de
+    máquina, sequências de dígitos binários que correspondem aos níveis lógicos
+    do circuito. Para melhorar o entendimento do código e facilitar
+    o desenvolvimento, uma outra representação é utilizada, o
+    \textit{assembly}. Um código \textit{assembly} é transformado em código de
+    máquina por um programa montador, ou \textit{assembler}, e o processo
+    inverso é realizado por um \textit{disassembler}. As linguagens
+    \textit{assembly}, dependendo do \textit{assembler} utilizado, permitem o
+    uso de macros de substituição e pseudo instruções (determinadas instruções
+    que não existem na \textit{ISA} são expandidas em instruções válidas pelo
+    montador) e são totalmente dependentes da arquitetura do processador, o
+    que impede que o mesmo código seja executado em arquiteturas diferentes.
+}
+
+{
+    A Figura~\ref{fig:cpu_abstraction} é uma representação simplificada de um
+    processador. A unidade de controle lê uma instrução da memória e a
+    decodifica; o circuito de lógica combinacional lê os dados dos
+    registradores, entrada e memória conforme necessário, executa a instrução
+    decodificada e escreve no banco de registradores, na memória de dados ou
+    na saída se for preciso; a unidade de controle lê uma nova instrução e o
+    ciclo se repete até o fim do programa. A posição de memória da instrução
+    que está sendo executada fica armazenada em um registrador especial chamado
+    de Contador de Programa, ou \textit{PC}. Algumas instruções modificam o
+    \textit{PC} condicionalmente ou diretamente, criando a estrutura para
+    saltos, laços e chamada e retorno de funções.
+}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.7\linewidth]
+    {../images/ABasicComputer.png}
+    \caption[Abstração da arquitetura de um computador]
+    {Abstração da arquitetura de um
+        computador.~\cite{wikimedia2015basiccpu}}\label{fig:cpu_abstraction}
+\end{figure}
+
+{
+    Historicamente, as arquiteturas são divididas em \textit{ISAs}
+    \textit{RISC} e \textit{CISC}. Na atualidade, a diferença entre elas é
+    que as \textit{ISAs RISC} acessam a memória por instruções de
+    \textit{load/store}, enquanto as \textit{CISC} podem acessar a memória
+    diretamente em uma instrução de operação lógica ou aritmética.
+
+    Algumas arquiteturas \textit{RISC} notáveis são a \textit{RISC-V}, a
+    \textit{ARM} e a \textit{MIPS}. Quanto às \textit{CISC}, a \textit{x86} e
+    sua extensão de 64 \textit{bits}, a \textit{AMD64}, são as mais conhecidas.
+}
+
+
+    \subsection{Arquitetura RISC-V}
     {}
 
-    \subsection{\textit{RISC-V}}
+    \subsection{Arquitetura MIPS}
+    {}
+
+    \subsection{Arquitetura ARM}
+    {}
+
+    \subsection{Arquitetura x86}
+    {}
+
+    \subsection{Arquitetura AMD64}
     {}
 
 \section{Microarquiteturas}
@@ -18,13 +104,13 @@
     \subsection{Multiciclo}
     {}
 
-    \subsection{\textit{Pipeline}}
+    \subsection{Pipeline}
     {}
 
-\section{Representação de \textit{Hardware}}
+\section{Representação de Hardware}
 {}
 
-    \subsection{\textit{Verilog HDL}}
+    \subsection{Verilog HDL}
     {}
 
 \section{Síntese Lógica}
@@ -33,19 +119,134 @@
     \subsection{Análise e Síntese}
     {}
 
-    \subsection{\textit{Fitting}}
+    \subsection{Fitting}
     {}
 
-    \subsection{\textit{Timing Analyzer}}
+    \subsection{Timing Analyzer}
     {}
 
 \section{Simulação}
 {}
 
-\section{Utilizando \textit{Hardware} Real}
-{}
+\section{Field Programmable Gate Arrays}
+{
+    \textit{Field Programmable Gate Arrays}---ou \textit{FPGAs}---são circuitos
+    integrados que permitem o desenvolvimento de circuitos lógicos
+    reconfiguráveis. Por serem reprogramáveis, as \textit{FPGAs} geram uma
+    grande economia em tempo de desenvolvimento e em custos como os de
+    prototipagem, validação e manufatura do projeto em relação aos circuitos de
+    aplicações específicas, os \textit{ASICs}, e aos projetos
+    \textit{full-custom}. As \textit{FPGAs} podem ser tanto o passo
+    intermediário no projeto de um \textit{ASIC} ou \textit{full-custom} quanto
+    o meio final do projeto quando a reconfigurabilidade e os preços muito mais
+    acessíveis forem fatores importantes.
 
-    \subsection{\textit{Field Programmable Gate Arrays}}
-    {}
+    Cada fabricante de \textit{FPGAs} possui seus \textit{softwares} de
+    desenvolvimento, ou \textit{SDKs}. A indústria de \textit{hardware} é
+    extremamente protecionista com sua propriedade intelectual, sendo a maioria
+    dessas ferramentas de código proprietário. Para a Intel Altera®, essa
+    plataforma é o Quartus Prime®.
 
+    \textit{FPGAs} mais modernas possuem, além do arranjo de portas lógicas,
+    blocos de memória, \textit{PLLs}, \textit{DSPs} e \textit{SoCs}. Os blocos
+    de memória internos funcionam como a memória \textit{cache} de um
+    microprocessador, armazenando os dados próximo ao seu local de
+    processamento para diminuir a latência. Os \textit{PLLs} permitem criar
+    sinais de \textit{clock} com diversas frequências a partir de um relógio de
+    referência, e podem ser reconfigurados a tempo de execução. \textit{DSPs}
+    são responsáveis pelo processamento de sinais analógicos discretizados, e
+    podem ser utilizados como multiplicadores de baixa latência. Já os
+    \textit{SoCs} são microprocessadores como os ARM® presentes
+    em celulares, e são capazes de executar sistemas operacionais como o Linux.
+
+    Além de disponíveis na forma de \textit{chips} para a integração com placas
+    de circuito impresso customizadas, as \textit{FPGAs} possuem \textit{kits}
+    de desenvolvimento com diversos periféricos para auxiliar no processo de
+    criação de soluções. Esses \textit{kits} são a principal ferramenta de
+    aprendizagem no universo dos circuitos reconfiguráveis. No Laboratório de
+    Informática da UnB, as placas \textit{terasIC DE1-SoC} com a \textit{FPGA
+    Intel® Cyclone V SoC} estão disponíveis para os alunos de OAC desenvolverem
+    seus projetos.
+}
+
+    \subsection{Arquitetura Generalizada de uma FPGA}
+    {
+        De forma genérica, uma \textit{FPGA} possui blocos lógicos, chaves de
+        interconexão, blocos de conexão direta e portas de entrada e saída,
+        conforme apresentado na Figura~\ref{fig:fpga_general_arch}.
+    }
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\linewidth]
+        {../images/fpga_architecture_abstraction_-_olin_college.jpg}
+        \caption[Abstração da arquitetura de uma FPGA]
+            {Abstração da arquitetura de uma FPGA \quad Fonte: Olin College of
+                Engineering}\label{fig:fpga_general_arch}
+    \end{figure}
+
+    {
+        Os blocos lógicos possuem \textit{lookup tables}, registradores, somadores
+        e multiplexadores. É neles que a lógica reconfigurável é implementada.
+    }
+
+    {
+        Já as chaves de interconexão são responsáveis por conectar os diversos
+        blocos da \textit{FPGA}. A Figura~\ref{fig:fpga_switch_box} exemplifica
+        como é feito o roteamento da malha de interconexão. Os blocos de conexão
+        direta são um tipo especial de chave de interconexão, e sua função é ligar
+        blocos lógicos adjacentes.
+    }
+
+    {
+        Por fim, as portas de entrada e saída conectam a \textit{FPGA} ao ``mundo
+        externo'' e.g. \textit{drivers} de áudio e vídeo.
+    }
+
+    \begin{figure}[H]
+    \centering
+    \includesvg[width=.5\linewidth]
+        {../images/switch_box_wikimedia.svg}
+        \caption[Funcionamento da chave de interconexão]
+            {Funcionamento da chave de interconexão \quad Fonte: Wikimedia
+            }\label{fig:fpga_switch_box}
+    \end{figure}
+
+
+    % \subsection{Arquitetura da FPGA Cyclone V SoC}
+    % {
+    %     A Figura~\ref{fig:cyclone_v_arch} apresenta a arquitetura da \textit{FPGA
+    %     Cyclone V SoC}.
+    % }
+
+    % \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=1\linewidth]
+    %     {../images/altera_cyclone_v_soc_architectural_downscale.jpg}
+    %     \caption[Arquitetura da FPGA Intel Cyclone V SoC]
+    %         {Arquitetura da \textit{FPGA Altera Cyclone V SoC} \quad Fonte: Intel
+    %         }\label{fig:cyclone_v_arch}
+    % \end{figure}
+
+    %     \subsubsection{Adaptative Logic Modules}
+    %     {}
+
+    %     \begin{figure}[H]
+    %     \centering
+    %     \includesvg[inkscapeformat=png,width=1\linewidth]
+    %         {../images/intel_alm_high_level.svg}
+    %         \caption[Diagrama de blocos de um ALM]
+    %             {Diagrama de blocos de um ALM\quad Fonte: Intel
+    %             }\label{fig:fpga_alm}
+    %     \end{figure}
+
+
+    %     \subsubsection{Embedded Memory Blocks}
+    %     {}
+
+    %     \subsubsection{Hard Processor System}
+    %     {}
+
+    %     \subsubsection{Phase-Locked Loops}
+    %     {}
 
