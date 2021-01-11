@@ -1,3 +1,4 @@
 # LaTeX build files
-build/
+**/build/
+**/session.vim
 

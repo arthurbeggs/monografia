@@ -1,5 +1,4 @@
 \chapter{Introdução}\label{cap_intro}
-% TODO: Adicionar demanda da plataforma p/ várias FPGAs
 
 %\resumodocapitulo{Resumo opcional}
 
@@ -18,41 +17,41 @@
 }
 
 {
-    Hoje, a disciplina de Organização e Arquitetura de Computadores da
-    Universidade de Brasília é ministrada utilizando a arquitetura
-    \textit{MIPS32}. Apesar da arquitetura \textit{MIPS32} ainda ter
-    grande força no meio acadêmico (em boa parte devido a sua simplicidade
-    e extensa bibliografia), sua aplicação na indústria tem diminuído
+    Até recentemente, a disciplina de Organização e Arquitetura de Computadores
+    da Universidade de Brasília era ministrada em todas as turmas utilizando a
+    arquitetura \textit{MIPS32}. Apesar da arquitetura \textit{MIPS32} ainda ter
+    grande força no meio acadêmico (em boa parte devido a sua simplicidade e
+    extensa bibliografia), sua aplicação na indústria tem diminuído
     consideravelmente na última década.
 }
 
 {
-    Embora a curva de aprendizagem de linguagens \textit{Assembly} de
-    alguns processadores \textit{RISC} seja relativamente baixa para quem
-    já  conhece o \textit{Assembly MIPS32}, aprender uma arquitetura atual
-    traz o benefício de conhecer o \textit{estado da arte} da organização e
-    arquitetura de computadores.
+    Embora a curva de aprendizagem de linguagens \textit{assembly} de alguns
+    processadores \textit{RISC} seja relativamente baixa para quem já conhece o
+    \textit{assembly MIPS32}, aprender uma arquitetura atual traz o benefício de
+    conhecer o \textit{estado da arte} da organização e arquitetura de
+    computadores.
 }
 
 {
-    Para a proposta de modernização da disciplina, foi escolhida a
-    \textit{ISA RISC-V} desenvolvida na Divisão de Ciência da Computação da
-    Universidade da Califórnia, Berkeley como substituta à
-    \textit{ISA MIPS32}.
+    Hoje, a disciplina também é ministrada na arquitetura \textit{ARM}, bem como
+    na \textit{ISA RISC-V}, desenvolvida na Divisão de Ciência da Computação da
+    Universidade da Califórnia - Berkeley, e será o objeto de estudo desse
+    trabalho.
 }
 
 
 \section{Por que RISC-V?}
 {
     A \textit{ISA RISC-V} (lê-se \textit{``risk-five''}) é uma arquitetura
-    \textit{open source} com licença \textit{BSD}, o que permite o seu
-    livre uso para quaisquer fins, sem distinção de se o trabalho possui
-    código-fonte aberto ou proprietário. Tal característica possibilita que
-    grandes fabricantes utilizem a arquitetura para criar seus produtos,
+    \textit{open source}~\cite{riscv_spec} com licença \textit{BSD}, o que
+    permite o seu livre uso para quaisquer fins, sem distinção de se o trabalho
+    possui código-fonte aberto ou proprietário. Tal característica possibilita
+    que grandes fabricantes utilizem a arquitetura para criar seus produtos,
     mantendo a proteção de propriedade intelectual sobre seus métodos de
-    implementação e quaisquer subconjuntos de instruções
-    não-\textit{standard} que as empresas venham a produzir, o que
-    estimula investimentos em pesquisa e desenvolvimento.
+    implementação e quaisquer subconjuntos de instruções não-\textit{standard}
+    que as empresas venham a produzir, o que estimula investimentos em pesquisa
+    e desenvolvimento.
 }
 
 {
@@ -66,8 +65,8 @@
 {
     A licença também permite que qualquer indivíduo produza, distribua e
     até mesmo comercialize sua própria implementação da arquitetura sem ter
-    que arcar com \textit{royalties}, sendo ideal para pesquisas
-    acadêmicas, \textit{startups} e até mesmo \textit{hobbyistas}.
+    que arcar com \textit{royalties}, sendo ideal para pesquisas acadêmicas,
+    \textit{startups} e até mesmo \textit{hobbyistas}.
 }
 
 {
@@ -86,47 +85,37 @@
 }
 
 {
-    Além disso, com a promessa de se tornar uma das arquiteturas mais
-    utilizadas nos próximos anos, utilizar o \textit{RISC-V} como
-    arquitetura da disciplina de OAC se mostra a escolha ideal no momento.
+    Além disso, com a promessa de se tornar uma das arquiteturas mais utilizadas
+    nos próximos anos, utilizar o \textit{RISC-V} como arquitetura da disciplina
+    de OAC se mostra a escolha ideal no momento.
 }
 
 \section{O Projeto RISC-V SiMPLE}
 {
-    O projeto \textit{RISC-V SiMPLE (Single-cycle Multicycle Pipeline
-    Learning Environment)} consiste no desenvolvimento de um processador
-    com conjunto de instruções \textit{RISC-V}, sintetizável em
-    \textit{FPGA} e com \textit{hardware} descrito em \textit{Verilog}. A
-    microarquitetura implementada nesse trabalho é uniciclo, escalar, em
-    ordem, com um único \textit{hart} e com caminho de dados de 64 bits.
-    Trabalhos futuros poderão utilizar a estrutura altamente configurável
-    e modularizada do projeto para desenvolver as versões em
-    microarquiteturas multiciclo e \textit{pipeline}.
-}
+    O projeto \textit{RISC-V SiMPLE (Single-cycle Multicycle Pipeline Learning
+    Environment)} consiste no aprimoramento e documentação do processador com
+    conjunto de instruções \textit{RISC-V}, sintetizável em \textit{FPGA} e com
+    \textit{hardware} descrito em \textit{Verilog} utilizado como material de
+    laboratório de uma das turmas da disciplina de OAC. O objetivo é ter uma
+    plataforma de testes e simulação bem documentada e com o mínimo de
+    \textit{bugs} para servir de referência na disciplina. O projeto implementa
+    três microarquiteturas que podem ser escolhidas a tempo de síntese:
+    uniciclo, multiciclo e \textit{pipeline}, todas as três com um \textit{hart}
+    e caminho de dados de 32 bits.
 
-{
-    O processador contém o conjunto de instruções I (para operações com
+    Os processadores contém o conjunto de instruções I (para operações com
     inteiros, sendo o único módulo com implementação mandatória pela
     arquitetura) e as extensões \textit{standard} M (para multiplicação e
-    divisão de inteiros) e F (para ponto flutuante com precisão simples
-    conforme o padrão IEEE 754 com revisão de 2008). O projeto não
-    implementa as extensões D (ponto flutuante de precisão dupla) e A
-    (operações atômicas de sincronização), e com isso o \textit{soft core}
-    desenvolvido não pode ser definido como de propósito geral, G (que deve
-    conter os módulos I, M, A, F e D). Assim, pela nomenclatura da
-    arquitetura, o processador desenvolvido é um \textit{RV64IMF}.
-}
+    divisão de inteiros) e F (para ponto flutuante com precisão simples conforme
+    o padrão IEEE 754 com revisão de 2008). O projeto não implementa as
+    extensões D (ponto flutuante de precisão dupla) e A (operações atômicas de
+    sincronização), e com isso o \textit{soft core} desenvolvido não pode ser
+    definido como de propósito geral, G (que deve conter os módulos I, M, A, F
+    e D). Assim, pela nomenclatura da arquitetura, os processadores
+    desenvolvidos são do tipo \textit{RV32IMF}.
 
-{
-    O projeto contempla \textit{traps}, interrupções, exceções,
+    O projeto também contempla \textit{traps}, interrupções, exceções,
     \textit{CSRs}, chamadas de sistema e outras funcionalidades de nível
-    privilegiado da arquitetura.
-}
-
-{
-    O \textit{soft core} possui barramento Avalon para se comunicar com os
-    periféricos das plataformas de desenvolvimento. O projeto foi
-    desenvolvido utilizando a placa DE2--115 com \textit{FPGA Altera
-    Cyclone} e permite a fácil adaptação para outras placas da Altera.
+    privilegiado da arquitetura~\cite{riscv_spec2}.
 }
 
