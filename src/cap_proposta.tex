@@ -23,64 +23,461 @@
     \textit{RS-232} é opcional.
 }
 
+{ O projeto é organizado seguindo o seguinte arranjo de pastas:
+\begin{verbatim}
+    ┌─ core                     (arquivos que implementam o soft-core)
+    │  ├─ clock                 (arquivos de interface e controle de sinais
+    │  │                            de clock do processador)
+    │  ├─ memory                (arquivos de interface/controle de memória)
+    │  ├─ misc                  (módulos como somador e multiplexador de
+    │  │                            largura definidas por parâmetros)
+    │  ├─ peripherals           (interfaces e controladores para os
+    │  │                            periféricos da FPGA)
+    │  ├─ risc_v                (projeto do processador RISC-V)
+    │  │  ├─ CPU.v              (arquivo top-level do processador)
+    │  │  ├─ Control_*.v        (módulos de controle de cada microarquitetura)
+    │  │  ├─ Datapath_*.v       (módulos do caminho de dados de cada µarch)
+    │  │  └─ ...                (demais módulos do processador)
+    │  ├─ config.v              (arquivo de configuração de versão do
+    │  │                            processador a implementar, seus
+    │  │                            periféricos e endereçamento de memória
+    │  │                            das interfaces MMIO)
+    │  ├─ default_data.mif      (arquivo de inicialização de memória de
+    │  │                            dados usado na síntese do projeto)
+    │  ├─ default_framebuffer.mif   (arquivo de inicialização de memória de
+    │  │                                vídeo usada na síntese do projeto)
+    │  ├─ default_text.mif      (arquivo de inicialização de memória de
+    │  │                            texto usado na síntese do projeto)
+    │  ├─ fpga_top.sdc          (restrições desejadas de temporização do
+    │  │                            sistema sintetizado)
+    │  └─ fpga_top.v            (interface verilog entre o soft-core e a
+    │                               placa de desenvolvimento)
+    ├─ doc                      (documentação e guias do projeto)
+    ├─ project                  (arquivos de projeto do Quartus)
+    │  ├─ de1_soc
+    │  │  ├─ db                 (arquivos de saída intermediários do
+    │  │  │                         Quartus; pasta ignorada pelo git)
+    │  │  ├─ incremental_db     (arquivos de saída intermediários do
+    │  │  │                         Quartus; pasta ignorada pelo git)
+    │  │  ├─ output_files       (arquivos de saída do Quartus; os logs de
+    │  │  │                         síntese gerados pelo script "make.sh"
+    │  │  │                         ficam aqui, bem como o .sof da última
+    │  │  │                         síntese completa; ignorada pelo git)
+    │  │  ├─ fpga_top.qpf       (arquivo de projeto do Quartus indicando
+    │  │  │                         a versão do projeto)
+    │  │  ├─ fpga_top.qsf       (arquivo de projeto do Quartus contendo
+    │  │  │                         as configurações do projeto)
+    │  │  └─ ...                (outros arquivos de projeto do Quartus)
+    │  └─ ...                   (outros modelos de FPGA)
+    ├─ system                   (códigos em assembly RISC-V implementando
+    │                               as chamadas de sistema e macros)
+    ├─ test
+    │  ├─ assembly_testbench    (códigos em assembly RISC-V para testar o
+    │  │                            funcionamento correto das instruções
+    │  │                            do processador)
+    │  ├─ gtkwave               (formas de onda predefinidas para visualizar
+    │  │                            os arquivos .vcd gerados pelo ModelSim
+    │  │                            usando o GTKwave)
+    │  ├─ mif_library           (testbenches assembly compilados para o
+    │  │                            formato .mif para gravação na memória
+    │  │                            da FPGA)
+    │  ├─ simulation            (arquivos de saída da simulação pelo
+    │  │                            ModelSim; pasta ignorada pelo git)
+    │  ├─ simulation_scripts    (scripts .do para que o ModelSim simule o
+    │  │                            sistema corretamente)
+    │  ├─ sof_library           (arquivos .sof das versões do processador
+    │  │                            prontos para gravação na FPGA)
+    │  └─ verilog_testbench     (testbench usado para simular as entradas
+    │                               da FPGA, inicializá-la e definir o
+    │                               tempo de simulação)
+    ├─ tools
+    │  ├─ bitmap_converter      (conversor de imagens para uso na FPGA)
+    │  └─ rars                  (montador e simulador de assembly RISC-V)
+    ├─ vendor
+    │  └─ ...                   (licenças dos softwares utilizados)
+    ├─ LICENSE                  (licença do sistema implementado)
+    ├─ make.sh                  (script para síntese e simulação de todas
+    │                               as variantes do processador)
+    └─ README.md                (README sobre o que é o projeto e como
+                                    utilizá-lo)
+\end{verbatim}
+}
+
 { O trabalho também é organizado de forma a facilitar a migração para placas de
     desenvolvimento diferentes da \textit{DE1-SoC} ou trocar o \textit{soft-core}
     desenvolvido por outra implementação, independente da sua \textit{ISA}.
-    Todas as opções de configuração estão presentes em um único arquivo,
-    centralizando as opções de customização do sistema gerado.
+    O \textit{soft-core} implementado se encontra no caminho
+    \texttt{core/risc\_v}. Assim, os demais módulos presentes na pasta \texttt{core}
+    não dependem da arquitetura do processador, exceto a tela de
+    \textit{debug} presente na interface de vídeo. No entanto, a tela de
+    \textit{debug} foi projetada de modo a ser relativamente fácil
+    customizá-la para uso em outra arquitetura.
+}
+
+{
+    O arquivo \texttt{core/config.v} possui todas as opções de configuração,
+    definição de parâmetros e endereçamento de memória dos módulos, facilitando
+    escolher as extensões, microarquitetura e periféricos sintetizados.
 }
 
 
-\section{Implementação da Microarquitetura Uniciclo}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.6\linewidth]{../images/placeholder.jpg}
+    \caption{Diagrama de blocos do sistema.}\label{fig:diagram_fpga_blocks}
+\end{figure}
 
+
+\section{Implementação dos \textit{soft-cores}}
+    { Todos os \textit{soft-cores} implementados possuem execução em ordem e sem
+        \textit{branch prediction} e sem \textit{caching} de memória. Como a
+        implementação atual só utiliza blocos de memória presentes no chip da
+        FPGA, sem utilizar as memórias \textit{SRAM} e \textit{DRAM} externas
+        presentes na placa de desenvolvimento, e também não faz uso de memória
+        secundária, as operações de \textit{load} e \textit{store} transferem
+        dados diretamente entre os registradores e os blocos de memória
+        \textit{M10K}.
+    }
+
+    \subsection{Microarquitetura Uniciclo}
+
+        { Os processsadores uniciclo com extensões I e IM são implementados
+            conforme o diagrama da Figura~\ref{fig:diagram_rv32i_uni}. O módulo
+            de controle é implementado somente com lógica combinacional, e a
+            frequência máxima de operação é limitada pela instrução mais lenta
+            do processador.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
+            \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
+            microarquitetura uniciclo.}\label{fig:diagram_rv32i_uni}
+        \end{figure}
+
+        { O processador uniciclo com extensão IMF é implementado conforme o
+            diagrama da Figura~\ref{fig:diagram_rv32imf_uni}. A unidade lógica e
+            aritmética de ponto flutuante utiliza uma frequência de \textit{clock}
+            maior que a do resto do processador, e é o único módulo da implementação
+            uniciclo que utiliza mais de um ciclo de relógio para realizar sua
+            operação. A frequência máxima de operação do \textit{clock} principal
+            do processador continua limitada pela operação mais lenta.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/singlecycle-RV32IMF.png}
+            \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
+            microarquitetura uniciclo.}\label{fig:diagram_rv32imf_uni}
+        \end{figure}
+
+    \subsection{Microarquitetura Multiciclo}
+        { Os processadores multiciclo com extensões I e IM são implementados
+            conforme o diagrama da Figura~\ref{fig:diagram_rv32i_multi}. A
+            unidade de controle é implementada utilizando microcódigo para
+            executar as instruções. Com isso, a frequência de operação do
+            processador depende da operação mais lenta do microcódigo, e não da
+            execução da instrução completa.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/multicycle-RV32I-RV32IM.png}
+            \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
+            microarquitetura multiciclo.}\label{fig:diagram_rv32i_multi}
+        \end{figure}
+
+        { O processador multicilo com extensões IMF é implementado conforme o
+            diagrama da Figura~\ref{fig:diagram_rv32imf_multi}. A unidade lógica
+            e aritmética de ponto flutuante utiliza uma frequência de \textit{clock}
+            mais alta que a do resto do processador, e possui um sinal de
+            \textit{ready} que causa o \textit{stall} do clock principal do
+            processador enquanto a operação de ponto flutuante não completa.
+            Assim, a frequência do \textit{clock} do processador é variável, já
+            que em operações de ponto flutuante o ciclo do relógio é mais longo
+            que em outras operações.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/multicycle-RV32IMF.png}
+            \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
+            microarquitetura multiciclo.}\label{fig:diagram_rv32imf_multi}
+        \end{figure}
+
+
+    \subsection{Microarquitetura \textit{Pipeline} de 5 Estágios}
+        { Os processadores \textit{pipeline} com extensões I e IM são
+            implementados conforme o diagrama da Figura~\ref{fig:diagram_rv32i_pipe}.
+            Seus cinco estágios são:
+            \begin{enumerate}
+                \item \textit{Instruction Fetch}
+                \item \textit{Instruction Decode}
+                \item \textit{Execution}
+                \item \textit{Memory Stage}
+                \item \textit{Write Back}
+            \end{enumerate}
+        }
+        { A frequência máxima do seu \textit{clock} é limitada pela operação
+            mais lenta da unidade lógica e aritmética na terceira etapa do
+            \textit{pipeline}.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=.7\linewidth]{../images/placeholder.jpg}
+            \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
+            microarquitetura \textit{pipeline} de 5 estágios.}\label{fig:diagram_rv32i_pipe}
+        \end{figure}
+
+        { O processador \textit{pipeline} com extensões IMF é implementado conforme
+            o diagrama da Figura~\ref{fig:diagram_rv32imf_pipe}.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=.7\linewidth]{../images/placeholder.jpg}
+            \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
+            microarquitetura \textit{pipeline} de 5 estágios.}\label{fig:diagram_rv32imf_pipe}
+        \end{figure}
+
+    \section{Chamadas de sistema}
+    { A pasta \texttt{system} contém a implementação das chamadas de sistema do
+        processador. O código \textit{assembly} deve incluir o arquivo
+        \texttt{system/MACROSv21.s} no início do programa e o arquivo
+        \texttt{system/SYSTEMv21.s} ao final do programa.
+    }
+    \begin{lstlisting}
+# Inicio do programa
+.include "MACROSv21.s"
+
+# Dados do programa
+.data
+    ...
+
+# Instrucoes do programa
+.text
+    ...
+
+# Chamadas de sistema
+.include "SYSTEMv21.s"
+    \end{lstlisting}
+
+    { O arquivo \texttt{MACROSv21.s} insere macros para testar se o programa
+        está sendo executado no \texttt{Rars} ou na \texttt{FPGA} ou no
+        \texttt{ModelSim} para decidir o uso de determinadas \textit{syscalls},
+        e também fornece a implementação por \textit{software} de algumas
+        instruções caso a extensão necessária não esteja implementada no processador.
+    }
+
+    { Os endereços de memória dos periféricos acessados por \textit{MMIO} também
+        estão presentes como definições \texttt{.eqv} a fim de facilitar a
+        implementação do programa.
+    }
+    { Por fim, o endereço inicial do nível privilegiado do sistema é gravado no
+        \textit{CSR UTVEC} e as interrupções são ativadas. Como o processador
+        implementado não possui memória reservada para o \textit{kernel}, a
+        posição inicial de memória varia de acordo com o tamanho do programa
+        implementado.
+    }
+
+    { Já o arquivo \texttt{SYSTEMv21.s} implementa o \textit{kernel} do sistema,
+        tratando exceções e executando as \textit{syscalls}. As chamadas de
+        sistema implementadas são apresentadas na Tabela~\ref{table:syscalls}.
+    }
+    \begin{longtable}{|l|c|p{3.5cm}|l |}
+        \hline
+        \textit{syscall}                    & \texttt{\$a7}             & Argumentos                & Operação\\*
+        \hline
+        \endhead
+        \multirow{5}{*}{Print Integer}      & \multirow{5}{*}{\parbox{0.6cm}{\centering 1 ou 101}}
+              & \texttt{\$a0 =} inteiro     & \multirow{5}{*}{\parbox{7cm}{Imprime no \textit{frame} \texttt{\$a4} o número inteiro \texttt{\$a0} (complemento de 2) na
+                                                posição \texttt{(\$a1,\$a2)} com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} coluna      & \\*
+            & & \texttt{\$a2 =} linha       & \\*
+            & & \texttt{\$a3 =} cores       & \\*
+            & & \texttt{\$a4 =} frame       & \\
+        \hline
+        \multirow{5}{*}{Print Float}        & \multirow{5}{*}{\parbox{0.6cm}{\centering 2 ou 102}}
+              & \texttt{\$fa0 =} float      & \multirow{5}{*}{\parbox{7cm}{Imprime no \textit{frame} \texttt{\$a4} o número de ponto flutuante \texttt{\$fa0} na
+                                                posição \texttt{(\$a1,\$a2)} com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} coluna      & \\*
+            & & \texttt{\$a2 =} linha}      & \\*
+            & & \texttt{\$a3 =} cores}      & \\*
+            & & \texttt{\$a4 =} frame}      & \\
+        \hline
+        \multirow{5}{*}{Print String}       & \multirow{5}{*}{\parbox{0.6cm}{\centering 4 ou 104}}
+              & \texttt{\$a0 =} endereço da string  & \multirow{5}{*}{\parbox{7cm}{Imprime no \textit{frame} \texttt{\$a4} a \textit{string} iniciada no endereço \texttt{\$a0} e terminada
+                                                        em \textit{NULL} na posição \texttt{(\$a1,\$a2)} com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} coluna      & \\*
+            & & \texttt{\$a2 =} linha       & \\*
+            & & \texttt{\$a3 =} cores       & \\*
+            & & \texttt{\$a4 =} frame       & \\
+        \hline
+        \multirow{3}{*}{Read Int}           & \multirow{3}{*}{\parbox{0.6cm}{\centering 5 ou 105}}
+            &                               & \multirow{3}{*}{\parbox{7cm}{Retorna em \texttt{\$a0} o valor do inteiro em complemento de 2 lido do teclado.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{3}{*}{Read Float}         & \multirow{3}{*}{\parbox{0.6cm}{\centering 6 ou 106}}
+            &                               & \multirow{3}{*}{\parbox{7cm}{Retorna em \texttt{\$a0} o valor do \textit{float} com precisão simples lido do teclado.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{3}{*}{Read String}        & \multirow{3}{*}{\parbox{0.6cm}{\centering 8 ou 108}}
+            & \texttt{\$a0 =} endereço do buffer    & \multirow{3}{*}{\parbox{7cm}{Escreve no \textit{buffer} iniciado em \texttt{\$a0} os caracteres lidos, terminando com um caracter \textit{NULL}.}}\\*
+            & & \texttt{\$a1 =} número máximo de caracteres & \\*
+            & & & \\
+        \hline
+        \multirow{3}{*}{Exit}               & \multirow{3}{*}{\parbox{0.6cm}{\centering 10 ou 110}}
+            &                               & \multirow{3}{*}{\parbox{7cm}{Retorna ao sistema operacional. Na \textit{DE1-SoC}, trava o processador.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{5}{*}{Print Char}         & \multirow{5}{*}{\parbox{0.6cm}{\centering 11 ou 111}}
+              & \texttt{\$a0 =} char ASCII  & \multirow{5}{*}{\parbox{7cm}{Imprime no \textit{frame} \texttt{\$a4} o caracter \texttt{\$a0} na
+                                                posição \texttt{(\$a1,\$a2)} com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} coluna      & \\*
+            & & \texttt{\$a2 =} linha       & \\*
+            & & \texttt{\$a3 =} cores       & \\*
+            & & \texttt{\$a4 =} frame       & \\
+        \hline
+        \multirow{3}{*}{Read Char}          & \multirow{3}{*}{\parbox{0.6cm}{\centering 12 ou 112}}
+            &                               & \multirow{3}{*}{\parbox{7cm}{Retorna em \texttt{\$a0} o valor ASCII do caracter lido do teclado.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{3}{*}{Time}               & \multirow{3}{*}{\parbox{0.6cm}{\centering 30 ou 130}}
+            &                               & \multirow{3}{*}{\parbox{7cm}{Retorna o tempo do sistema em \textit{ms}, com os 32 \textit{bits} menos significativos em \texttt{\$a0}
+                                                e os 32 \textit{bits} mais significativos em \texttt{\$a1}.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{4}{*}{MIDI Out Assíncrono }   & \multirow{4}{*}{\parbox{0.6cm}{\centering 31 ou 131}}
+              & \texttt{\$a0 =} pitch       & \multirow{4}{*}{\parbox{7cm}{Gera o som definido e retorna imediatamente.}}\\*
+            & & \texttt{\$a1 =} duração (\textit{ms}) & \\*
+            & & \texttt{\$a2 =} instrumento & \\*
+            & & \texttt{\$a3 =} volume      & \\
+        \hline
+        \multirow{3}{*}{Sleep}              & \multirow{3}{*}{\parbox{0.6cm}{\centering 32 ou 132}}
+            & \texttt{\$a0 =} duração (\textit{ms}) & \multirow{3}{*}{\parbox{7cm}{Coloca o processador em \textit{sleep} por \texttt{\$a1} \textit{ms}.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{4}{*}{MIDI Out Síncrono }     & \multirow{4}{*}{\parbox{0.6cm}{\centering 33 ou 133}}
+              & \texttt{\$a0 =} pitch       & \multirow{4}{*}{\parbox{7cm}{Gera o som definido e retorna após o término da execução da nota.}}\\*
+            & & \texttt{\$a1 =} duração (\textit{ms}) & \\*
+            & & \texttt{\$a2 =} instrumento & \\*
+            & & \texttt{\$a3 =} volume      & \\
+        \hline
+        \multirow{5}{*}{Print Integer}      & \multirow{5}{*}{\parbox{0.6cm}{\centering 34 ou 134}}
+              & \texttt{\$a0 =} inteiro     & \multirow{5}{*}{\parbox{7cm}{Imprime no \textit{frame} \texttt{\$a4} o número inteiro \texttt{\$a0} em formato hexadecimal na
+                                                posição \texttt{(\$a1,\$a2)} com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} coluna      & \\*
+            & & \texttt{\$a2 =} linha       & \\*
+            & & \texttt{\$a3 =} cores       & \\*
+            & & \texttt{\$a4 =} frame       & \\
+        \hline
+        \multirow{5}{*}{Print Integer Unsigned} & \multirow{5}{*}{\parbox{0.6cm}{\centering 36 ou 136}}
+              & \texttt{\$a0 =} inteiro     & \multirow{5}{*}{\parbox{7cm}{Imprime no \textit{frame} \texttt{\$a4} o número inteiro \texttt{\$a0} sem sinal na
+                                                posição \texttt{(\$a1,\$a2)} com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} coluna      & \\*
+            & & \texttt{\$a2 =} linha       & \\*
+            & & \texttt{\$a3 =} cores       & \\*
+            & & \texttt{\$a4 =} frame       & \\
+        \hline
+        \multirow{3}{*}{Rand}               & \multirow{3}{*}{\parbox{0.6cm}{\centering 41 ou 141}}
+            & & \multirow{3}{*}{\parbox{7cm}{Retorna um número pseudorandômico de 32 \textit{bits} em \texttt{\$a0}.}}\\*
+            & & & \\*
+            & & & \\
+        \hline
+        \multirow{6}{*}{Draw Line}          & \multirow{6}{*}{\parbox{0.6cm}{\centering 47 ou 147}}
+              & \texttt{\$a0 =} $x_0$       & \multirow{6}{*}{\parbox{7cm}{Desenha no \textit{frame} \texttt{\$a5} uma linha reta do ponto \texttt{(\$a0,\$a1)} até o ponto \texttt{(\$a2,\$a3)}
+                                                com as cores \texttt{\$a3[7:0]} de \textit{foreground} e \texttt{\$a3[15:8]} de \textit{background}.}}\\*
+            & & \texttt{\$a1 =} $y_0$       & \\*
+            & & \texttt{\$a2 =} $x_1$       & \\*
+            & & \texttt{\$a3 =} $y_1$       & \\*
+            & & \texttt{\$a4 =} cor         & \\*
+            & & \texttt{\$a5 =} frame       & \\
+        \hline
+        \multirow{3}{*}{Read Char}          & \multirow{3}{*}{\parbox{0.6cm}{\centering 48 ou 148}}
+            & \texttt{\$a0 =} cor           & \multirow{3}{*}{\parbox{7cm}{Preenche o \textit{frame} \texttt{\$a1} com a cor \texttt{\$a0}.}}\\*
+            & & \texttt{\$a1 =} frame       & \\*
+            & & & \\
+        \hline
+
+        \caption{Tabela de \textit{syscalls} implementadas.}
+        \label{table:syscalls}
+    \end{longtable}
+
+    { As \textit{ecalls} \texttt{1XX} são utilizadas no \textit{Rars} pelas
+        ferramentas \textit{Bitmap Display Tool} e \textit{Keyboard Display MMIO
+        Tool}, que foram customizadas para funcionar de maneira idêntica quando
+        o programa é executado na \textit{FPGA}.
+    }
+
+    \section{Interface de vídeo e depuração}
+    { A interface de vídeo possui resolução de 320x240 \textit{pixels} com 8
+        \textit{bits} de cor para cada pixel. Efetivamente, a interface de vídeo
+        possui 255 cores diferentes e uma cor utilizada como transparência, o
+        magenta \texttt{0xC7}. Ela também conta com dois \textit{framebuffers},
+        permitindo renderizar duas imagens diferentes e alternar entre elas, ou
+        se aplicado em um jogo, permite a transição de \textit{frames} sem
+        \textit{flickering}: enquanto um \textit{frame} é exibido, o outro
+        \textit{framebuffer} é construído com as imagens do próximo \textit{frame},
+        e quando pronto, a tela é atualizada com o novo \textit{frame}
+        completamente renderizado.
+    }
+
+    { A conexão do vídeo do sistema é feita por interface VGA, podendo se
+        conectar a qualquer monitor com entrada VGA. A resolução real da
+        interface é de 640x480 \textit{pixels} com taxa de atualização de 59 Hz
+        por questões de compatibilidade com os monitores. Cada \textit{pixel}
+        da interface de vídeo representa uma célula de 4 \textit{pixels} na
+        saída de vídeo real. A saída de vídeo VGA também possui 24 \textit{bits}
+        de cor, pois o controlador faz a conversão das cores em 8 \textit{bits}
+        para três canais de 8 \textit{bits}, um verde, um vermelho e um azul.
+    }
     \begin{figure}[H]
     \centering
-        \includegraphics[width=1\linewidth]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
-        \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-        microarquitetura uniciclo.}\label{fig:diagram_rv32i_uni}
+        \includegraphics[width=.7\linewidth]{../images/osd/display.jpg}
+        \caption{Exibição do \textit{frame} de vídeo da \textit{FPGA}.}
+        \label{fig:display_cats}
     \end{figure}
 
+    { Acionando um \textit{switch} da \textit{FPGA}, é mostrado por cima do
+        \textit{frame} um \textit{menu On Screen Display} que mostra o valor
+        atual contido nos bancos de registradores do processador, incluindo os
+        \textit{CSRs} e, caso a extensão F esteja implementada, outro
+        \textit{switch} permite alternar entre a visualização dos registradores
+        de ponto flutuante e os de ponto fixo.
+    }
     \begin{figure}[H]
     \centering
-        \includegraphics[width=1\linewidth]{../images/uarch_diagrams/singlecycle-RV32IMF.png}
-        \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-        microarquitetura uniciclo.}\label{fig:diagram_rv32imf_uni}
+        \includegraphics[width=.7\linewidth]{../images/osd/display_osd.jpg}
+        \caption{\textit{Menu OSD} exibindo os valores dos registradores do processador.}
+        \label{fig:display_cats_osd}
     \end{figure}
 
-\section{Implementação da Microarquitetura Multiciclo}
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=1\linewidth]{../images/uarch_diagrams/multicycle-RV32I-RV32IM.png}
-        \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-        microarquitetura multiciclo.}\label{fig:diagram_rv32i_multi}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=1\linewidth]{../images/uarch_diagrams/multicycle-RV32IMF.png}
-        \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-        microarquitetura multiciclo.}\label{fig:diagram_rv32imf_multi}
-    \end{figure}
+    { O \textit{menu OSD} é implementado como uma matriz de 52x24 caracteres
+        monoespaçados. Na matriz, os caracteres que não mudam com o tempo, como
+        é o caso do nome dos registradores, são representados com um parâmetro
+        correspondente ao próprio caracter. Já os valores que se alteram, como
+        o valor dos registradores, são representados por um parâmetro
+        \textit{placeholder} e o valor a ser mostrado na tela é obtido usando
+        uma tabela de \textit{lookup}. O projeto do \textit{menu OSD} foi pensado
+        de forma que possa ser modificado para expansão ou utilização em outras
+        arquiteturas de processadores de maneira simples.
+    }
 
 
-\section{Implementação da Microarquitetura \textit{Pipeline} de 5 Estágios}
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=1\linewidth]{../images/placeholder.jpg}
-        \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-        microarquitetura \textit{pipeline} de 5 estágios.}\label{fig:diagram_rv32i_pipe}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=1\linewidth]{../images/placeholder.jpg}
-        \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-        microarquitetura \textit{pipeline} de 5 estágios.}\label{fig:diagram_rv32imf_pipe}
-    \end{figure}
+    \section{Configuração e síntese do processador pelo Quartus}
 
 
+    \section{Simulação do processador pelo Quartus e ModelSim}
 
+    \section{Script \texttt{make.sh}}
+
+    \section{Uso da FPGA DE1-SoC}
 
 
