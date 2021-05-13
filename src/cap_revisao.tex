@@ -404,7 +404,12 @@
     \subsection{Arquitetura da FPGA Cyclone V SoC}
     {
         A Figura~\ref{fig:cyclone_v_arch} apresenta a arquitetura da
-        \textit{FPGA Cyclone V SoC}.
+        \textit{FPGA Cyclone V SoC}. O \textit{chip} possui um processador
+        \textit{ARM} integrado, blocos de memória embutidos, \textit{DSPs} para
+        acelerar operações como multiplicação de números ou processamento de
+        sinais genéricos, diversos pinos para integrar o \textit{chip} a
+        um projeto de circuito mais complexo, \textit{PLLs} para gerar diversos
+        sinais de \textit{clock}, entre outras funcionalidades.
     }
 
     \begin{figure}[H]
@@ -417,7 +422,12 @@
     \end{figure}
 
         \subsubsection{Adaptative Logic Modules}
-        {}
+        { Os blocos lógicos, como mostrados na abstração da Figura~\ref{fig:fpga_general_arch}
+            são implementados na \textit{FPGA Cyclone V SoC} como
+            \textit{Adaptative Logic Modules}, conforme a Figura~\ref{fig:fpga_alm}.
+            Como os \textit{ALMs} são blocos genéricos, há um \textit{trade-off}
+            entre configurabilidade e performance.
+        }
 
         \begin{figure}[H]
         \centering
@@ -430,8 +440,44 @@
 
 
         \subsubsection{Embedded Memory Blocks}
-        {}
+        { Como mostrado na Figura~\ref{fig:cyclone_v_arch}, existem blocos de
+            memória embutidos na \textit{FPGA}. Esses blocos são o equivalente
+            a uma memória \textit{cache L1}, sendo a camada de memória mais próxima
+            dos registradores. Para utilizá-los no \textit{design} do circuito,
+            blocos do \textit{IP} de memória são configurados e instanciados
+            pelo programa de desenvolvimento para gerar um módulo integrável no
+            resto do \textit{design}.
+        }
+
+        { As placas de desenvolvimento podem possuir outros tipos de memória,
+            como as \textit{SRAM} e \textit{DRAM}. Apesar de possuírem capacidade
+            de armazenamento bem maiores que os blocos embutidos, seus
+            módulos controladores são mais complexos e apresentam latência maior
+            para leitura e escrita de dados. Para seu uso eficiente, é necessário
+            implementar camadas de \textit{caching} para que as operações de
+            \textit{input} e \textit{output} (\textit{IO}) não se tornem um
+            gargalo que comprometa o resto do \textit{design}.
+        }
 
 
 \section{Estado da Arte dos processadores RISC-V}
+    { Uma das surpresas na adoção da arquitetura \textit{RISC-V} nos seus
+        \textit{designs} veio da \textit{MIPS Technologies}, detentora das
+        patentes das arquiteturas \textit{MIPS}. Em 2013, a empresa foi adquirida
+        pela \textit{Imagination Technologies}~\cite{imagination_technologies_acq},
+        e lançou alguns \textit{development kits} voltados a visão computacional
+        e microcontroladores, mas não conseguiu dar tração aos projetos.
+        Em 2017 a companhia foi novamente vendida para a \textit{Tailwood
+        Venture Capital}~\cite{tailwood_acq}, que tentou capitalizar em cima dos
+        \textit{royalties} da arquitetura. Porém, em 2018 a companhia foi vendida
+        novamente para a \textit{Wave Computing}~\cite{wave_comp_acq}, companhia
+        voltada para aplicações de inteligência artificial. Em 2020, a
+        \textit{Wave Computing} declara falência~\cite{wave_comp_bankrupt},
+        demitindo todos os seus funcionários. Em março desse ano, a empresa
+        conseguiu se recuperar da falência, mudou o nome da companhia para
+        \textit{MIPS} e anunciou que seus novos \textit{designs} serão baseados
+        na arquitetura \textit{RISC-V}~\cite{mips_reborn}. Atualmente, a empresa
+        \textit{MIPS} integra a \textit{RISC-V Foundation} como Membro Estratégico.
+    }
+
 
