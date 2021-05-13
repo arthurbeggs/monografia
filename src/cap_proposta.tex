@@ -15,12 +15,12 @@
 }
 
 { O projeto utiliza a placa de desenvolvimento \textit{terasIC DE1-SoC} contendo
-    diversos periféricos e um \textit{SoC Intel Altera Cyclone-V}. Vários dos
+    diversos periféricos e um \textit{SoC Intel Altera Cyclone-V}. A maioria dos
     periféricos presentes na plataforma tem controladores implementados com
     Entradas e Saídas Mapeadas em Memória (\textit{MMIO}) para que o
-    \textit{soft-core} possa utilizá-los. A síntese dos controladores desses
+    \textit{soft-core} possa utilizá-los. A síntese dos controladores dos
     periféricos, como a saída de vídeo, entrada de teclado e barramento
-    \textit{RS-232} é opcional.
+    \textit{RS-232}, é opcional.
 }
 
 { O projeto é organizado seguindo o seguinte arranjo de pastas:
@@ -129,14 +129,15 @@
 
 
 \section{Implementação dos \textit{soft-cores}}
-    { Todos os \textit{soft-cores} implementados possuem execução em ordem e sem
-        \textit{branch prediction} e sem \textit{caching} de memória. Como a
-        implementação atual só utiliza blocos de memória presentes no chip da
-        FPGA, sem utilizar as memórias \textit{SRAM} e \textit{DRAM} externas
-        presentes na placa de desenvolvimento, e também não faz uso de memória
-        secundária, as operações de \textit{load} e \textit{store} transferem
-        dados diretamente entre os registradores e os blocos de memória
-        \textit{M10K}.
+    { Todos os \textit{soft-cores} implementados possuem execução em ordem, sem
+        \textit{branch prediction}, sem \textit{caching} de memória e sem
+        \textit{Return Address Stack}. O processador é escalar e possui um
+        único \textit{hart}. Como a implementação atual só utiliza blocos de
+        memória presentes no chip da FPGA, sem utilizar as memórias
+        \textit{SRAM} e \textit{DRAM} externas presentes na placa de
+        desenvolvimento, e também não faz uso de memória secundária, as operações
+        de \textit{load} e \textit{store} transferem dados diretamente entre os
+        registradores e os blocos de memória \textit{M10K}.
     }
 
     \subsection{Microarquitetura Uniciclo}
@@ -472,12 +473,163 @@
 
 
     \section{Configuração e síntese do processador pelo Quartus}
+    { O \textit{software} utilizado para a síntese do processador, fornecimento
+        de \textit{IPs} como as de memória e operações de ponto flutuante,
+        gravação do \textit{soft-core}, dentre outras funcionalidades é o
+        \textit{Intel Quartus Lite v18.1}. Versões superiores são compatíveis com
+        menos sistemas operacionais e/ou não possuem todos os \textit{IPs}
+        necessários para a síntese do processador.
+    }
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/quartus/files_config.png}
+        \caption{\textit{Intel Quartus Lite v18.1} com a janela de configurações
+            do projeto.}\label{fig:quartus_files_config}
+    \end{figure}
+
+    { Todas as configurações do projeto também podem ser alteradas manualmente
+        no arquivo \texttt{project/de1\_soc/fpga\_top.qsf}. Para ativar ou desativar
+        os pinos do \textit{chip} da \textit{FPGA} que conectam os periféricos
+        da placa, é preferível que a edição seja feita diretamente no arquivo
+        de configuração, comentando ou descomentando a declaração dos pinos.
+    }
+
+    { Para realizar a síntese completa do processador para poder utilizá-lo
+        na \textit{FPGA}, basta acessar o menu \texttt{Processing > Start Compilation}
+        ou utilizar o atalho \texttt{Ctrl + L} ou clicar no ícone de \textit{"Play"}
+        na barra de tarefas do programa. Assim, as etapas de Análise e Síntese,
+        \textit{Placing} e \textit{Routing}, \textit{Assembler} e
+        \textit{Timing Analysis} serão realizadas, e no caso de não ocorrerem
+        erros durante o processo, o \textit{soft-core} estará pronto para ser
+        gravado na \textit{FPGA} utilizando o arquivo \textit{.mif} gerado.
+    }
 
 
     \section{Simulação do processador pelo Quartus e ModelSim}
+    { O projeto possui um \textit{testbench} em \textit{Verilog} para simular as
+        entradas e saídas da \textit{FPGA} que o usuário operaria, como os botões
+        e \textit{switches}. Ele configura a rotina de reinicialização da placa
+        após o \textit{power-up} e define por quanto tempo a simulação será
+        executada.
+    }
+
+    { O \textit{script} \texttt{test/simulation\_scripts/de1\_soc\_rtl.do} é
+        necessário para realizar a simulação de forma correta. O \textit{script}
+        gerado automaticamente pelo \textit{Quartus} apresenta problemas que
+        impedem que a simulação seja executada corretamente, além de não gerar
+        o arquivo de saída da simulação no formato desejado.
+    }
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.6\linewidth]{../images/quartus/simulation_config.png}
+        \caption{Janela de configuração da simulação no \textit{Quartus}.}
+        \label{fig:quartus_simulation_config}
+    \end{figure}
+
+    { Por limitações do \textit{Quartus}, não é possível simular
+        \textit{FPGAs Cyclone V} a nível de portas lógicas, somente sendo possível
+        fazer a simulação \textit{RTL}. Por outras limitações no programa, o
+        \textit{script .do} produzido manualmente só é executado usando o
+        \textit{menu} \texttt{Tools > Run Simulation Tool > Gate Level Simulation...},
+        que apesar do nome, executará uma simulação \textit{RTL}. A opção
+        \texttt{Tools > Run Simulation Tool > RTL Simulation}, utiliza o script
+        gerado automaticamente e não funciona.
+    }
+
+    { Ao executar a simulação, os \textit{scripts NativeLink} iniciarão o
+        programa \textit{ModelSim}, carregando o \textit{script .do} customizado,
+        conforme mostrado na Figura~\ref{fig:quartus_modelsim}. Ao finalizar a
+        simulação, um arquivo \texttt{.vcd} será gerado e poderá ser analisado
+        em \textit{softwares} de visualização de formatos de onda, como o
+        \textit{GTKWave} ou o próprio \textit{ModelSim}.
+    }
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/quartus/quartus_modelsim.png}
+        \caption{O \textit{script NativeLink} invoca o \textit{ModelSim} passando
+            o \textit{script .do} com as informações de como simular o sistema.}
+        \label{fig:quartus_modelsim}
+    \end{figure}
 
     \section{Script \texttt{make.sh}}
+    { A pasta \texttt{test/sof\_library} contém os arquivos \texttt{.sof} com
+        as nove variações da última versão do processador, prontos para serem
+        gravados na \textit{FPGA}. Para facilitar a geração das nove variantes,
+        o \textit{bash script} \texttt{make.sh} foi criado para automatizar a
+        síntese e salvar a nova versão na pasta \texttt{test/sof\_library}.
+        O \textit{script} também permite realizar somente a etapa de
+        análise das variantes para confirmar que alterações feitas no código não
+        introduziram erros de compilação, uma vez que é um processo muito mais
+        ágil que realizar a síntese completa.
+    }
+
+    { O \textit{script} também faz a simulação \textit{RTL} de todas as variantes
+        do processador, salvando os \textit{logs} e arquivos \textit{.vcd} na
+        pasta \texttt{test/simulation}, que é ignorada pelo \textit{git}.
+    }
 
     \section{Uso da FPGA DE1-SoC}
+    { A placa de desenvolvimento \textit{terasIC DE1-SoC} utilizada no projeto
+        é mostrada na Figura~\ref{fig:de1_soc}.
+    }
 
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/fpga/de1_soc_subs.png}
+        \caption[Placa de desenvolvimento \textit{terasIC DE1-SoC}.]{Placa de
+        desenvolvimento \textit{terasIC DE1-SoC}.\quad Fonte:~\cite{terasic_de1_soc}}
+        \label{fig:de1_soc}
+    \end{figure}
+
+    { Os botões e \textit{switches} mostrados na Figura~\ref{fig:de1_soc} são
+        utilizados para controlar as características do \textit{clock} do
+        processador, fazer seu \textit{reset} e controlar o \textit{menu OSD}
+        de depuração. A função de cada \textit{input} é:
+    }
+    \begin{itemize}
+        \item \texttt{KEY0}: Reset do processador;
+        \item \texttt{KEY1}: Seletor de divisor de \textit{clock} lento ou rápido;
+        \item \texttt{KEY2}: Seletor de \textit{clock} manual ou automático;
+        \item \texttt{KEY3}: Gerador de \textit{clock} manual;
+        \item \texttt{SW0}: Bit [0] do divisor de \textit{clock};
+        \item \texttt{SW1}: Bit [1] do divisor de \textit{clock};
+        \item \texttt{SW2}: Bit [2] do divisor de \textit{clock};
+        \item \texttt{SW3}: Bit [3] do divisor de \textit{clock};
+        \item \texttt{SW4}: Bit [4] do divisor de \textit{clock};
+        \item \texttt{SW5}: Temporizador para \textit{stall} do processador;
+        \item \texttt{SW6}: Seletor de \textit{framebuffer} a ser exibido;
+        \item \texttt{SW7}: Seletor de banco de registradores no \textit{menu OSD};
+        \item \texttt{SW8}: Sem função;
+        \item \texttt{SW9}: Habilita o \textit{menu OSD};
+    \end{itemize}
+
+    { O procedimento recomendado para inicialização do processador após o
+        \textit{Programmer} do \textit{Quartus} programar a \textit{FPGA} com
+        um novo arquivo \textit{.mif} é: Pressionar e soltar a \texttt{KEY2}
+        para ativar o \textit{clock} automático; pressionar e soltar a
+        \texttt{KEY0} para dar o \textit{reset} dos estados do processador e,
+        caso queira uma execução mais rápida, pressionar e soltar a \texttt{KEY1}
+        para mudar para um divisor de \textit{clock} mais veloz. A frequência
+        máxima de operação do \textit{clock} é de 50MHz, e ocorre na opção de
+        divisor rápido com o divisor \texttt{5'b1}.
+    }
+
+    { Utilizando a saída de vídeo, o sistema pode executar programas gráficos
+        como jogos, ou pode ser usado simplesmente como ferramenta de \textit{debug}.
+        Ativando o \textit{menu OSD} e utilizando o \textit{clock} manual, é
+        possível ver a progressão dos registradores do processador instrução por
+        instrução.
+    }
+
+    { O processador também pode receber \textit{inputs} do usuário utilizando
+        um teclado \textit{PS/2}. A leitura do teclado é realizada por meio de
+        \textit{polling} do endereço do \textit{buffer} do teclado.
+    }
+
+    { A interface \textit{RS-232} também pode ser utilizada para enviar e receber
+        dados provenientes de outro computador, permitindo contornar a limitação
+        de pouca memória disponível na \textit{FPGA}, enviando novos dados e
+        instruções à medida em que forem necessários e/ou requisitados pelo
+        processador.
+    }
 
