@@ -41,16 +41,16 @@
 
 { As instruções são passadas para o processador na forma de código de máquina,
     sequências de dígitos binários que correspondem aos níveis lógicos do
-    circuito. Para melhorar o entendimento do código e facilitar o
+    circuito. Para melhorar o entendimento do código e facilitar seu
     desenvolvimento, uma outra representação é utilizada, o \textit{assembly}.
     Um código \textit{assembly} é transformado em código de máquina por um
-    programa montador, (\textit{assembler}), e o processo inverso é realizado
+    programa montador (\textit{assembler}), e o processo inverso é realizado
     por um \textit{disassembler}. As linguagens \textit{assembly}, dependendo do
-    \textit{assembler} utilizado, permitem o uso de macros de substituição e
-    pseudo instruções (determinadas instruções que não existem na \textit{ISA}
+    \textit{assembler} utilizado, permitem o uso de \textit{macros} de substituição
+    e pseudo-instruções (determinadas instruções inexistentes na \textit{ISA}
     que são expandidas em instruções válidas pelo montador) e são totalmente
     dependentes da arquitetura do processador, o que normalmente impede que o
-    mesmo código seja executado em arquiteturas diferentes.
+    mesmo código binário executável funcione em arquiteturas diferentes.
 }
 
 { A Figura~\ref{fig:cpu_abstraction} é uma representação simplificada de um
@@ -68,25 +68,28 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=.7\linewidth]
+\includegraphics[width=.75\linewidth]
     {../images/ABasicComputer.png}
     \caption[Abstração da arquitetura de um computador]
     {Abstração da arquitetura de um
         computador. Fonte:~\cite{wikimedia2015basiccpu}}\label{fig:cpu_abstraction}
 \end{figure}
 
-{ Historicamente, as arquiteturas são divididas em \textit{ISAs}
-    \textit{RISC} e \textit{CISC}. Na atualidade, a diferença entre elas é que
-    as \textit{ISAs RISC} acessam a memória por instruções de
-    \textit{load/store}, enquanto as \textit{CISC} podem acessar a memória
-    diretamente em uma instrução de operação lógica ou aritmética.
-}
+    \subsection{Arquiteturas \textit{RISC} e \textit{CISC}}
+    { Historicamente, as arquiteturas são divididas em \textit{ISAs} \textit{RISC}
+        (\textit{Reduced Instruction Set Computer}) e \textit{CISC}
+        (\textit{Complex Instruction Set Computer}).  Na atualidade, a principal
+        diferença entre elas é que as \textit{ISAs RISC} acessam a memória por
+        instruções de \textit{load/store}, enquanto as \textit{CISC} podem acessar
+        a memória diretamente em uma instrução de operação lógica ou
+        aritmética.~\cite{risc_cisc_wars}
+    }
 
-{ Algumas arquiteturas \textit{RISC} notáveis são a \textit{RISC-V}, objeto de
-    estudo desse trabalho, a \textit{ARM} e a \textit{MIPS}. Quanto às
-    \textit{CISC}, a \textit{x86} e sua extensão de 64 \textit{bits}, a
-    \textit{AMD64}, são as mais conhecidas.
-}
+    { Algumas arquiteturas \textit{RISC} notáveis são a \textit{RISC-V}, objeto de
+        estudo desse trabalho, a \textit{ARM} e a \textit{MIPS}. Quanto às
+        \textit{CISC}, a \textit{x86} e sua extensão de 64 \textit{bits}, a
+        \textit{AMD64}, são as mais conhecidas e amplamente utilizadas.
+    }
 
     \subsection{Arquitetura MIPS}
     {}
@@ -417,7 +420,7 @@
 
         \begin{figure}[H]
         \centering
-        \includegraphics[width=.8\linewidth]
+        \includegraphics[width=.7\linewidth]
             {../images/intel_alm_high_level.png}
             \caption[Diagrama de blocos de um ALM]
                 {Diagrama de blocos de um ALM.\quad Fonte:~\cite{cyclone_alm}}
@@ -445,18 +448,43 @@
             gargalo que comprometa o resto do \textit{design}.
         }
 
+\section{RARS - \textit{IDE} para programar e simular \textit{assembly RISC-V}}
+{}
+
 
 \section{Estado da Arte dos processadores RISC-V}
 { Por alguns anos, processadores com arquitetura \textit{RISC-V} só podiam
     ser utilizados por meio de emuladores como o \textit{qemu}~\cite{qemu_riscv}
-    ou em \textit{FPGAs}, o objeto desse trabalho. Algumas fabricantes já
-    divulgaram planos para começar a usar microcontroladores com a arquitetura
-    em seus produtos, como é o caso dos controladores de discos rígidos e
-    \textit{SSDs} da \textit{Western Digital}~\cite{western_riscv} e da Nvidia
-    como o substituto dos controladores \textit{Falcon} de suas placas de
-    vídeo~\cite{nvidia_riscv}.  Porém, ainda não se sabe se as empresas já
-    utilizam os controladores em seus \textit{hardwares}, se a adoção ainda
-    está em fase de projeto ou se a ideia foi abandonada.
+    ou em \textit{FPGAs}. Diversos \textit{soft-cores} \textit{open source},
+    tanto experimentais (como o desenvolvido neste trabalho) quanto de alto
+    desempenho podem ser encontrados na \textit{internet} e utilizados por
+    qualquer pessoa interessada. Um dos processadores alto desempenho disponíveis
+    é o \textit{BOOM}~\cite{boom_berkeley}, processador com execução
+    \textit{Out of Order} desenvolvido na universidade americana \textit{UC Berkeley}
+    pelo mesmo departamento onde surgiu a arquitetura \textit{RISC-V}, o
+    \textit{Berkeley Architecture Research}~\cite{berkeley_bar}. O processador
+    pode ser sintetizado em instâncias \textit{EC2 F1} da
+    \textit{AWS}~\cite{boom_aws}, eliminando a necessidade de possuir uma
+    \textit{FPGA} de alto desempenho para usufruir do projeto.
+}
+
+{ Outro projeto \textit{open source} notável é o \textit{Shakti}~\cite{shakti},
+    ecossistema desenvolvido na universidade indiana \textit{IIT-Madras} com
+    diversas implementações para os mais diversos usos, que variam desde
+    microcontroladores de 32 \textit{bits}, superescalares de 64 \textit{bits}
+    para aplicação em \textit{desktops} e servidores até processadores de alta
+    performance com mais de 32 \textit{cores}~\cite{shakti_types}.
+}
+
+{ Porém, a presença apenas de \textit{soft-cores} limita as possíveis aplicações
+    da arquitetura. Algumas fabricantes já divulgaram planos para começar a usar
+    microcontroladores com a arquitetura em seus produtos, como é o caso dos
+    controladores de discos rígidos e \textit{SSDs} da
+    \textit{Western Digital}~\cite{western_riscv} e da Nvidia como o substituto
+    dos controladores \textit{Falcon} de suas placas de vídeo~\cite{nvidia_riscv}.
+    Ainda não se sabe se as empresas já utilizam os controladores em seus
+    \textit{hardwares}, se a adoção ainda está em fase de projeto ou se a ideia
+    foi abandonada.
 }
 
 { Porém, começam a surgir no mercado microcontroladores e \textit{Single
@@ -464,8 +492,6 @@
     \textit{Sipeed} da \textit{Seed} se equiparam aos \textit{MCUs
     ESP32}~\cite{hackaday_sipeed}, e outras como a \textit{SiFive HiFive1}
     se assemelham aos \textit{arduinos}~\cite{hifive_arduino}.
-    Também é possível utilizar processadores de alto desempenho como o
-    \textit{BOOM} em instâncias \textit{EC2 F1} da \textit{AWS}~\cite{boom_aws}.
 }
 
 { Há uma expectativa de \textit{SBCs} mais robustos, capazes de rodar um
@@ -522,4 +548,11 @@
     \textit{MIPS} integra a \textit{RISC-V Foundation} como Membro Estratégico.
 }
 
+
+\section{Observações finais da Revisão Teórica}
+{ O capítulo abordou os conceitos que formam o alicerce do trabalho. O capítulo
+    seguinte apresentará a proposta do projeto, descrevendo sua implementação
+    e documentando o processo de execução e modificação do produto final a fim
+    de permitir sua reprodução e reuso.
+}
 
