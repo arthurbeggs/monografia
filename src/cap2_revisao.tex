@@ -1,0 +1,525 @@
+\chapter{Revisão Teórica}\label{cap2_revisao}
+{ Alguns conceitos são essenciais para compreender o projeto proposto, sua
+    implementação e seus resultados. Esse capítulo abordará o que é arquitetura
+    e organização de computadores, tratará brevemente sobre as arquiteturas mais
+    conhecidas e se aprofundará na especificação da arquitetura \textit{RISC-V}.
+    Além disso, serão expostos os conceitos de síntese de \textit{hardware} e
+    do funcionamento das \textit{FPGAs}, em especial o modelo que será utilizado
+    para desenvolver o trabalho.
+    Por fim, o ``estado da arte'' da arquitetura \textit{RISC-V} será discutido.
+}
+
+\section{Arquitetura de Computadores}
+{ Para nos comunicarmos, necessitamos de uma linguagem, e no caso dos
+    brasileiros, essa linguagem é o português. Como toda linguagem, o português
+    possui sua gramática e dicionário que lhe dá estrutura e sentido. Línguas
+    humanas como o português, inglês e espanhol são chamadas de linguagens
+    naturais, e evoluíram naturalmente a partir do uso e
+    repetição.~\cite{lyons1991natural}
+}
+
+{ Por causa da excelente capacidade de interpretação e adaptação da mente
+    humana, somos capazes de criar e entender novos dialetos que não seguem as
+    regras formais das linguagens naturais que conhecemos. Porém, fora da
+    comunicação casual é importante e às vezes obrigatório que nos expressemos
+    sem ambiguidade. Línguas artificiais como a notação matemática e linguagens
+    de programação possuem semântica e sintaxe mais rígidas para garantir que
+    a mensagem transmitida seja interpretada da maneira correta. Sem essa
+    rigidez, os computadores de hoje não seriam capazes de entender nossos
+    comandos.
+}
+
+{ Para a comunicação com o processador de um computador, utilizamos mensagens
+    chamadas de instruções, e o conjunto dessas instruções é chamado de
+    Arquitetura do Conjunto de Instruções (\textit{ISA}). Um processador só é
+    capaz de entender as mensagens que obedecem as regras semânticas e
+    sintáticas de sua \textit{ISA}, e qualquer instrução que fuja das suas
+    regras causará um erro de execução ou realizará uma tarefa diferente da
+    pretendida. A linguagem de máquina é considerada de baixo nível pois
+    apresenta pouca ou nenhuma abstração em relação à arquitetura.
+}
+
+{ As instruções são passadas para o processador na forma de código de máquina,
+    sequências de dígitos binários que correspondem aos níveis lógicos do
+    circuito. Para melhorar o entendimento do código e facilitar o
+    desenvolvimento, uma outra representação é utilizada, o \textit{assembly}.
+    Um código \textit{assembly} é transformado em código de máquina por um
+    programa montador, (\textit{assembler}), e o processo inverso é realizado
+    por um \textit{disassembler}. As linguagens \textit{assembly}, dependendo do
+    \textit{assembler} utilizado, permitem o uso de macros de substituição e
+    pseudo instruções (determinadas instruções que não existem na \textit{ISA}
+    que são expandidas em instruções válidas pelo montador) e são totalmente
+    dependentes da arquitetura do processador, o que normalmente impede que o
+    mesmo código seja executado em arquiteturas diferentes.
+}
+
+{ A Figura~\ref{fig:cpu_abstraction} é uma representação simplificada de um
+    processador. A unidade de controle lê uma instrução da memória e a
+    decodifica; o circuito de lógica combinacional lê os dados dos
+    registradores, entrada e memória conforme necessário, executa a instrução
+    decodificada e escreve no banco de registradores, na memória de dados ou
+    na saída se for preciso; a unidade de controle lê uma nova instrução e o
+    ciclo se repete até o fim do programa. A posição de memória da instrução
+    que está sendo executada fica armazenada em um registrador especial chamado
+    de Contador de Programa (\textit{PC}). Algumas instruções modificam o
+    \textit{PC} condicionalmente ou diretamente, criando a estrutura para
+    saltos, laços e chamada/retorno de funções.
+}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.7\linewidth]
+    {../images/ABasicComputer.png}
+    \caption[Abstração da arquitetura de um computador]
+    {Abstração da arquitetura de um
+        computador. Fonte:~\cite{wikimedia2015basiccpu}}\label{fig:cpu_abstraction}
+\end{figure}
+
+{ Historicamente, as arquiteturas são divididas em \textit{ISAs}
+    \textit{RISC} e \textit{CISC}. Na atualidade, a diferença entre elas é que
+    as \textit{ISAs RISC} acessam a memória por instruções de
+    \textit{load/store}, enquanto as \textit{CISC} podem acessar a memória
+    diretamente em uma instrução de operação lógica ou aritmética.
+}
+
+{ Algumas arquiteturas \textit{RISC} notáveis são a \textit{RISC-V}, objeto de
+    estudo desse trabalho, a \textit{ARM} e a \textit{MIPS}. Quanto às
+    \textit{CISC}, a \textit{x86} e sua extensão de 64 \textit{bits}, a
+    \textit{AMD64}, são as mais conhecidas.
+}
+
+    \subsection{Arquitetura MIPS}
+    {}
+
+    \subsection{Arquitetura ARM}
+    {}
+
+    \subsection{Arquitetura x86}
+    {}
+
+    \subsection{Arquitetura AMD64}
+    {}
+
+    \subsection{Arquitetura RISC-V}
+    { A \textit{ISA RISC-V} é uma arquitetura modular, sendo o módulo base de
+        operações com inteiros mandatório em qualquer implementação. Os demais
+        módulos são extensões de uso opcional. A arquitetura não suporta
+        \textit{branch delay slots} e aceita instruções de tamanho variável. A
+        codificação das instruções de tamanho variável é mostrada na
+        Figura~\ref{fig:riscv_var_length}. As instruções presentes no módulo
+        base correspondem ao mínimo necessário para emular por
+        \textit{software} as demais extensões (com exceção das operações
+        atômicas).
+    }
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=1\linewidth]{../images/RV_InstructionLength.png}
+        \caption{Codificação de instruções de tamanho variável da arquitetura
+                    \textit{RISC-V}}\label{fig:riscv_var_length}
+    \end{figure}
+
+    { A nomenclatura do conjunto de instruções implementado segue a
+        seguinte estrutura:
+    }
+
+    \begin{itemize}[leftmargin=20mm]
+        \item {As letras ``RV'';}
+        \item {A largura dos registradores do módulo Inteiro;}
+        \item {A letra ``I'' representando a base Inteira. Caso o subconjunto
+                Embarcado (\textit{Embedded}) seja implementado, substitui-se
+                pela letra ``E'';}
+        \item {Demais letras identificadoras de módulos opcionais.}
+    \end{itemize}
+
+    { Assim, uma implementação com registradores de 32 bits somente com o
+        módulo base de Inteiros é denominado ``RV32I''.
+    }
+
+        \subsubsection{Módulo Inteiro}
+        { O módulo Inteiro é o módulo base da arquiterura. O \textit{design} de sua
+            especificação visa reduzir o \textit{hardware} necesário para uma
+            implementação mínima, bem como ser um alvo de compilação satisfatório.
+        }
+
+        { Diferente de outras arquiteturas como a \textit{ARM}, as instruções de
+            multiplicação e divisão não fazem parte do conjunto básico uam vez que
+            necessitam de circuito especializado e por isso encarecem o desenvolvimento
+            e produção dos processadores.
+        }
+
+        { Para sistemas embarcados com restrições mais severas de tamanho, custo,
+            potência, etc o módulo base I pode ser substituído por um \textit{subset},
+            o módulo E. Porém, nenhuma das demais extensões pode ser usada em conjunto
+            com o módulo E.
+        }
+
+        \subsubsection{Extensões}
+            \paragraph{Extensão M}
+            { A extensão M implementa as operações de multiplicação e divisão de
+                números inteiros.
+            }
+
+            \paragraph{Extensão A}
+            { A extensão A implementa instruções de acesso atômico a memória.
+                Instruções atômicas mantém a coerência da memória em sistemas
+                preemptivos e paralelos.
+            }
+
+            \paragraph{Extensão F}
+            { A extensão F implementa as isntruções de ponto flutuante IEEE 754 de
+                precisão simples, bem como o banco de registradores especializado para
+                operações com ponto flutuante.
+            }
+
+            \paragraph{Extensão D}
+            { A extensão D implementa as instruções de ponto flutuante IEEE 754 de
+                precisão dupla. Ela é um incremento à extensão F, sendo esta de
+                implementação obrigatória para se poder implementar a extensão D.
+            }
+
+            \paragraph{Outras Extensões}
+            { Outras extensões são previstas na especificação da arquitetura, e.g.
+                a extensão C para instruções comprimidas (16 bits).
+            }
+
+            { A arquitetura prevê a expansão de extensões, com alguns
+                \textit{opcodes} sendo reservados para essa finalidade. Desse modo,
+                instruções proprietárias e/ou customisadas podem ser adicionadas.
+            }
+
+        \subsubsection{Arquitetura Privilegiada}
+        { Para a \textit{ISA RISC-V}, existem quatro níveis de privilégio de acesso,
+            sendo eles o de usuário (módulo I e extensões), de máquina
+            (\textit{syscalls}) de supervisor (sistema operacional) e hipervisor
+            (virtualização).
+        }
+
+        \subsubsection{Formatos de Instruções}
+        { As instruções da arquitetura podem ser separadas em subgrupos de acordo com
+            os operadores necessários para o processador interpretá-la. A
+            Figura~\ref{fig:riscv_formats} apresenta os formatos das instruções do
+            módulo I da \textit{ISA RISC-V}, e, para efeitos de comparação, a
+            Figura~\ref{fig:mips_formats} mostra os formatos de instruções equivalentes
+            na arquitetura MIPS32.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/RV_Formats.png}
+            \caption{Formatos de Instruções da \textit{ISA RISC-V}
+                }\label{fig:riscv_formats}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/MIPS_Formats.png}
+            \caption{Formatos de Instruções da \textit{ISA MIPS32}
+                }\label{fig:mips_formats}
+        \end{figure}
+
+        \subsubsection{Formatos de Imediatos}
+        { Os imediatos são operandos descritos na própria instrução em vez de estar
+            contido em um registrador. Como os operandos necessitam ter a mesma largura
+            que o banco de registradores, algumas regras são utilizadas para gerar os
+            operandos imediatos. As figuras a seguir mostram a formação de cada tipo de
+            imediato dos formatos da Figura~\ref{fig:riscv_formats}.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/RV_I_Imm.png}
+            \caption{Formação do Imediato de tipo I
+                }\label{fig:riscv_i_imm}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/RV_S_Imm.png}
+            \caption{Formação do Imediato de tipo S
+                }\label{fig:riscv_s_imm}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/RV_B_Imm.png}
+            \caption{Formação do Imediato de tipo B
+                }\label{fig:riscv_b_imm}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/RV_U_Imm.png}
+            \caption{Formação do Imediato de tipo U
+                }\label{fig:riscv_u_imm}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/RV_J_Imm.png}
+            \caption{Formação do Imediato de tipo J
+                }\label{fig:riscv_j_imm}
+        \end{figure}
+
+        { Para efeitos comparativos, a Figura~\ref{fig:mips_immediates} mostra a
+            formação de imediatos na arquitetura MIPS32.
+        }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=1\linewidth]{../images/MIPS_Immediates.png}
+            \caption{Formatos de Imediato da \textit{ISA MIPS32}}\label{fig:mips_immediates}
+        \end{figure}
+
+
+\section{Microarquiteturas}
+{}
+
+    \subsection{Uniciclo}
+    {}
+
+    \subsection{Multiciclo}
+    {}
+
+    \subsection{Pipeline}
+    {}
+
+\section{Representação de Hardware}
+{}
+
+    \subsection{VHDL}
+    {}
+
+    \subsection{Verilog}
+    {}
+
+\section{Síntese Lógica}
+{}
+
+    \subsection{Análise e Síntese}
+    {}
+
+    \subsection{Fitting}
+    {}
+
+    \subsection{Timing Analyzer}
+    {}
+
+\section{Field Programmable Gate Arrays}
+{ \textit{Field Programmable Gate Arrays} (\textit{FPGAs}) são circuitos
+    integrados que permitem o desenvolvimento de circuitos lógicos
+    reconfiguráveis. Por serem reprogramáveis, as \textit{FPGAs} geram uma
+    grande economia em tempo de desenvolvimento e em custos como os de
+    prototipagem, validação e manufatura do projeto em relação aos circuitos de
+    aplicações específicas, os \textit{ASICs}, e aos projetos
+    \textit{full-custom}. As \textit{FPGAs} podem ser tanto o passo
+    intermediário no projeto de um \textit{ASIC} ou \textit{full-custom} quanto
+    o meio final do projeto quando a reconfigurabilidade e os preços muito mais
+    acessíveis forem fatores importantes.
+}
+
+{ Cada fabricante de \textit{FPGAs} possui seus \textit{softwares} de
+    desenvolvimento, ou \textit{SDKs}. A indústria de \textit{hardware} é
+    extremamente protecionista com sua propriedade intelectual, sendo a maioria
+    dessas ferramentas de código proprietário. Para a Intel Altera®, essa
+    plataforma é o Quartus Prime®.
+}
+
+{ \textit{FPGAs} mais modernas possuem, além do arranjo de portas lógicas,
+    blocos de memória, \textit{PLLs}, \textit{DSPs} e \textit{SoCs}. Os blocos
+    de memória internos funcionam como a memória \textit{cache} de um
+    microprocessador, armazenando os dados próximo ao seu local de
+    processamento para diminuir a latência. Os \textit{PLLs} permitem criar
+    sinais de \textit{clock} com diversas frequências a partir de um relógio de
+    referência, e podem ser reconfigurados a tempo de execução. \textit{DSPs}
+    são responsáveis pelo processamento de sinais analógicos discretizados, e
+    podem ser utilizados como multiplicadores de baixa latência. Já os
+    \textit{SoCs} são microprocessadores como os ARM® presentes em celulares,
+    e são capazes de executar sistemas operacionais como o Linux.
+}
+
+{ Além de disponíveis na forma de \textit{chips} para a integração com placas
+    de circuito impresso customizadas, as \textit{FPGAs} possuem \textit{kits}
+    de desenvolvimento com diversos periféricos para auxiliar no processo de
+    criação de soluções. Esses \textit{kits} são a principal ferramenta de
+    aprendizagem no universo dos circuitos reconfiguráveis. No Laboratório de
+    Informática da UnB, as placas \textit{terasIC DE1-SoC} com a \textit{FPGA
+    Intel® Cyclone V SoC} estão disponíveis para os alunos de OAC desenvolverem
+    seus projetos.
+}
+
+    \subsection{Arquitetura Generalizada de uma FPGA}
+    { De forma genérica, uma \textit{FPGA} possui blocos lógicos, chaves de
+        interconexão, blocos de conexão direta e portas de entrada e saída,
+        conforme apresentado na Figura~\ref{fig:fpga_general_arch}.
+    }
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=.7\linewidth]
+        {../images/fpga_architecture_abstraction_-_olin_college.jpg}
+        \caption[Abstração da arquitetura de uma FPGA]
+            {Abstração da arquitetura de uma FPGA.\quad Fonte:~\cite{fpga_arch_abstraction}}
+        \label{fig:fpga_general_arch}
+    \end{figure}
+
+    { Os blocos lógicos possuem \textit{lookup tables}, registradores, somadores
+        e multiplexadores. É neles que a lógica reconfigurável é implementada.
+    }
+
+    { Já as chaves de interconexão são responsáveis por conectar os diversos
+        blocos da \textit{FPGA}. A Figura~\ref{fig:fpga_switch_box} exemplifica
+        como é feito o roteamento da malha de interconexão. Os blocos de conexão
+        direta são um tipo especial de chave de interconexão, e sua função é ligar
+        blocos lógicos adjacentes.
+    }
+
+    { Por fim, as portas de entrada e saída conectam a \textit{FPGA} ao ``mundo
+        externo'' e.g. \textit{drivers} de áudio e vídeo.
+    }
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\linewidth]
+        {../images/switch_box_wikimedia.png}
+        \caption[Funcionamento da chave de interconexão]
+            {Funcionamento da chave de interconexão.\quad Fonte:~\cite{fpga_switch_box}}
+        \label{fig:fpga_switch_box}
+    \end{figure}
+
+
+    \subsection{Arquitetura da FPGA Cyclone V SoC}
+    { A Figura~\ref{fig:cyclone_v_arch} apresenta a arquitetura da
+        \textit{FPGA Cyclone V SoC}. O \textit{chip} possui um processador
+        \textit{ARM} integrado, blocos de memória embutidos, \textit{DSPs} para
+        acelerar operações como multiplicação de números ou processamento de
+        sinais genéricos, diversos pinos para integrar o \textit{chip} a
+        um projeto de circuito mais complexo, \textit{PLLs} para gerar diversos
+        sinais de \textit{clock}, entre outras funcionalidades.
+    }
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]
+        {../images/altera_cyclone_v_soc_architectural_downscale.jpg}
+        \caption[Arquitetura da FPGA Intel Cyclone V SoC]
+            {Arquitetura da \textit{FPGA Altera Cyclone V SoC}.\quad Fonte:~\cite{cyclone_v_soc}}
+        \label{fig:cyclone_v_arch}
+    \end{figure}
+
+        \subsubsection{Adaptative Logic Modules}
+        { Os blocos lógicos, como mostrados na abstração da Figura~\ref{fig:fpga_general_arch}
+            são implementados na \textit{FPGA Cyclone V SoC} como
+            \textit{Adaptative Logic Modules}, conforme a Figura~\ref{fig:fpga_alm}.
+            Como os \textit{ALMs} são blocos genéricos, há um \textit{trade-off}
+            entre configurabilidade e performance.
+        }
+
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=.8\linewidth]
+            {../images/intel_alm_high_level.png}
+            \caption[Diagrama de blocos de um ALM]
+                {Diagrama de blocos de um ALM.\quad Fonte:~\cite{cyclone_alm}}
+            \label{fig:fpga_alm}
+        \end{figure}
+
+
+        \subsubsection{Embedded Memory Blocks}
+        { Como mostrado na Figura~\ref{fig:cyclone_v_arch}, existem blocos de
+            memória embutidos na \textit{FPGA}. Esses blocos são o equivalente
+            a uma memória \textit{cache L1}, sendo a camada de memória mais próxima
+            dos registradores. Para utilizá-los no \textit{design} do circuito,
+            blocos do \textit{IP} de memória são configurados e instanciados
+            pelo programa de desenvolvimento para gerar um módulo integrável no
+            resto do \textit{design}.
+        }
+
+        { As placas de desenvolvimento podem possuir outros tipos de memória,
+            como as \textit{SRAM} e \textit{DRAM}. Apesar de possuírem capacidade
+            de armazenamento bem maiores que os blocos embutidos, seus
+            módulos controladores são mais complexos e apresentam latência maior
+            para leitura e escrita de dados. Para seu uso eficiente, é necessário
+            implementar camadas de \textit{caching} para que as operações de
+            \textit{input} e \textit{output} (\textit{IO}) não se tornem um
+            gargalo que comprometa o resto do \textit{design}.
+        }
+
+
+\section{Estado da Arte dos processadores RISC-V}
+{ Por alguns anos, processadores com arquitetura \textit{RISC-V} só podiam
+    ser utilizados por meio de emuladores como o \textit{qemu}~\cite{qemu_riscv}
+    ou em \textit{FPGAs}, o objeto desse trabalho. Algumas fabricantes já
+    divulgaram planos para começar a usar microcontroladores com a arquitetura
+    em seus produtos, como é o caso dos controladores de discos rígidos e
+    \textit{SSDs} da \textit{Western Digital}~\cite{western_riscv} e da Nvidia
+    como o substituto dos controladores \textit{Falcon} de suas placas de
+    vídeo~\cite{nvidia_riscv}.  Porém, ainda não se sabe se as empresas já
+    utilizam os controladores em seus \textit{hardwares}, se a adoção ainda
+    está em fase de projeto ou se a ideia foi abandonada.
+}
+
+{ Porém, começam a surgir no mercado microcontroladores e \textit{Single
+    Board Computers (SBCs)} com preços acessíveis. Placas como a linha
+    \textit{Sipeed} da \textit{Seed} se equiparam aos \textit{MCUs
+    ESP32}~\cite{hackaday_sipeed}, e outras como a \textit{SiFive HiFive1}
+    se assemelham aos \textit{arduinos}~\cite{hifive_arduino}.
+    Também é possível utilizar processadores de alto desempenho como o
+    \textit{BOOM} em instâncias \textit{EC2 F1} da \textit{AWS}~\cite{boom_aws}.
+}
+
+{ Há uma expectativa de \textit{SBCs} mais robustos, capazes de rodar um
+    sistema operacional de uso geral, como um \textit{Raspberry Pi}. Existem
+    alguns pré-lançamentos de placas para atender essa demanda, como a
+    \textit{SiFive HiFive Unmatched}~\cite{hifive_unmatched} e a
+    \textit{BeagleV}~\cite{beaglev}.
+}
+
+{ A empresa \textit{SiFive}, liderada pelos criadores da arquitetura, produzirá
+    em parceria com a \textit{TSMC (Taiwan Semiconductor Manufacturing Company)}
+    o primeiro processador \textit{RISC-V} de 32 \textit{bits} em tecnologia
+    de 5nm~\cite{sifive_tsmc}. A \textit{TSMC} é a \textit{foundry} líder em
+    manufatura de circuitos integrados no mundo.
+}
+
+{ Atualmente, compilar códigos em \textit{C/C++} para \textit{targets RISC-V}
+    não envolve mais a instalação de \textit{toolchains} complicadas e frágeis.
+    Tanto o \textit{gcc}~\cite{gcc_riscv} quanto o \textit{clang}~\cite{clang_riscv}
+    já oferecem suporte para o \textit{RISC-V}, eliminando assim uma barreira
+    para a adoção da arquitetura.
+}
+
+{ Uma outra característica essencial para o uso do \textit{RISC-V} em sistemas
+    de uso geral é a existência de sistemas operacionais que funcionem na
+    plataforma. Desde a versão 4.15, o \textit{kernel} do \textit{linux}
+    oferece suporte para a arquitetura~\cite{linux_kernel}. \textit{Distros}
+    como \textit{Fedora}~\cite{fedora_experimental},
+    e \textit{Alpine}~\cite{alpine_experimental} já possuem suporte experimental.
+    A chinesa \textit{Alibaba} fez o \textit{port} do \textit{OS Android}
+    para um de seus \textit{SoCs RISC-V}~\cite{alibaba_android}. Alguns
+    ecossistemas mais robustos possuem \textit{ports} completos, como é o
+    caso do \textit{Haiku-OS}~\cite{haiku_riscv} e do \textit{microkernel
+    seL4}~\cite{sel4_riscv}, possibilitando o uso em ambientes industriais
+    e áreas que exigem maior robustez do sistema operacional.
+}
+
+{ Uma das surpresas na adoção da arquitetura \textit{RISC-V} nos seus
+    \textit{designs} veio da \textit{MIPS Technologies}, detentora das
+    patentes das arquiteturas \textit{MIPS}. Em 2013, a empresa foi adquirida
+    pela \textit{Imagination Technologies}~\cite{imagination_technologies_acq},
+    e lançou alguns \textit{development kits} voltados a visão computacional
+    e microcontroladores, mas não conseguiu dar tração aos projetos.
+    Em 2017 a companhia foi novamente vendida para a \textit{Tailwood
+    Venture Capital}~\cite{tailwood_acq}, que tentou capitalizar em cima dos
+    \textit{royalties} da arquitetura. Porém, em 2018 a companhia foi vendida
+    novamente para a \textit{Wave Computing}~\cite{wave_comp_acq}, companhia
+    voltada para aplicações de inteligência artificial. Em 2020, a
+    \textit{Wave Computing} declara falência~\cite{wave_comp_bankrupt},
+    demitindo todos os seus funcionários. Em março desse ano, a empresa
+    conseguiu se recuperar da falência, mudou o nome da companhia para
+    \textit{MIPS} e anunciou que seus novos \textit{designs} serão baseados
+    na arquitetura \textit{RISC-V}~\cite{mips_reborn}. Atualmente, a empresa
+    \textit{MIPS} integra a \textit{RISC-V Foundation} como Membro Estratégico.
+}
+
+
