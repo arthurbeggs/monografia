@@ -1,15 +1,24 @@
 \chapter{Revisão Teórica}\label{cap_revisao}
+{ Alguns conceitos são essenciais para compreender o projeto proposto, sua
+    implementação e seus resultados. Esse capítulo abordará o que é arquitetura
+    e organização de computadores, tratará brevemente sobre as arquiteturas mais
+    conhecidas e se aprofundará na especificação da arquitetura \textit{RISC-V}.
+    Além disso, serão expostos os conceitos de síntese de \textit{hardware} e
+    do funcionamento das \textit{FPGAs}, em especial o modelo que será utilizado
+    para desenvolver o trabalho.
+    Por fim, o ``estado da arte'' da arquitetura \textit{RISC-V} será discutido.
+}
 
 \section{Arquitetura de Computadores}
-{
-    Para nos comunicarmos, necessitamos de uma linguagem, e no caso dos
+{ Para nos comunicarmos, necessitamos de uma linguagem, e no caso dos
     brasileiros, essa linguagem é o português. Como toda linguagem, o português
     possui sua gramática e dicionário que lhe dá estrutura e sentido. Línguas
     humanas como o português, inglês e espanhol são chamadas de linguagens
     naturais, e evoluíram naturalmente a partir do uso e
     repetição.~\cite{lyons1991natural}
+}
 
-    Por causa da excelente capacidade de interpretação e adaptação da mente
+{ Por causa da excelente capacidade de interpretação e adaptação da mente
     humana, somos capazes de criar e entender novos dialetos que não seguem as
     regras formais das linguagens naturais que conhecemos. Porém, fora da
     comunicação casual é importante e às vezes obrigatório que nos expressemos
@@ -20,8 +29,7 @@
     comandos.
 }
 
-{
-    Para a comunicação com o processador de um computador, utilizamos mensagens
+{ Para a comunicação com o processador de um computador, utilizamos mensagens
     chamadas de instruções, e o conjunto dessas instruções é chamado de
     Arquitetura do Conjunto de Instruções (\textit{ISA}). Um processador só é
     capaz de entender as mensagens que obedecem as regras semânticas e
@@ -29,8 +37,9 @@
     regras causará um erro de execução ou realizará uma tarefa diferente da
     pretendida. A linguagem de máquina é considerada de baixo nível pois
     apresenta pouca ou nenhuma abstração em relação à arquitetura.
+}
 
-    As instruções são passadas para o processador na forma de código de máquina,
+{ As instruções são passadas para o processador na forma de código de máquina,
     sequências de dígitos binários que correspondem aos níveis lógicos do
     circuito. Para melhorar o entendimento do código e facilitar o
     desenvolvimento, uma outra representação é utilizada, o \textit{assembly}.
@@ -44,8 +53,7 @@
     mesmo código seja executado em arquiteturas diferentes.
 }
 
-{
-    A Figura~\ref{fig:cpu_abstraction} é uma representação simplificada de um
+{ A Figura~\ref{fig:cpu_abstraction} é uma representação simplificada de um
     processador. A unidade de controle lê uma instrução da memória e a
     decodifica; o circuito de lógica combinacional lê os dados dos
     registradores, entrada e memória conforme necessário, executa a instrução
@@ -67,14 +75,14 @@
         computador. Fonte:~\cite{wikimedia2015basiccpu}}\label{fig:cpu_abstraction}
 \end{figure}
 
-{
-    Historicamente, as arquiteturas são divididas em \textit{ISAs}
+{ Historicamente, as arquiteturas são divididas em \textit{ISAs}
     \textit{RISC} e \textit{CISC}. Na atualidade, a diferença entre elas é que
     as \textit{ISAs RISC} acessam a memória por instruções de
     \textit{load/store}, enquanto as \textit{CISC} podem acessar a memória
     diretamente em uma instrução de operação lógica ou aritmética.
+}
 
-    Algumas arquiteturas \textit{RISC} notáveis são a \textit{RISC-V}, objeto de
+{ Algumas arquiteturas \textit{RISC} notáveis são a \textit{RISC-V}, objeto de
     estudo desse trabalho, a \textit{ARM} e a \textit{MIPS}. Quanto às
     \textit{CISC}, a \textit{x86} e sua extensão de 64 \textit{bits}, a
     \textit{AMD64}, são as mais conhecidas.
@@ -93,8 +101,7 @@
     {}
 
     \subsection{Arquitetura RISC-V}
-    {
-        A \textit{ISA RISC-V} é uma arquitetura modular, sendo o módulo base de
+    { A \textit{ISA RISC-V} é uma arquitetura modular, sendo o módulo base de
         operações com inteiros mandatório em qualquer implementação. Os demais
         módulos são extensões de uso opcional. A arquitetura não suporta
         \textit{branch delay slots} e aceita instruções de tamanho variável. A
@@ -112,8 +119,7 @@
                     \textit{RISC-V}}\label{fig:riscv_var_length}
     \end{figure}
 
-    {
-        A nomenclatura do conjunto de instruções implementado segue a
+    { A nomenclatura do conjunto de instruções implementado segue a
         seguinte estrutura:
     }
 
@@ -126,27 +132,23 @@
         \item {Demais letras identificadoras de módulos opcionais.}
     \end{itemize}
 
-    {
-        Assim, uma implementação com registradores de 32 bits somente com o
+    { Assim, uma implementação com registradores de 32 bits somente com o
         módulo base de Inteiros é denominado ``RV32I''.
     }
 
         \subsubsection{Módulo Inteiro}
-        {
-            O módulo Inteiro é o módulo base da arquiterura. O \textit{design} de sua
+        { O módulo Inteiro é o módulo base da arquiterura. O \textit{design} de sua
             especificação visa reduzir o \textit{hardware} necesário para uma
             implementação mínima, bem como ser um alvo de compilação satisfatório.
         }
 
-        {
-            Diferente de outras arquiteturas como a \textit{ARM}, as instruções de
+        { Diferente de outras arquiteturas como a \textit{ARM}, as instruções de
             multiplicação e divisão não fazem parte do conjunto básico uam vez que
             necessitam de circuito especializado e por isso encarecem o desenvolvimento
             e produção dos processadores.
         }
 
-        {
-            Para sistemas embarcados com restrições mais severas de tamanho, custo,
+        { Para sistemas embarcados com restrições mais severas de tamanho, custo,
             potência, etc o módulo base I pode ser substituído por um \textit{subset},
             o módulo E. Porém, nenhuma das demais extensões pode ser usada em conjunto
             com o módulo E.
@@ -154,55 +156,47 @@
 
         \subsubsection{Extensões}
             \paragraph{Extensão M}
-            {
-                A extensão M implementa as operações de multiplicação e divisão de
+            { A extensão M implementa as operações de multiplicação e divisão de
                 números inteiros.
             }
 
             \paragraph{Extensão A}
-            {
-                A extensão A implementa instruções de acesso atômico a memória.
+            { A extensão A implementa instruções de acesso atômico a memória.
                 Instruções atômicas mantém a coerência da memória em sistemas
                 preemptivos e paralelos.
             }
 
             \paragraph{Extensão F}
-            {
-                A extensão F implementa as isntruções de ponto flutuante IEEE 754 de
+            { A extensão F implementa as isntruções de ponto flutuante IEEE 754 de
                 precisão simples, bem como o banco de registradores especializado para
                 operações com ponto flutuante.
             }
 
             \paragraph{Extensão D}
-            {
-                A extensão D implementa as instruções de ponto flutuante IEEE 754 de
+            { A extensão D implementa as instruções de ponto flutuante IEEE 754 de
                 precisão dupla. Ela é um incremento à extensão F, sendo esta de
                 implementação obrigatória para se poder implementar a extensão D.
             }
 
             \paragraph{Outras Extensões}
-            {
-                Outras extensões são previstas na especificação da arquitetura, e.g.
+            { Outras extensões são previstas na especificação da arquitetura, e.g.
                 a extensão C para instruções comprimidas (16 bits).
             }
 
-            {
-                A arquitetura prevê a expansão de extensões, com alguns
+            { A arquitetura prevê a expansão de extensões, com alguns
                 \textit{opcodes} sendo reservados para essa finalidade. Desse modo,
                 instruções proprietárias e/ou customisadas podem ser adicionadas.
             }
 
         \subsubsection{Arquitetura Privilegiada}
-        {
-            Para a \textit{ISA RISC-V}, existem quatro níveis de privilégio de acesso,
+        { Para a \textit{ISA RISC-V}, existem quatro níveis de privilégio de acesso,
             sendo eles o de usuário (módulo I e extensões), de máquina
             (\textit{syscalls}) de supervisor (sistema operacional) e hipervisor
             (virtualização).
         }
 
         \subsubsection{Formatos de Instruções}
-        {
-            As instruções da arquitetura podem ser separadas em subgrupos de acordo com
+        { As instruções da arquitetura podem ser separadas em subgrupos de acordo com
             os operadores necessários para o processador interpretá-la. A
             Figura~\ref{fig:riscv_formats} apresenta os formatos das instruções do
             módulo I da \textit{ISA RISC-V}, e, para efeitos de comparação, a
@@ -225,8 +219,7 @@
         \end{figure}
 
         \subsubsection{Formatos de Imediatos}
-        {
-            Os imediatos são operandos descritos na própria instrução em vez de estar
+        { Os imediatos são operandos descritos na própria instrução em vez de estar
             contido em um registrador. Como os operandos necessitam ter a mesma largura
             que o banco de registradores, algumas regras são utilizadas para gerar os
             operandos imediatos. As figuras a seguir mostram a formação de cada tipo de
@@ -268,8 +261,7 @@
                 }\label{fig:riscv_j_imm}
         \end{figure}
 
-        {
-            Para efeitos comparativos, a Figura~\ref{fig:mips_immediates} mostra a
+        { Para efeitos comparativos, a Figura~\ref{fig:mips_immediates} mostra a
             formação de imediatos na arquitetura MIPS32.
         }
 
@@ -313,12 +305,8 @@
     \subsection{Timing Analyzer}
     {}
 
-%\section{Simulação}
-%{}
-
 \section{Field Programmable Gate Arrays}
-{
-    \textit{Field Programmable Gate Arrays} (\textit{FPGAs}) são circuitos
+{ \textit{Field Programmable Gate Arrays} (\textit{FPGAs}) são circuitos
     integrados que permitem o desenvolvimento de circuitos lógicos
     reconfiguráveis. Por serem reprogramáveis, as \textit{FPGAs} geram uma
     grande economia em tempo de desenvolvimento e em custos como os de
@@ -328,14 +316,16 @@
     intermediário no projeto de um \textit{ASIC} ou \textit{full-custom} quanto
     o meio final do projeto quando a reconfigurabilidade e os preços muito mais
     acessíveis forem fatores importantes.
+}
 
-    Cada fabricante de \textit{FPGAs} possui seus \textit{softwares} de
+{ Cada fabricante de \textit{FPGAs} possui seus \textit{softwares} de
     desenvolvimento, ou \textit{SDKs}. A indústria de \textit{hardware} é
     extremamente protecionista com sua propriedade intelectual, sendo a maioria
     dessas ferramentas de código proprietário. Para a Intel Altera®, essa
     plataforma é o Quartus Prime®.
+}
 
-    \textit{FPGAs} mais modernas possuem, além do arranjo de portas lógicas,
+{ \textit{FPGAs} mais modernas possuem, além do arranjo de portas lógicas,
     blocos de memória, \textit{PLLs}, \textit{DSPs} e \textit{SoCs}. Os blocos
     de memória internos funcionam como a memória \textit{cache} de um
     microprocessador, armazenando os dados próximo ao seu local de
@@ -346,8 +336,9 @@
     podem ser utilizados como multiplicadores de baixa latência. Já os
     \textit{SoCs} são microprocessadores como os ARM® presentes em celulares,
     e são capazes de executar sistemas operacionais como o Linux.
+}
 
-    Além de disponíveis na forma de \textit{chips} para a integração com placas
+{ Além de disponíveis na forma de \textit{chips} para a integração com placas
     de circuito impresso customizadas, as \textit{FPGAs} possuem \textit{kits}
     de desenvolvimento com diversos periféricos para auxiliar no processo de
     criação de soluções. Esses \textit{kits} são a principal ferramenta de
@@ -358,8 +349,7 @@
 }
 
     \subsection{Arquitetura Generalizada de uma FPGA}
-    {
-        De forma genérica, uma \textit{FPGA} possui blocos lógicos, chaves de
+    { De forma genérica, uma \textit{FPGA} possui blocos lógicos, chaves de
         interconexão, blocos de conexão direta e portas de entrada e saída,
         conforme apresentado na Figura~\ref{fig:fpga_general_arch}.
     }
@@ -373,21 +363,18 @@
         \label{fig:fpga_general_arch}
     \end{figure}
 
-    {
-        Os blocos lógicos possuem \textit{lookup tables}, registradores, somadores
+    { Os blocos lógicos possuem \textit{lookup tables}, registradores, somadores
         e multiplexadores. É neles que a lógica reconfigurável é implementada.
     }
 
-    {
-        Já as chaves de interconexão são responsáveis por conectar os diversos
+    { Já as chaves de interconexão são responsáveis por conectar os diversos
         blocos da \textit{FPGA}. A Figura~\ref{fig:fpga_switch_box} exemplifica
         como é feito o roteamento da malha de interconexão. Os blocos de conexão
         direta são um tipo especial de chave de interconexão, e sua função é ligar
         blocos lógicos adjacentes.
     }
 
-    {
-        Por fim, as portas de entrada e saída conectam a \textit{FPGA} ao ``mundo
+    { Por fim, as portas de entrada e saída conectam a \textit{FPGA} ao ``mundo
         externo'' e.g. \textit{drivers} de áudio e vídeo.
     }
 
@@ -402,8 +389,7 @@
 
 
     \subsection{Arquitetura da FPGA Cyclone V SoC}
-    {
-        A Figura~\ref{fig:cyclone_v_arch} apresenta a arquitetura da
+    { A Figura~\ref{fig:cyclone_v_arch} apresenta a arquitetura da
         \textit{FPGA Cyclone V SoC}. O \textit{chip} possui um processador
         \textit{ARM} integrado, blocos de memória embutidos, \textit{DSPs} para
         acelerar operações como multiplicação de números ou processamento de
@@ -461,86 +447,79 @@
 
 
 \section{Estado da Arte dos processadores RISC-V}
-    { Por alguns anos, processadores com arquitetura \textit{RISC-V} só podiam
-        ser utilizados por meio de emuladores como o \textit{qemu}~\cite{qemu_riscv}
-        ou em \textit{FPGAs}, o objeto desse trabalho. Algumas fabricantes já
-        divulgaram planos para começar a usar microcontroladores com a arquitetura
-        em seus produtos, como é o caso dos controladores de discos rígidos e
-        \textit{SSDs} da \textit{Western Digital}~\cite{western_riscv} e da Nvidia
-        como o substituto dos controladores \textit{Falcon} de suas placas de
-        vídeo~\cite{nvidia_riscv}.  Porém, ainda não se sabe se as empresas já
-        utilizam os controladores em seus \textit{hardwares}, se a adoção ainda
-        está em fase de projeto ou se a ideia foi abandonada.
-    }
+{ Por alguns anos, processadores com arquitetura \textit{RISC-V} só podiam
+    ser utilizados por meio de emuladores como o \textit{qemu}~\cite{qemu_riscv}
+    ou em \textit{FPGAs}, o objeto desse trabalho. Algumas fabricantes já
+    divulgaram planos para começar a usar microcontroladores com a arquitetura
+    em seus produtos, como é o caso dos controladores de discos rígidos e
+    \textit{SSDs} da \textit{Western Digital}~\cite{western_riscv} e da Nvidia
+    como o substituto dos controladores \textit{Falcon} de suas placas de
+    vídeo~\cite{nvidia_riscv}.  Porém, ainda não se sabe se as empresas já
+    utilizam os controladores em seus \textit{hardwares}, se a adoção ainda
+    está em fase de projeto ou se a ideia foi abandonada.
+}
 
-    { Porém, começam a surgir no mercado microcontroladores e \textit{Single
-        Board Computers (SBCs)} com preços acessíveis. Placas como a linha
-        \textit{Sipeed} da \textit{Seed} se equiparam aos \textit{MCUs
-        ESP32}~\cite{hackaday_sipeed}, e outras como a \textit{SiFive HiFive1}
-        se assemelham aos \textit{arduinos}~\cite{hifive_arduino}.
-        Também é possível utilizar processadores de alto desempenho como o
-        \textit{BOOM} em instâncias \textit{EC2 F1} da \textit{AWS}~\cite{boom_aws}.
-    }
+{ Porém, começam a surgir no mercado microcontroladores e \textit{Single
+    Board Computers (SBCs)} com preços acessíveis. Placas como a linha
+    \textit{Sipeed} da \textit{Seed} se equiparam aos \textit{MCUs
+    ESP32}~\cite{hackaday_sipeed}, e outras como a \textit{SiFive HiFive1}
+    se assemelham aos \textit{arduinos}~\cite{hifive_arduino}.
+    Também é possível utilizar processadores de alto desempenho como o
+    \textit{BOOM} em instâncias \textit{EC2 F1} da \textit{AWS}~\cite{boom_aws}.
+}
 
-    { Há uma expectativa de \textit{SBCs} mais robustos, capazes de rodar um
-        sistema operacional de uso geral, como um \textit{Raspberry Pi}. Existem
-        alguns pré-lançamentos de placas para atender essa demanda, como a
-        \textit{SiFive HiFive Unmatched}~\cite{hifive_unmatched} e a
-        \textit{BeagleV}~\cite{beaglev}.
-    }
+{ Há uma expectativa de \textit{SBCs} mais robustos, capazes de rodar um
+    sistema operacional de uso geral, como um \textit{Raspberry Pi}. Existem
+    alguns pré-lançamentos de placas para atender essa demanda, como a
+    \textit{SiFive HiFive Unmatched}~\cite{hifive_unmatched} e a
+    \textit{BeagleV}~\cite{beaglev}.
+}
 
-    { A empresa \textit{SiFive}, liderada pelos criadores da arquitetura, produzirá
-        em parceria com a \textit{TSMC (Taiwan Semiconductor Manufacturing Company)}
-        o primeiro processador \textit{RISC-V} de 32 \textit{bits} em tecnologia
-        de 5nm~\cite{sifive_tsmc}. A \textit{TSMC} é a \textit{foundry} líder em
-        manufatura de circuitos integrados no mundo.
-    }
+{ A empresa \textit{SiFive}, liderada pelos criadores da arquitetura, produzirá
+    em parceria com a \textit{TSMC (Taiwan Semiconductor Manufacturing Company)}
+    o primeiro processador \textit{RISC-V} de 32 \textit{bits} em tecnologia
+    de 5nm~\cite{sifive_tsmc}. A \textit{TSMC} é a \textit{foundry} líder em
+    manufatura de circuitos integrados no mundo.
+}
 
-    { Atualmente, compilar códigos em \textit{C/C++} para \textit{targets RISC-V}
-        não envolve mais a instalação de \textit{toolchains} complicadas e frágeis.
-        Tanto o \textit{gcc}~\cite{gcc_riscv} quanto o \textit{clang}~\cite{clang_riscv}
-        já oferecem suporte para o \textit{RISC-V}, eliminando assim uma barreira
-        para a adoção da arquitetura.
-    }
+{ Atualmente, compilar códigos em \textit{C/C++} para \textit{targets RISC-V}
+    não envolve mais a instalação de \textit{toolchains} complicadas e frágeis.
+    Tanto o \textit{gcc}~\cite{gcc_riscv} quanto o \textit{clang}~\cite{clang_riscv}
+    já oferecem suporte para o \textit{RISC-V}, eliminando assim uma barreira
+    para a adoção da arquitetura.
+}
 
-    { Uma outra característica essencial para o uso do \textit{RISC-V} em sistemas
-        de uso geral é a existência de sistemas operacionais que funcionem na
-        plataforma. Desde a versão 4.15, o \textit{kernel} do \textit{linux}
-        oferece suporte para a arquitetura~\cite{linux_kernel}. \textit{Distros}
-        como \textit{Fedora}~\cite{fedora_experimental},
-        e \textit{Alpine}~\cite{alpine_experimental} já possuem suporte experimental.
-        A chinesa \textit{Alibaba} fez o \textit{port} do \textit{OS Android}
-        para um de seus \textit{SoCs RISC-V}~\cite{alibaba_android}. Alguns
-        ecossistemas mais robustos possuem \textit{ports} completos, como é o
-        caso do \textit{Haiku-OS}~\cite{haiku_riscv} e do \textit{microkernel
-        seL4}~\cite{sel4_riscv}, possibilitando o uso em ambientes industriais
-        e áreas que exigem maior robustez do sistema operacional.
-    }
+{ Uma outra característica essencial para o uso do \textit{RISC-V} em sistemas
+    de uso geral é a existência de sistemas operacionais que funcionem na
+    plataforma. Desde a versão 4.15, o \textit{kernel} do \textit{linux}
+    oferece suporte para a arquitetura~\cite{linux_kernel}. \textit{Distros}
+    como \textit{Fedora}~\cite{fedora_experimental},
+    e \textit{Alpine}~\cite{alpine_experimental} já possuem suporte experimental.
+    A chinesa \textit{Alibaba} fez o \textit{port} do \textit{OS Android}
+    para um de seus \textit{SoCs RISC-V}~\cite{alibaba_android}. Alguns
+    ecossistemas mais robustos possuem \textit{ports} completos, como é o
+    caso do \textit{Haiku-OS}~\cite{haiku_riscv} e do \textit{microkernel
+    seL4}~\cite{sel4_riscv}, possibilitando o uso em ambientes industriais
+    e áreas que exigem maior robustez do sistema operacional.
+}
 
-    { Uma das surpresas na adoção da arquitetura \textit{RISC-V} nos seus
-        \textit{designs} veio da \textit{MIPS Technologies}, detentora das
-        patentes das arquiteturas \textit{MIPS}. Em 2013, a empresa foi adquirida
-        pela \textit{Imagination Technologies}~\cite{imagination_technologies_acq},
-        e lançou alguns \textit{development kits} voltados a visão computacional
-        e microcontroladores, mas não conseguiu dar tração aos projetos.
-        Em 2017 a companhia foi novamente vendida para a \textit{Tailwood
-        Venture Capital}~\cite{tailwood_acq}, que tentou capitalizar em cima dos
-        \textit{royalties} da arquitetura. Porém, em 2018 a companhia foi vendida
-        novamente para a \textit{Wave Computing}~\cite{wave_comp_acq}, companhia
-        voltada para aplicações de inteligência artificial. Em 2020, a
-        \textit{Wave Computing} declara falência~\cite{wave_comp_bankrupt},
-        demitindo todos os seus funcionários. Em março desse ano, a empresa
-        conseguiu se recuperar da falência, mudou o nome da companhia para
-        \textit{MIPS} e anunciou que seus novos \textit{designs} serão baseados
-        na arquitetura \textit{RISC-V}~\cite{mips_reborn}. Atualmente, a empresa
-        \textit{MIPS} integra a \textit{RISC-V Foundation} como Membro Estratégico.
-    }
-
-    { Com o recente sucesso dos processadores \textit{ARM M1} lançados pela
-        \textit{Apple}, e com os processadores \textit{ARM Graviton} disponíveis
-        no serviço de servidores em nuvem da \textit{Amazon}, é uma possibilidade
-        forte que o desenvolvimento de plataformas \textit{RISC-V} para uso geral
-        desacelere.
-    }
+{ Uma das surpresas na adoção da arquitetura \textit{RISC-V} nos seus
+    \textit{designs} veio da \textit{MIPS Technologies}, detentora das
+    patentes das arquiteturas \textit{MIPS}. Em 2013, a empresa foi adquirida
+    pela \textit{Imagination Technologies}~\cite{imagination_technologies_acq},
+    e lançou alguns \textit{development kits} voltados a visão computacional
+    e microcontroladores, mas não conseguiu dar tração aos projetos.
+    Em 2017 a companhia foi novamente vendida para a \textit{Tailwood
+    Venture Capital}~\cite{tailwood_acq}, que tentou capitalizar em cima dos
+    \textit{royalties} da arquitetura. Porém, em 2018 a companhia foi vendida
+    novamente para a \textit{Wave Computing}~\cite{wave_comp_acq}, companhia
+    voltada para aplicações de inteligência artificial. Em 2020, a
+    \textit{Wave Computing} declara falência~\cite{wave_comp_bankrupt},
+    demitindo todos os seus funcionários. Em março desse ano, a empresa
+    conseguiu se recuperar da falência, mudou o nome da companhia para
+    \textit{MIPS} e anunciou que seus novos \textit{designs} serão baseados
+    na arquitetura \textit{RISC-V}~\cite{mips_reborn}. Atualmente, a empresa
+    \textit{MIPS} integra a \textit{RISC-V Foundation} como Membro Estratégico.
+}
 
 

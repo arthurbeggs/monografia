@@ -23,6 +23,7 @@
     \textit{RS-232}, é opcional.
 }
 
+\section{Organização do projeto}
 { O projeto é organizado seguindo o seguinte arranjo de pastas:
 \begin{verbatim}
     ┌─ core                     (arquivos que implementam o soft-core)
@@ -287,8 +288,11 @@
         sistema implementadas são apresentadas na Tabela~\ref{table:syscalls}.
     }
     \begin{longtable}{|l|c|p{3.5cm}|l |}
-        \caption{Tabela de \textit{syscalls} implementadas.}
-        \label{table:syscalls}
+        \caption{Tabela de \textit{syscalls} implementadas.}\label{table:syscalls}\\
+        \hline
+        \textit{syscall}                    & \texttt{a7}             & Argumentos                & Operação\\*
+        \hline
+        \endfirsthead
         \hline
         \textit{syscall}                    & \texttt{a7}             & Argumentos                & Operação\\*
         \hline

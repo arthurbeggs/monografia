@@ -35,10 +35,10 @@
 \usepackage{import}
 \usepackage{enumitem}
 \usepackage{pmboxdraw}
-\usepackage[hyphens]{url}
-\usepackage{hyperref}
 \usepackage{longtable}
 \usepackage{multirow}
+\usepackage[hyphens]{url}
+\usepackage[breaklinks]{hyperref}
 \usepackage{listings}
 \lstset{
     frame=tb,
@@ -87,7 +87,7 @@
 \membrodabancaiifuncao{Examinador Interno}
 
 
-\membrodabancaiii{Prof.\ Marcelo Grandi Mandelli,CIC/UnB}
+\membrodabancaiii{Prof.\ Marcelo Grandi Mandelli, CIC/UnB}
 \membrodabancaiiifuncao{Examinador Interno}
 
 \membrodabancaiv{}
@@ -110,16 +110,16 @@
 % Dedicatória
 \frontmatter
 
-\dedicatoriaautori{}
-\dedicatoriaautorii{}
-\dedicatoriaautoriii{}
-\dedicatoria{}
+%\dedicatoriaautori{}
+%\dedicatoriaautorii{}
+%\dedicatoriaautoriii{}
+%\dedicatoria{}
 
 % Agradecimentos
-\agradecimentosautori{}
-\agradecimentosautorii{}
-\agradecimentosautoriii{}
-\agradecimentos{}
+%\agradecimentosautori{}
+%\agradecimentosautorii{}
+%\agradecimentosautoriii{}
+%\agradecimentos{}
 
 \resumo{resumo}{
 {
@@ -132,7 +132,7 @@
     A plataforma funciona nas \textit{FPGAs terasIC DE1-SoC} disponíveis no
     laboratório da Universidade, possui periféricos de depuração como
     \textit{display} dos registradores do processador na saída de vídeo, além
-    de outros periféricos como \textit{drivers} de áudio e vídeo para uma
+    de outros periféricos como \textit{drivers} de áudio e teclado para uma
     experiência mais completa de desenvolvimento, e permite que o processador
     seja substituído por implementações de diversas arquiteturas de
     \textit{32 bits} com certa facilidade.
@@ -146,6 +146,17 @@ Palavras Chave: RISC-V, Verilog, FPGA
 
 \resumo{Abstract}{
 {
+    Development and documentation of a computer architecture learning environment
+    in Verilog synthesizable to FPGA, focusing in a computer processor using
+    the RISC-V instruction set architecture implemented in three different
+    microarchitectures. The project will be used as a lab resource on the
+    Computer Architecture and Organization course at Universidade de Brasília.
+    The platform works in FPGAs terasIC DE1-SoC available at the university lab,
+    possess debugging peripherals such as an On Screen Display showing the contents
+    of regfiles via video output, and other peripherals as audio and keyboard
+    drivers delivering a full development experience. It allows with relative
+    easiness the exchange of the core processor for other implementations of
+    32 bits architectures.
 }
 
 \medskip{}
@@ -179,9 +190,6 @@ Keywords: RISC-V, Verilog, FPGA
 \include{cap_introducao}
 \include{cap_revisao}
 \include{cap_proposta}
-% \include{cap_arquitetura}
-% \include{cap_fpga}
-% \include{cap_implementacao}
 \include{cap_resultados}
 \include{cap_conclusoes}
 
