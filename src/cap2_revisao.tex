@@ -92,16 +92,93 @@
     }
 
     \subsection{Arquitetura MIPS}
-    {}
+    { Durante seus 36 anos de existência, a \textit{ISA MIPS} (\textit{Microprocessor
+        without Interlocked Pipelined Stages}) teve diversas versões produzidas,
+        atendendo às demandas de diversos segmentos do mercado. Usado em
+        supercomputadores na década de 90 e nos famosos \textit{videogames
+        Nintendo 64, PlayStation, PlayStation 2 e PlayStation Portable}, a
+        arquitetura atendia a vários segmentos do mercado.
+    }
+
+    { A \textit{MIPS32}, uma de suas versões lançada em 1999~\cite{mips32_1999},
+        é amplamente utilizada no meio acadêmico, utilizando livros como as
+        diversas edições do \textit{Computer Organization and
+        Design}~\cite{patterson2014computer} e o clássico
+        \textit{See MIPS run}~\cite{sweetman1999see} como livros-texto das
+        disciplinas de arquitetura de computadores.
+    }
+
+    { Na última década, o uso de processadores \textit{MIPS} têm se limitado a
+        sistemas automotivos e roteadores de \textit{internet}~\cite{mips_uses_wiki},
+        e a empresa detentora dos direitos da arquitetura anunciou o fim do
+        desenvolvimento de novas iterações.~\cite{wave_comp_bankrupt}
+    }
 
     \subsection{Arquitetura ARM}
-    {}
+    { A arquitetura \textit{ARM} (\textit{Advanced RISC Machines}) é considerada
+        extremamente eficiente no consumo de energia e possui boa dissipação de
+        calor sem comprometer seu desempenho~\cite{arm_facts1988}, e com isso é
+        predominante no mercado de \textit{smartphones}~\cite{arm_milestone}.
+        Presente também nos \textit{videogames Nintendo 3DS e Nintendo Switch},
+        nos \textit{Single Board Computers} (\textit{SBCs}) \textit{Raspberry Pi},
+        entre outros dispositivos, a arquitetura tem enorme força em aplicações
+        embarcadas.
+    }
+
+    { Porém, isso não a impede de atender a outros setores do mercado. Atualmente,
+        o supercomputador mais potente do mundo utiliza a arquitetura
+        \textit{ARM}.~\cite{arm_super} A \textit{Apple} recentemente lançou seus
+        primeiros \textit{notebooks} e \textit{desktops} com seu processador
+        \textit{Apple M1}, considerado hoje o processador de computadores pessoais
+        com maior eficiência por \textit{watt}.~\cite{arm_m1} O serviço de
+        computação em nuvem \textit{Amazon Web Services} (\textit{AWS})
+        também oferece máquinas equipadas com seu processador \textit{AWS Graviton}
+        para computação geral.
+    }
+
+    { A empresa \textit{ARM} opera licenciando o uso do seu conjunto de instruções
+        e de projetos de implementação, mas não produz \textit{chips}. A manufatura
+        do processador fica a cargo da empresa licenciante, como a \textit{Qualcomm},
+        \textit{NXP}, \textit{Samsung} e \textit{Apple}.
+    }
+
+    { Por ser uma das arquiteturas prevalentes da atualidade, a \textit{ISA ARM}
+        era uma forte candidata para ser utilizada no presente trabalho. Porém,
+        a \textit{ISA ARM} não é uma arquitetura aberta, sendo necessário obter
+        uma licença para desenvolvimento e distribuição de implementações.
+    }
 
     \subsection{Arquitetura x86}
-    {}
+    { A \textit{ISA x86}, também conhecida como \textit{IA-32} é uma arquitetura
+        \textit{CISC} de 32 \textit{bits} criada em 1985 pela \textit{Intel}
+        para uso no seu processador \textit{80386}, renomeado para \textit{i386}.
+        Um diferencial da \textit{ISA x86} é que versões mais novas do conjunto
+        de instruções mantém a compatibilidade com as versões anteriores.
+        Assim, programas desenvolvidos para versões mais antigas continuam
+        funcionando em sistemas modernos. Essa característica fez com que
+        processadores \textit{x86} dominassem o mercado de computadores pessoais
+        e \textit{workstations}.
+    }
+
+    { Apesar de criada pela \textit{Intel} para a manufatura de seus próprios
+        processadores, a \textit{ISA} foi licenciada para outras empresas como a
+        \textit{AMD}.
+    }
 
     \subsection{Arquitetura AMD64}
-    {}
+    { A arquitetura \textit{AMD64} também conhecida como \textit{x86-64} é a
+        extensão de 64 \textit{bits} da \textit{IA-32}, criada pela \textit{AMD}
+        em 1999. A \textit{Intel} criou sua própria extensão para a \textit{IA-32},
+        a \textit{IA-64} da linha de processadores \textit{Itanium}. Porém, a
+        extensão criada pela \textit{AMD} teve mais tração e a \textit{Intel}
+        também adotou a \textit{AMD64}. A característica de iterações mais novas
+        manterem compatibilidade com \textit{softwares} desenvolvidos para versões
+        anteriores também faz parte da especificação da arquitetura.
+    }
+
+    { Hoje, a maioria predominante dos computadores pessoais modernos,
+        \textit{workstations} e servidores utilizam processadores \textit{x86-64}.
+    }
 
     \subsection{Arquitetura RISC-V}
     { A \textit{ISA RISC-V} é uma arquitetura modular, sendo o módulo base de
