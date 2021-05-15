@@ -180,260 +180,373 @@
         \textit{workstations} e servidores utilizam processadores \textit{x86-64}.
     }
 
-    \subsection{Arquitetura RISC-V}\label{riscv_basic_arch}
-    { Conforme descrito na Seção~\ref{intro_riscv}, a \textit{RISC-V} é uma
-        arquitetura de especificação aberta e licença livre, o que permite que
-        qualquer indivíduo ou entidade produza, distribua e/ou comercialize
-        processadores que a utilizem sem haver cobrança de \textit{royalties}.
+\section{A Arquitetura RISC-V}\label{riscv_basic_arch}
+{ Conforme descrito na Seção~\ref{intro_riscv}, a \textit{RISC-V} é uma
+    arquitetura de especificação aberta e licença livre, o que permite que
+    qualquer indivíduo ou entidade produza, distribua e/ou comercialize
+    processadores que a utilizem sem haver cobrança de \textit{royalties}.
+}
+
+{ A \textit{RISC-V} é uma arquitetura modular, sendo o módulo base de
+    operações com inteiros mandatório em qualquer implementação.
+    Esse módulo será o \textbf{I} (de \textit{\textbf{I}nteger}) para a
+    maioria das implementações. Ele possui 32 registradores, sendo 31 de uso
+    geral e um \textit{hardwired} para o valor \texttt{zero}. Mas também existe
+    o módulo \textbf{E} (de \textit{\textbf{E}mbedded}) para aplicações embarcadas,
+    que possui metade dos registradores presentes nas outras implementações
+    (15 de uso geral mais o \texttt{zero}) e é limitado a registradores de
+    32 \textit{bits} de largura. As demais extensões são de uso opcional.
+}
+
+{ O módulo \textbf{I} pode ser implementado com registradores de 32, 64 ou
+    128 \textit{bits} de largura. O módulo com registradores de 128
+    \textit{bits} é um planejamento para o futuro quando 64 \textit{bits}
+    não forem mais suficientes para o endereçamento de memória do sistema,
+    fazendo com que a arquitetura não tenha que ser reprojetada para se
+    adequar às novas demandas. Assim, os possíveis conjuntos de instrução
+    base são: \textit{RV32I}, \textit{RV32E}, \textit{RV64I} e \textit{RV128I}.
+}
+
+{ O \textit{design} do módulo visa reduzir o \textit{hardware} necesário para
+    uma implementação mínima, bem como ser um alvo de compilação satisfatório,
+    sendo capaz de emular por \textit{software} as extensões \textbf{M}
+    (de \textit{\textbf{M}ultiplication and Division}), \textbf{F} (de
+    \textit{Single-Precision \textbf{F}loating-Point}) e \textbf{D} (de
+    \textit{\textbf{D}ouble-Precision Floating-Point}). Para isso, são
+    implementadas instruções de \textit{load/store} para transferir dados
+    entre a memória e os registradores, operações lógicas e aritméticas
+    entre dados de registradores, instruções para transferência de controle
+    (\textit{jumps} e \textit{branches} condicionais) e chamadas de sistema
+    (\textit{syscalls}).
+}
+
+{ Diferente de outras arquiteturas como a \textit{ARM}, as instruções de
+    multiplicação e divisão não fazem parte do conjunto básico, uma vez que
+    necessitam de circuito especializado e por isso encarecem o desenvolvimento
+    e produção dos processadores.
+}
+
+{ A arquitetura foi projetada para aceitar instruções de tamanho variável.
+    A codificação do tamanho das instruções é mostrada na
+    Figura~\ref{fig:riscv_var_length}. As instruções do módulo \textbf{I}
+    seguem o \textit{encoding} de instruções de 32 \textit{bits}. A extensão
+    \textbf{C} (de \textit{\textbf{C}ompact}) especifica instruções utilizando
+    a codificação de 16 \textit{bits}. As demais extensões previstas pela
+    especificação da arquitetura também utilizam a codificação de 32
+    \textit{bits}. As codificações para instruções com mais de 32
+    \textit{bits} de largura foram projetadas para acomodar necessidades
+    futuras e para permitir que projetistas extendam a arquitetura com módulos
+    proprietários.
+}
+
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.8\linewidth]{../images/RV_InstructionLength.png}
+    \caption{Codificação de instruções de tamanho variável da arquitetura
+                \textit{RISC-V}}\label{fig:riscv_var_length}
+\end{figure}
+
+
+    \subsection{Extensão de Registradores de Controle e Estado}
+    { A extensão \textbf{Zicsr} implementa o banco de \textit{Control and
+        Status Registers} (\textit{CSRs}) e as instruções para acessá-los.
+        Esses registradores contemplam um relógio de tempo real (\textit{RTC}),
+        contadores de instruções processadas e \textit{ticks} do \textit{clock},
+        além de habilitar/desabilitar funcionalidades do processador e checar
+        seu estado.
     }
 
-    { A \textit{RISC-V} é uma arquitetura modular, sendo o módulo base de
-        operações com inteiros mandatório em qualquer implementação.
-        Esse módulo será o \textbf{I} (de \textit{\textbf{I}nteger}) para a
-        maioria das implementações. Ele possui 32 registradores, sendo 31 de uso
-        geral e um \textit{hardwired} para o valor \texttt{zero}. Mas também existe
-        o módulo \textbf{E} (de \textit{\textbf{E}mbedded}) para aplicações embarcadas,
-        que possui metade dos registradores presentes nas outras implementações
-        (15 de uso geral mais o \texttt{zero}) e é limitado a registradores de
-        32 \textit{bits} de largura. As demais extensões são de uso opcional.
+    \subsection{Extensão de Multiplicação e Divisão}
+    { As operações aritméticas de multiplicação, divisão e resto de números
+        inteiros são implementadas pela extensão \textbf{M}.
     }
 
-    { O módulo \textbf{I} pode ser implementado com registradores de 32, 64 ou
-        128 \textit{bits} de largura. O módulo com registradores de 128
-        \textit{bits} é um planejamento para o futuro quando 64 \textit{bits}
-        não forem mais suficientes para o endereçamento de memória do sistema,
-        fazendo com que a arquitetura não tenha que ser reprojetada para se
-        adequar às novas demandas. Assim, os possíveis conjuntos de instrução
-        base são: \textit{RV32I}, \textit{RV32E}, \textit{RV64I} e \textit{RV128I}.
+    \subsection{Extensões de Ponto Flutuante}
+    { A extensão \textbf{F} implementa instruções de ponto flutuante
+        \textit{IEEE 754 - 2008} de precisão simples que adiciona
+        no processador um banco de 32 registradores de 32 \textit{bits}
+        usado para suas operações e um \textit{CSR} para controlar o modo
+        de arredondamento e identificar anormalidades na execução de uma
+        instrução e.g. divisão por zero.
     }
 
-    { O \textit{design} do módulo visa reduzir o \textit{hardware} necesário para
-        uma implementação mínima, bem como ser um alvo de compilação satisfatório,
-        sendo capaz de emular por \textit{software} as extensões \textbf{M}
-        (de \textit{\textbf{M}ultiplication and Division}), \textbf{F} (de
-        \textit{Single-Precision \textbf{F}loating-Point}) e \textbf{D} (de
-        \textit{\textbf{D}ouble-Precision Floating-Point}). Para isso, são
-        implementadas instruções de \textit{load/store} para transferir dados
-        entre a memória e os registradores, operações lógicas e aritméticas
-        entre dados de registradores, instruções para transferência de controle
-        (\textit{jumps} e \textit{branches} condicionais) e chamadas de sistema
-        (\textit{syscalls}).
+    { Suas instruções contemplam \textit{load/store} no banco de registradores
+        de ponto flutuante, transferência de dados entre os registradores de
+        ponto flutuante e os de números inteiros (com ou sem conversão para
+        inteiro), operações aritméticas e comparações.
     }
 
-    { Diferente de outras arquiteturas como a \textit{ARM}, as instruções de
-        multiplicação e divisão não fazem parte do conjunto básico, uma vez que
-        necessitam de circuito especializado e por isso encarecem o desenvolvimento
-        e produção dos processadores.
+    { A extensão \textbf{D} requer a implementação da extensão \textbf{F} e
+        adiciona suporte para operações de ponto flutuante de precisão dupla,
+        aumentando a largura do banco de registradores de ponto flutuante
+        para 64 \textit{bits}. Há ainda a extensão \textbf{Q} para operações
+        de ponto flutuante com precisão quádrupla, que depende da extensão
+        \textbf{D} estar implementada e extende a largura do banco de
+        registradores de ponto flutuante para 128 \textit{bits}.
     }
 
-    { A arquitetura foi projetada para aceitar instruções de tamanho variável.
-        A codificação do tamanho das instruções é mostrada na
-        Figura~\ref{fig:riscv_var_length}. As instruções do módulo \textbf{I}
-        seguem o \textit{encoding} de instruções de 32 \textit{bits}. A extensão
-        \textbf{C} (de \textit{\textbf{C}ompact}) especifica instruções utilizando
-        a codificação de 16 \textit{bits}. As demais extensões previstas pela
-        especificação da arquitetura também utilizam a codificação de 32
-        \textit{bits}. As codificações para instruções com mais de 32
-        \textit{bits} de largura foram projetadas para acomodar necessidades
-        futuras e para permitir que projetistas extendam a arquitetura com módulos
-        proprietários.
+    \subsection{Extensões A e Zifencei}
+    { A extensão \textbf{A} implementa instruções de acesso atômico a memória,
+        enquanto a extensão \textbf{Zifencei} implementa \textit{fencing}
+        para escrita e leitura da memória de instruções em um \textit{hart}.
+    }
+
+    \subsection{Nomenclatura da implementação}
+    { A nomenclatura de um processador \textit{RISC-V} segue a seguinte
+        estrutura: as letras \textbf{RV} seguidas da largura do banco de
+        registradores (\textbf{32/64}), da letra do módulo base (\textbf{I/E}),
+        conforme visto na Seção~\ref{riscv_basic_arch}, e em seguida as outras
+        extensões implementadas.
+    }
+
+    { As extensões \textbf{M}, \textbf{A}, \textbf{F}, \textbf{D},
+        \textbf{Zicsr} e \textbf{Zifencei} utilizadas com o módulo \textbf{I}
+        constituem um conjunto considerado um alvo razoável para o
+        desenvolvimento de um processador de uso geral. Pela convenção de
+        nomenclatura, um processador de 64 \textit{bits} com essa implementação
+        se chamaria \textbf{RV64IMAFDZicsr\_Zifencei}. Para uma melhor
+        apresentação, o conjunto \textbf{IMAFDZicsr\_Zifencei} pode ser abreviado
+        para \textbf{G} (de \textit{\textbf{G}eneral-purpose}). Assim, o
+        processador descrito pode ser chaamdo de \textbf{RV64G}.
+    }
+
+    \subsection{Outras Extensões}
+    { Existem propostas de adição de algumas extensões na especificação da
+        \textit{ISA}, como a \textbf{B} para manipulação de \textit{\textbf{B}its}
+        e a \textbf{V} para operar \textbf{V}etores, mas ainda não foram
+        ratificadas.
+    }
+
+    {Há também a possibilidade de se desenvolver extensões próprias. A regra
+        de nomenclatura para esse caso é iniciar o nome da extensão com um
+        \textbf{X} seguido por um nome alfabético e.g. \textbf{Xhwacha}.
+    }
+
+    \subsection{Arquitetura Privilegiada}
+    { Para a \textit{ISA RISC-V}, existem quatro níveis de privilégio de acesso,
+        sendo eles: o de máquina (nível \textit{bare-metal} que em implementações
+        mais simples trata \textit{syscalls}), o de usuário (o nível onde a
+        aplicação do usuário é executada), o de supervisor (nível do sistema
+        operacional) e o de hipervisor (virtualização).
+    }
+
+    { O nível privilegiado de máquina adiciona alguns \textit{CSRs} importantes
+        como o \texttt{misa} (\textit{Machine ISA register}), que indica as
+        capacidades do processador como largura dos registradores e extensões
+        implementadas codificados em \textit{bit fields}, o \texttt{mstatus}
+        que controla o estado operacional do \textit{hart} como a habilitação
+        de interrupções, o \texttt{mtvec} que contém o endereço de memória
+        do tratamento de \textit{traps}, o \texttt{mepc} que guarda o endereço
+        de memória onde uma instrução causou uma exceção e o \texttt{mcause}
+        que indica a causa da exceção.
+    }
+
+    \subsection{Formatos de Instruções}
+    { As instruções da arquitetura podem ser separadas em subgrupos de acordo com
+        os operadores necessários para o processador interpretá-la. A
+        Figura~\ref{fig:riscv_formats} apresenta os formatos das instruções do
+        módulo I da \textit{ISA RISC-V}, e, para efeitos de comparação, a
+        Figura~\ref{fig:mips_formats} mostra os formatos de instruções equivalentes
+        na arquitetura \textit{MIPS32}.
+    }
+
+    { Apesar dos formatos das instruções da \textit{RISC-V} serem mais
+        complicados que os da \textit{MIPS32} do ponto de vista de um
+        humano, para uma máquina eles são muito mais eficientes. Os campos
+        do \texttt{opcode}, do \texttt{funct3}, dos registradores \texttt{rs1},
+        \texttt{rs2} e \texttt{rd}, e alguns bits dos imediatos \texttt{imm}
+        sempre se encontram na mesma posição na instrução. Isso reduz a
+        complexidade dos multiplexadores de geração de imediatos e da lógica
+        de decodificação da instrução. Além disso, por utilizar imediatos de
+        12 \textit{bits} (ou 20 no caso das instruções do tipo \textbf{U})
+        em vez de imediatos de 16 \textit{bits} (ou 28 nas instruções do
+        tipo \textbf{J}), a \textit{ISA RISC-V} possui mais \textit{bits}
+        disponíveis para codificar mais instruções.
     }
 
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.8\linewidth]{../images/RV_InstructionLength.png}
-        \caption{Codificação de instruções de tamanho variável da arquitetura
-                    \textit{RISC-V}}\label{fig:riscv_var_length}
+        \includegraphics[width=.9\linewidth]{../images/RV_Formats.png}
+        \caption{Formatos de Instruções da \textit{ISA RISC-V}}\label{fig:riscv_formats}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.8\linewidth]{../images/MIPS_Formats.png}
+        \caption{Formatos de Instruções da \textit{ISA MIPS32}}\label{fig:mips_formats}
+    \end{figure}
+
+    \subsection{Formatos de Imediatos}
+    { Os imediatos são operandos descritos na própria instrução em vez de
+        estarem contidos em um registrador. Como os operandos necessitam ter
+        a mesma largura que o banco de registradores, algumas regras são
+        utilizadas para gerar os imediatos. As figuras a seguir mostram a
+        formação de cada tipo de imediato dos formatos das instruções
+        apresentadas na Figura~\ref{fig:riscv_formats}.
+    }
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/RV_I_Imm.png}
+        \caption{Formação do Imediato de tipo I}\label{fig:riscv_i_imm}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/RV_S_Imm.png}
+        \caption{Formação do Imediato de tipo S}\label{fig:riscv_s_imm}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/RV_B_Imm.png}
+        \caption{Formação do Imediato de tipo B}\label{fig:riscv_b_imm}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/RV_U_Imm.png}
+        \caption{Formação do Imediato de tipo U}\label{fig:riscv_u_imm}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/RV_J_Imm.png}
+        \caption{Formação do Imediato de tipo J}\label{fig:riscv_j_imm}
     \end{figure}
 
 
-        \subsubsection{Extensão de Registradores de Controle e Estado}
-        { A extensão \textbf{Zicsr} implementa o banco de \textit{Control and
-            Status Registers} (\textit{CSRs}) e as instruções para acessá-los.
-            Esses registradores contemplam um relógio de tempo real (\textit{RTC}),
-            contadores de instruções processadas e \textit{ticks} do \textit{clock},
-            além de habilitar/desabilitar funcionalidades do processador e checar
-            seu estado.
-        }
+\section{\textit{IDE RARS}}
+{ O Ambiente Integrado de Desenvolvimento (\textit{IDE}) \textit{RARS}
+    (\textit{RISC-V Assembler and Runtime Simulator}) é um \textit{software
+    open source}~\cite{rars_git} utilizado para desenvolver, montar, simular e
+    exportar código em \textit{assembly RISC-V}. O projeto é um \textit{fork}
+    do \textit{MARS} (\textit{MIPS Assembler and Runtime Simulator}), outro
+    \textit{software open source}~\cite{mars_site} muito utilizado em cursos
+    de arquitetura de computadores ministrados em \textit{MIPS32}.
+}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.9\linewidth]{../images/rars.png}
+    \caption{\textit{IDE RARS}}\label{fig:rars}
+\end{figure}
 
-        \subsubsection{Extensão de Multiplicação e Divisão}
-        { As operações aritméticas de multiplicação, divisão e resto são
-            implementadas pela extensão \textbf{M}.
-        }
+{ O \textit{RARS} é compatível com as \textit{ISAs} \textbf{RV32IMFD} e
+    \textbf{RV64IMFD} com suporte a interrupções e implementa parcialmente a
+    extensão \textbf{Zicsr}. Também tem suporte a \textit{syscalls}. Possui
+    também um guia de programação em \textit{assembly RISC-V} e pode ser
+    utilizado como referência de instruções e pseudo-instruções.
+}
 
-        \subsubsection{Extensões de Ponto Flutuante}
-        { A extensão \textbf{F} implementa instruções de ponto flutuante
-            \textit{IEEE 754 - 2008} de precisão simples que adiciona
-            no processador um banco de 32 registradores de 32 \textit{bits}
-            usado para suas operações e um \textit{CSR} para controlar o modo
-            de arredondamento e identificar anormalidades na execução de uma
-            instrução e.g. divisão por zero.
-        }
-
-        { Suas instruções contemplam \textit{load/store} no banco de registradores
-            de ponto flutuante, transferência de dados entre os registradores de
-            ponto flutuante e os de números inteiros (com ou sem conversão para
-            inteiro), operações aritméticas e comparações.
-        }
-
-        { A extensão \textbf{D} requer a implementação da extensão \textbf{F} e
-            adiciona suporte para operações de ponto flutuante de precisão dupla,
-            aumentando a largura do banco de registradores de ponto flutuante
-            para 64 \textit{bits}. Há ainda a extensão \textbf{Q} para operações
-            de ponto flutuante com precisão quádrupla, que depende da extensão
-            \textbf{D} estar implementada e extende a largura do banco de
-            registradores de ponto flutuante para 128 \textit{bits}.
-        }
-
-        \subsubsection{Extensões A e Zifencei}
-        { A extensão \textbf{A} implementa instruções de acesso atômico a memória,
-            enquanto a extensão \textbf{Zifencei} implementa \textit{fencing}
-            para escrita e leitura da memória de instruções em um \textit{hart}.
-        }
-
-        \subsubsection{Nomenclatura do processador implementado}
-        { A nomenclatura de um processador \textit{RISC-V} segue a seguinte
-            estrutura: as letras \textbf{RV} seguidas da largura do banco de
-            registradores (\textbf{32/64}), da letra do módulo base (\textbf{I/E}),
-            conforme visto na Seção~\ref{riscv_basic_arch}, e em seguida as outras
-            extensões implementadas.
-        }
-
-        { As extensões \textbf{M}, \textbf{A}, \textbf{F}, \textbf{D},
-            \textbf{Zicsr} e \textbf{Zifencei} utilizadas com o módulo \textbf{I}
-            constituem um conjunto considerado um alvo razoável para o
-            desenvolvimento de um processador de uso geral. Pela convenção de
-            nomenclatura, um processador de 64 \textit{bits} com essa implementação
-            se chamaria \textbf{RV64IMAFDZicsr\_Zifencei}. Para uma melhor
-            apresentação, o conjunto \textbf{IMAFDZicsr\_Zifencei} pode ser abreviado
-            para \textbf{G} (de \textit{\textbf{G}eneral-purpose}). Assim, o
-            processador descrito pode ser chaamdo de \textbf{RV64G}.
-        }
-
-        \subsubsection{Outras Extensões}
-        { Existem propostas de adição de algumas extensões na especificação da
-            \textit{ISA}, como a \textbf{B} para manipulação de \textit{\textbf{B}its}
-            e a \textbf{V} para operar \textbf{V}etores, mas ainda não foram
-            ratificadas.
-        }
-
-        {Há também a possibilidade de se desenvolver extensões próprias. A regra
-            de nomenclatura para esse caso é iniciar o nome da extensão com um
-            \textbf{X} seguido por um nome alfabético e.g. \textbf{Xhwacha}.
-        }
-
-        \subsubsection{Arquitetura Privilegiada}
-        { Para a \textit{ISA RISC-V}, existem quatro níveis de privilégio de acesso,
-            sendo eles: o de máquina (nível \textit{bare-metal} que em implementações
-            mais simples trata \textit{syscalls}), o de usuário (o nível onde a
-            aplicação do usuário é executada), o de supervisor (nível do sistema
-            operacional) e o de hipervisor (virtualização).
-        }
-
-        { O nível privilegiado de máquina adiciona alguns \textit{CSRs} importantes
-            como o \texttt{misa} (\textit{Machine ISA register}), que indica as
-            capacidades do processador como largura dos registradores e extensões
-            implementadas codificados em \textit{bit fields}, o \texttt{mstatus}
-            que controla o estado operacional do \textit{hart} como a habilitação
-            de interrupções, o \texttt{mtvec} que contém o endereço de memória
-            do tratamento de \textit{traps}, o \texttt{mepc} que guarda o endereço
-            de memória onde uma instrução causou uma exceção e o \texttt{mcause}
-            que indica a causa da exceção.
-        }
-
-        \subsubsection{Formatos de Instruções}
-        { As instruções da arquitetura podem ser separadas em subgrupos de acordo com
-            os operadores necessários para o processador interpretá-la. A
-            Figura~\ref{fig:riscv_formats} apresenta os formatos das instruções do
-            módulo I da \textit{ISA RISC-V}, e, para efeitos de comparação, a
-            Figura~\ref{fig:mips_formats} mostra os formatos de instruções equivalentes
-            na arquitetura \textit{MIPS32}.
-        }
-
-        { Apesar dos formatos das instruções da \textit{RISC-V} serem mais
-            complicados que os da \textit{MIPS32} do ponto de vista de um
-            humano, para uma máquina eles são muito mais eficientes. Os campos
-            do \texttt{opcode}, do \texttt{funct3}, dos registradores \texttt{rs1},
-            \texttt{rs2} e \texttt{rd}, e alguns bits dos imediatos \texttt{imm}
-            sempre se encontram na mesma posição na instrução. Isso reduz a
-            complexidade dos multiplexadores de geração de imediatos e da lógica
-            de decodificação da instrução. Além disso, por utilizar imediatos de
-            12 \textit{bits} (ou 20 no caso das instruções do tipo \textbf{U})
-            em vez de imediatos de 16 \textit{bits} (ou 28 nas instruções do
-            tipo \textbf{J}), a \textit{ISA RISC-V} possui mais \textit{bits}
-            disponíveis para codificar mais instruções.
-        }
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/RV_Formats.png}
-            \caption{Formatos de Instruções da \textit{ISA RISC-V}
-                }\label{fig:riscv_formats}
-        \end{figure}
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.8\linewidth]{../images/MIPS_Formats.png}
-            \caption{Formatos de Instruções da \textit{ISA MIPS32}
-                }\label{fig:mips_formats}
-        \end{figure}
-
-        \subsubsection{Formatos de Imediatos}
-        { Os imediatos são operandos descritos na própria instrução em vez de
-            estarem contidos em um registrador. Como os operandos necessitam ter
-            a mesma largura que o banco de registradores, algumas regras são
-            utilizadas para gerar os imediatos. As figuras a seguir mostram a
-            formação de cada tipo de imediato dos formatos das instruções
-            apresentadas na Figura~\ref{fig:riscv_formats}.
-        }
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/RV_I_Imm.png}
-            \caption{Formação do Imediato de tipo I
-                }\label{fig:riscv_i_imm}
-        \end{figure}
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/RV_S_Imm.png}
-            \caption{Formação do Imediato de tipo S
-                }\label{fig:riscv_s_imm}
-        \end{figure}
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/RV_B_Imm.png}
-            \caption{Formação do Imediato de tipo B
-                }\label{fig:riscv_b_imm}
-        \end{figure}
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/RV_U_Imm.png}
-            \caption{Formação do Imediato de tipo U
-                }\label{fig:riscv_u_imm}
-        \end{figure}
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/RV_J_Imm.png}
-            \caption{Formação do Imediato de tipo J
-                }\label{fig:riscv_j_imm}
-        \end{figure}
+{ Com sua função de simulador, permite executar o código instrução por instrução,
+    mostrando as modificações nos bancos de registradores e na memória. Além
+    disso, permite exportar o programa montado no formato \textit{.mif} para
+    uso na inicialização de memória de \textit{FPGAs}.
+}
 
 
 \section{Microarquiteturas}
-{}
+{ Enquanto o campo de arquitetura de computadores explora a especificação dos
+    conjuntos de instruções, a organização de computadores trata da forma com que
+    as especificações são implementadas. Os padrões de implementação de
+    \textit{ISAs} são chamados de microarquiteturas, e esses padrões podem ser
+    combinados para produzir soluções mais complexas.
+}
+
+{ Processadores são circuitos elétricos, e podem ser descritos por diagramas.
+    Nesses diagramas, o caminho de dados (\textit{datapath}) representa a
+    conexão feita entre blocos lógicos por barramentos onde os sinais a serem
+    processados trafegam. A unidade de controle é responsável por interpretar as
+    instruções recebidas e comandar os blocos lógicos para executar o comando.
+    Os blocos lógicos são as Unidades de Lógica e Aritmética (ULA, ou
+    \textit{ALU} em inglês), bancos de registradores (\textit{regfiles})
+    multiplexadores e blocos de memória.
+}
 
     \subsection{Uniciclo}
-    {}
+    { Processadores uniciclo são implementados de forma com que cada instrução
+        seja recuperada (\textit{fetch}), decodificada (\textit{decode}),
+        executada e finalizada (\textit{retire}) durante um único \textit{tick}
+        do \textit{clock}. Para isso, a unidade de controle deve conter somente
+        lógica combinacional e a frequência de operação do \textit{clock} deve
+        ser projetada para o pior caso, ou seja, a instrução que leva mais tempo
+        entre seu \textit{fetching} e seu \textit{retiring}.
+    }
+
+    { A implementação da microarquitetura uniciclo é uma das mais mais simples
+        de se fazer, mas o processador resultante apresenta baixa frequência de
+        processamento. Para \textit{workloads} que utilizam muitas instruções
+        complexas, seu desempenho pode ser parecido ou até melhor que implementações
+        mais elaboradas, mas se a maioria da carga de processamento for de
+        instruções rápidas, o uniciclo sofre uma penalidade por ficar ocioso
+        durante parte do seu ciclo.
+    }
 
     \subsection{Multiciclo}
-    {}
+    { A microarquitetura multiciclo também é conhecida como implementação por
+        microcódigo. As instruções são ``quebradas'' em etapas menores, como
+        o acesso à memória, a leitura do banco de registradores, a seleção de um
+        sinal multiplexado, a realização de uma operação lógica ou aritmética,
+        dentre outras possibilidades. A unidade de controle é implementada por
+        lógica sequencial como uma máquina de estados finitos, e a frequência
+        máxima de operação é limitada pela etapa mais lenta da máquina de estados.
+    }
 
-    \subsection{Pipeline}
-    {}
+    { Como a quantidade de estados que uma instrução deve passar entre seu
+        \textit{fetching} e \textit{retiring} depende de sua complexidade e de
+        como a máquina de estados foi projetada, a frequência do \textit{clock}
+        costuma ser mais alta que de uma implementação uniciclo, mas isso não
+        significa que seu desempenho será melhor, pois o desempenho também depende
+        do \textit{workload}. Se a maioria das instruções executadas precisa
+        passar por diversos estados para serem completadas, o somatório de ciclos
+        menores pode resultar em um intervalo de tempo maior que o do ciclo único.
+    }
+
+    \subsection{\textit{Pipeline}}
+    { Uma implementação \textit{pipeline} consiste em inserir registradores entre
+        os blocos lógicos do \textit{datapath}, o dividindo em etapas. O objetivo
+        é ser capaz de processar mais de uma instrução por vez. A
+        Figura~\ref{fig:pipe_generic} mostra um \textit{pipeline} genérico de
+        quatro estágios. O processo inicia com o \textit{fetching} de uma instrução
+        no primeiro ciclo do \textit{clock}. No segundo ciclo do \textit{clock},
+        a primeira instrução passa para o estágio de \textit{decode} e uma nova
+        instrução entra no primeiro estágio do \textit{pipeline}. No terceiro
+        \textit{tick}, a primeira instrução está no terceiro estágio, a segunda
+        no segundo estágio e a terceira no primeiro estágio. No quarto ciclo,
+        a primeira instrução está no quarto estágio, a segunda instrução no
+        terceiro estágio, a terceira instrução no segundo estágio e a quarta
+        instrução acaba de entrar no \textit{pipeline}. No ciclo seguinte, a
+        primeira instrução é finalizada, as outras três instruções passam para
+        o estágio seguinte e uma nova instrução entra no primeiro estágio do
+        \textit{pipeline}.
+    }
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.7\linewidth]{../images/pipeline_4_stage.png}
+        \caption[\textit{Pipeline} genérico com 4 estágios]{\textit{Pipeline}
+            genérico com 4 estágios. \quad Fonte:~\cite{pipe_generic}}\label{fig:pipe_generic}
+    \end{figure}
+
+    { A frequência do \textit{clock} é limitada pelo estágio mais lento. O objetivo
+        é manter o \textit{pipeline} com todos os seus estágios preenchidos, e
+        assim, a cada \textit{tick}, uma instrução é completada, sendo uma
+        implementação com ótimo desempenho. Porém, é comum que uma instrução
+        precise do resultado de outra instrução que ainda não foi finalizada.
+    }
+
+    { Uma solução simples porém ineficiente para o problema é limpar os estágios
+        anteriores, inserindo \texttt{nop}s (instruções que não realizam nenhuma
+        tarefa) até que o resultado esteja disponível e voltar a preencher o
+        \textit{pipeline}. Uma solução mais robusta seria implementar uma
+        unidade de identificação e tratamento de \textit{forwards} e \textit{hazards}.
+        \textit{Forwards} ocorrem quando a instrução anterior ainda não finalizou,
+        mas seu resultado já está disponível em algum estágio do \textit{pipeline}
+        e o valor pode ser injetado na etapa que precisa dele. Já os \textit{hazards}
+        são situações onde o \textit{forward} não é possível e \texttt{nop}s
+        precisam ser inseridos.
+    }
+
 
 \section{Representação de Hardware}
 {}
@@ -593,9 +706,6 @@
             \textit{input} e \textit{output} (\textit{IO}) não se tornem um
             gargalo que comprometa o resto do \textit{design}.
         }
-
-\section{RARS - \textit{IDE} para programar e simular \textit{assembly RISC-V}}
-{}
 
 
 \section{Estado da Arte dos processadores RISC-V}
