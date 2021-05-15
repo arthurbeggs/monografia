@@ -548,26 +548,82 @@
     }
 
 
-\section{Representação de Hardware}
-{}
+\section{Representação de \textit{Hardware}}
+{ Existem diversas maneiras de representar circuitos eletrônicos. Na programação
+    visual, as entradas e saídas dos blocos funcionais são conectados de forma
+    gráfica, montando um diagrama do circuito. Já as linguagens de descrição de
+    \textit{hardware} (\textit{HDLs}) como o \textit{Verilog} e o \textit{VHDL}
+    permitem uma descrição precisa da estrutura e comportamento dos circuitos.
+    Outra forma de representação utiliza a síntese de alto nível (\textit{High-Level Synthesis}),
+    onde se desenvolve um algoritmo em linguagens como \textit{C++} ou \textit{MATLAB},
+    que será ``traduzido'' para um circuito eletrônico.
+}
 
-    \subsection{VHDL}
-    {}
+{ Essas reprentações permitem a geração de \textit{netlists} utilizadas para
+    simular o projeto, sintetizá-lo em \textit{FPGAs} ou fazer o \textit{tapeout}
+    para produção de \textit{chips}.
+}
 
-    \subsection{Verilog}
-    {}
+    \subsection{\textit{Verilog}}
+    { \textit{Verilog} é uma \textit{HDL} comumente utilizada no projeto \textit{RTL}
+        de circuitos lógicos. Módulos escritos em \textit{Verilog} descrevem seus
+        sinais de entrada e saída como parâmetros para a conexão com outros módulos.
+        As suas principais ``variáveis'' são \textit{wires} (fios que conectam
+        um sinal a outro) e \textit{regs} (registradores ou \textit{drivers} de
+        sinal). A lógica do módulo pode ser implementada por \textit{assignments}
+        (a conexão de um fio a um registrador ou um \textit{driver}) ou por
+        blocos de lógica sequencial ou combinacional, usando operadores blocantes
+        (\texttt{=}) ou não-blocantes (\texttt{<=}).
+    }
 
-\section{Síntese Lógica}
-{}
+    { Para quem está acostumado com linguagens imperativas como o \textit{C},
+        há uma barreira inicial para entender que o código não é executado linha
+        por linha, mas sim de maneira concorrente, e que a escolha entre operadores
+        blocantes e não-blocantes afeta a forma com que os sinais são propagados
+        no circuito.
+    }
+
+    { A sintaxe do \textit{Verilog} é menos verbosa que a do \textit{VHDL}, que
+        é fortemente tipada. Enquanto a verificação formal de \textit{designs}
+        em \textit{VHDL} é um processo mais natural, o \textit{Verilog} possui
+        uma curva de aprendizado menor, sendo ideal para o primeiro contato com
+        linguagens de descrição de \textit{hardware}.
+    }
 
     \subsection{Análise e Síntese}
-    {}
+    { O processo de análise de representações de \textit{hardware} verifica a
+        sintaxe da representação, identificando estruturas inválidas, sinais não
+        conectados e possíveis erros semânticos que farão com que a \textit{netlist}
+        não possa ser gerada ou não se comporte conforme o esperado.
+    }
 
-    \subsection{Fitting}
-    {}
+    { Já a síntese é o processo de transformar a estrutura analisada em uma
+        \textit{netlist}, estrutura que contém a lista de componentes eletrônicos
+        do \textit{design} e a descrição de como eles se conectam.
+    }
 
-    \subsection{Timing Analyzer}
-    {}
+    \subsection{\textit{Fitting} e \textit{Timing Analyzer}}
+    { O \textit{fitting} é o processo de criar as rotas de conexão da \textit{netlist}.
+        O \textit{design} é mapeado para a plataforma onde será implementado.
+        Já o \textit{timing analyzer} define restrições de temporização entre
+        elementos do circuito que o \textit{fitter} tenta respeitar. O
+        \textit{fitter} itera diversas vezes o posicionamento e roteamento dos
+        componentes até gerar o resultado final.
+    }
+
+    { Com a \textit{netlist} roteada, o \textit{Timing Analyzer} é executado
+        novamente, testa se o \textit{fitter} conseguiu atender às restrições e
+        gera um relatório. Caso alguma rstrição essencial não for respeitada,
+        o \textit{Fitter} pode ser novamente executado com opções diferentes que
+        impactarão outras características do circuito final, como quantidade de
+        componentes e consumo energético.
+    }
+
+    { Pode ser necessário reimplementar a
+        representação do \textit{hardware} para que todos os requisitos de projeto
+        sejam atendidos.
+    }
+
 
 \section{Field Programmable Gate Arrays}
 { \textit{Field Programmable Gate Arrays} (\textit{FPGAs}) são circuitos
@@ -809,6 +865,6 @@
 { O capítulo abordou os conceitos que formam o alicerce do trabalho. O capítulo
     seguinte apresentará a proposta do projeto, descrevendo sua implementação
     e documentando o processo de execução e modificação do produto final a fim
-    de permitir sua reprodução e reuso.
+    de permitir sua utilização futura.
 }
 
