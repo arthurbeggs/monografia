@@ -2,10 +2,10 @@
 
 { O sistema proposto consiste em um \textit{soft-core} da \textit{ISA RISC-V}
     de 32 \textit{bits} com as extensões \textbf{I}, \textbf{M} e \textbf{F},
-    podendo ser sintetizado nas versões \textit{RV32I}, \textit{RV32IM} ou
-    \textit{RV32IMF}. A extensão \textit{Zicsr} com os Registradores de Controle
+    podendo ser sintetizado nas versões \textbf{RV32I}, \textbf{RV32IM} ou
+    \textbf{RV32IMF}. A extensão \textbf{Zicsr} com os Registradores de Controle
     e Estado (\textit{CSR}) é parcialmente implementada em todas as três
-    configurações.
+    configurações. Chamadas de sistema (\textit{syscalls}) também são implementadas.
 }
 
 { Cada uma das combinações da \textit{ISA} pode ser realizada em três
@@ -112,7 +112,7 @@
     não dependem da arquitetura do processador, exceto a tela de
     \textit{debug} presente na interface de vídeo. No entanto, a tela de
     \textit{debug} foi projetada de modo a ser relativamente fácil
-    customizá-la para uso em outra arquitetura.
+    customizá-la para utilização em outra arquitetura.
 }
 
 {
@@ -124,8 +124,8 @@
 
 \begin{figure}[H]
 \centering
-    \includegraphics[width=0.6\linewidth]{../images/placeholder.jpg}
-    \caption{Diagrama de blocos do sistema.}\label{fig:diagram_fpga_blocks}
+    \includegraphics[width=0.9\linewidth]{../images/fpga/fpga_simplified_block_diagram.png}
+    \caption{Diagrama de blocos simplificado do sistema.}\label{fig:diagram_fpga_blocks}
 \end{figure}
 
 
@@ -287,7 +287,7 @@
         tratando exceções e executando as \textit{syscalls}. As chamadas de
         sistema implementadas são apresentadas na Tabela~\ref{table:syscalls}.
     }
-    \begin{longtable}{|l|c|p{3.5cm}|l |}
+    \begin{longtable}{|l|c|p{3cm}|l |}
         \caption{Tabela de \textit{syscalls} implementadas.}\label{table:syscalls}\\
         \hline
         \textit{syscall}                    & \texttt{a7}             & Argumentos                & Operação\\*
@@ -536,7 +536,7 @@
         \textit{menu} \texttt{Tools > Run Simulation Tool > Gate Level Simulation...},
         que apesar do nome, executará uma simulação \textit{RTL}. A opção
         \texttt{Tools > Run Simulation Tool > RTL Simulation}, utiliza o script
-        gerado automaticamente e não funciona.
+        gerado automaticamente e não funciona corretamente.
     }
 
     { Ao executar a simulação, os \textit{scripts NativeLink} iniciarão o
