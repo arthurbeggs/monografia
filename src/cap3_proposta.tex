@@ -151,7 +151,7 @@
     }
 
 
-\section{Implementação dos \textit{soft-cores} (Incompleto)}
+\section{Implementação dos \textit{soft-cores}}
     { Todos os \textit{soft-cores} implementados possuem execução em ordem, sem
         \textit{branch prediction}, sem \textit{caching} de memória e sem
         \textit{Return Address Stack}. O processador é escalar e possui um
@@ -163,7 +163,7 @@
         registradores e os blocos de memória \textit{M10K}.
     }
 
-    \subsection{Microarquitetura Uniciclo (Incompleto)}
+    \subsection{Microarquitetura Uniciclo}
 
         { Os processsadores uniciclo com extensões I e IM são implementados
             conforme o diagrama da Figura~\ref{fig:diagram_rv32i_uni}. O módulo
@@ -179,6 +179,43 @@
             microarquitetura uniciclo}\label{fig:diagram_rv32i_uni}
         \end{figure}
 
+        { A instrução recuperada da memória de instruções \texttt{core/memory/CodeMemory\_Interface}
+            no endereço do registrador \texttt{PC} é lida pela unidade de controle
+            \texttt{core/risc\_v/Control\_UNI.v}, que gera todos os sinais de
+            controle enviados ao caminho de dados \texttt{core/risc\_v/Datapath\_Uni.v}.
+            O banco de registradores \texttt{core/risc\_v/Registers.v} também
+            recebe alguns \textit{bits} da instrução (para endereçamento dos
+            registradores) e os dados para possivelmente serem escritos no registrador
+            \texttt{rd} provenientes do multiplexador de \textit{write-back}.
+        }
+
+        { A unidade de lógica e aritmética \texttt{core/risc\_v/ALU.v} possui um
+            multiplexador em cada uma de suas entradas para selecionar os operandos.
+            Já a memória de dados \texttt{core/memory/DataMemory\_Interface.v}
+            recebe o endereço de escrita/leitura vindo da saída da ULA, e suas
+            operações de \textit{load/store} são comandadas pelos controladores
+            \texttt{core/memory/MemLoad.v} e \texttt{core/memory/MemStore.v}.
+        }
+
+        { O banco de registradores de contorle e estado \texttt{core/risc\_v/CSRegisters.v}
+            também é endereçado pela instrução, e o dado que possivelmente será
+            gravado origina da ULA.
+        }
+
+        { Há ainda as unidades de controle de exceção \texttt{core/risc\_v/ExceptionControl.v},
+            responsável por redirecionar o contador de programa \texttt{PC} para
+            o endereço do \textit{kernel} quando ocorre uma exceção, como uma
+            instrução inválida ou um endereço desalinhado. A unidade de controle
+            de \textit{branches} \texttt{core/risc\_v/BranchControl.v} é responsável
+            por rotear o endereço da próxima instrução caso ocorra um \textit{branch}
+            ou \textit{jump}.
+        }
+
+        { A única diferença entre a implementação da \textit{ISA RV32I} e da
+            \textit{RV32IM} é a adição de novas operações na unidade de lógica e
+            aritmética.
+        }
+
         { O processador uniciclo com extensão IMF é implementado conforme o
             diagrama da Figura~\ref{fig:diagram_rv32imf_uni}. A unidade lógica e
             aritmética de ponto flutuante utiliza uma frequência de \textit{clock}
@@ -186,6 +223,12 @@
             uniciclo que utiliza mais de um ciclo de relógio para realizar sua
             operação. A frequência máxima de operação do \textit{clock} principal
             do processador continua limitada pela operação mais lenta.
+        }
+
+        { Exceto o roteamento extra do banco de registadores de ponto flutuante
+            \texttt{core/risc\_v/FRegisters.v} e da ULA de ponto flutuante de
+            precisão simples \texttt{core/risc\_v/FPULA/FPALU.v}, o restante do
+            circuito segue as mesmas conexões.
         }
 
         \begin{figure}[H]
