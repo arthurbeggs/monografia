@@ -1,14 +1,76 @@
 \chapter{Conclusões}\label{cap5_conclusoes}
 
+{ Nos capítulos anteriores foram explorados conceitos sobre organização e arquitetura
+    de computadores, \textit{overviews} de arquiteturas famosas e um aprofundamento
+    na especificação do conjunto de instruções \textit{RISC-V}. Além disso, foi
+    descrito o que é, como funciona e quais são as peças do Ambiente de Aprendizado
+    de microarquiteturas Uniciclo, Multiciclo e Pipeline, o \textit{RISC-V SiMPLE},
+    desde o uso de ferramentas preexistentes até a criação de materiais próprios.
+}
 
+
+\section{Objetivos Alcançados}
+    { O projeto de melhoria e documentação da plataforma utilizada no laboratório
+        obteve resultados satisfatórios. Tanto a presença da documentação da
+        arquitetura quanto as melhorias em código devem permitir que o uso da
+        ferramenta seja facilitado.
+    }
+
+    { A implementação do conjunto de instruções \textit{RV32IMF} em \textit{pipeline}
+        de cinco estágios ainda apresenta alguns \textit{bugs} de execução.
+        O trabalho conseguiu corrigir alguns desses erros, mas a implementação
+        ainda não se encontra no estado de ter a garantia de funcionamento correto
+        do código ao executar operações de ponto flutuante sem a inserção de
+        \texttt{nop}s no código, o que é caracterizado como uma prática ruim.
+    }
+
+    { Em relação às oito outras implementações, não foram encontrados erros nos
+        testes realizados, e seu uso pode ser considerado seguro.
+    }
+
+    { A expansão das ferramentas de auxílio ao desenvolvimento e depuração como
+        a automação do processo de síntese de todas as versões do processador e
+        o uso de ferramentas mais completas como o \textit{GTKWave} trouxeram
+        maior observabilidade dos problemas, suas causas e caminhos para solucioná-los,
+        acelerando o ciclo de desenvolvimento do projeto. Com isso, o resultado
+        final se alinha à maioria das suas expectativas.
+    }
+
+\clearpage
 \section{Perspectivas Futuras}
+    { Apesar do trabalho ter tido bom progresso, ainda existem diversas possíveis
+        melhorias, como:
+    }
+    \begin{itemize}
+        \item Deixar a implementação do \textit{pipeline bug-free};
+        \item Simplificar partes do projeto de \textit{hardware} para melhorar o desempenho do sistema;
+        \item Implementar uma versão de 64 \textit{bits} do sistema;
+        \item Implementar uma \textit{ISA} diferente, usando a plataforma como base e permitindo a escolha da arquitetura pelo arquivo \texttt{config.v}.
+    \end{itemize}
 
-    % NOTE: Colocar em lugar apropriado
+
+\section{Palavras Finais}
+
     { Com o recente sucesso dos processadores \textit{ARM M1} lançados pela
         \textit{Apple}, e com os processadores \textit{ARM Graviton} disponíveis
         no serviço de servidores em nuvem da \textit{Amazon}, é uma possibilidade
         forte que o desenvolvimento de plataformas \textit{RISC-V} para uso geral
-        desacelere.
+        desacelere e o mercado \textit{ARM} cresça ainda mais. De um ponto de vista
+        mercadológico, o desenvolvimento de uma plataforma de aprendizagem em
+        \textit{ARM} aumentaria as chances de aplicação direta do conteúdo aprendido
+        no ambiente de trabalho.
     }
 
+    { Atualmente, algumas versões de seu conjunto de instruções foram abertas.
+        Porém, a incerteza quanto a possíveis problemas de licenciamento para
+        desenvolvimento e distribuição de uma solução \textit{ARM} no início do
+        projeto inviabilizaram seu uso para o presente trabalho.
+    }
+
+    { Mesmo assim, a \textit{RISC-V} já possui um bom alicerce e tem futuro promissor
+        e a escolha da \textit{ISA} para o desenvolvimento do trabalho se mostrou
+        uma decisão acertada. Mercados emergentes também abrem diversas portas e
+        se espera que o conhecimento adquirido desenvolvendo e utilizando a
+        plataforma se provará de grande valia.
+    }
 
