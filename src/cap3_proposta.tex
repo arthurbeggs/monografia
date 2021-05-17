@@ -20,11 +20,12 @@
     Entradas e Saídas Mapeadas em Memória (\textit{MMIO}) para que o
     \textit{soft-core} possa utilizá-los. A síntese dos controladores dos
     periféricos, como a saída de vídeo, entrada de teclado e barramento
-    \textit{RS-232}, é opcional.
+    \textit{RS-232} é opcional.
 }
 
 \section{Organização do projeto}
-{ O projeto é organizado seguindo o seguinte arranjo de pastas:
+    { O projeto é organizado seguindo o seguinte arranjo de pastas:
+    }
 \begin{verbatim}
     ┌─ core                     (arquivos que implementam o soft-core)
     │  ├─ clock                 (arquivos de interface e controle de sinais
@@ -93,43 +94,64 @@
     │                               tempo de simulação)
     ├─ tools
     │  ├─ bitmap_converter      (conversor de imagens para uso na FPGA)
-    │  └─ rars                  (montador e simulador de assembly RISC-V)
+    │  ├─ rars                  (montador e simulador de assembly RISC-V)
+    │  └─ riscv-disassembler    (disassembler de instruções usado para
+    │                               traduzir o código de máquina dos
+    │                               sinais de instruções no GTKWave e
+    │                               como ferramenta de linha de comando)
     ├─ vendor
     │  └─ ...                   (licenças dos softwares utilizados)
+    ├─ inst_decode.sh           (script para traduzir de forma rápida uma
+    │                               instrução em formato hexadecimal
+    │                               usando o riscv-disassembler)
     ├─ LICENSE                  (licença do sistema implementado)
     ├─ make.sh                  (script para síntese e simulação de todas
     │                               as variantes do processador)
+    ├─ gtkwave.sh               (script para invocar o GTKWave usando a
+    │                               pasta do projeto como diretório raíz;
+    │                               necessita do GTKWave instalado)
+    ├─ rars.sh                  (script para invocar o RARS presente em
+    │                               tools/rars usando a pasta do projeto
+    │                               como diretório raiz; necessita do
+    │                               Java instalado)
     └─ README.md                (README sobre o que é o projeto e como
                                     utilizá-lo)
 \end{verbatim}
-}
-
-{ O trabalho também é organizado de forma a facilitar a migração para placas de
-    desenvolvimento diferentes da \textit{DE1-SoC} ou trocar o \textit{soft-core}
-    desenvolvido por outra implementação, independente da sua \textit{ISA}.
-    O \textit{soft-core} implementado se encontra no caminho
-    \texttt{core/risc\_v}. Assim, os demais módulos presentes na pasta \texttt{core}
-    não dependem da arquitetura do processador, exceto a tela de
-    \textit{debug} presente na interface de vídeo. No entanto, a tela de
-    \textit{debug} foi projetada de modo a ser relativamente fácil
-    customizá-la para utilização em outra arquitetura.
-}
-
-{
-    O arquivo \texttt{core/config.v} possui todas as opções de configuração,
-    definição de parâmetros e endereçamento de memória dos módulos, facilitando
-    escolher as extensões, microarquitetura e periféricos sintetizados.
-}
 
 
-\begin{figure}[H]
-\centering
-    \includegraphics[width=0.9\linewidth]{../images/fpga/fpga_simplified_block_diagram.png}
-    \caption{Diagrama de blocos simplificado do sistema.}\label{fig:diagram_fpga_blocks}
-\end{figure}
+    { O trabalho também é organizado de forma a facilitar a migração para placas de
+        desenvolvimento diferentes da \textit{DE1-SoC} ou trocar o \textit{soft-core}
+        desenvolvido por outra implementação, independente da sua \textit{ISA}.
+        O \textit{soft-core} implementado se encontra no caminho
+        \texttt{core/risc\_v}. Assim, os demais módulos presentes na pasta \texttt{core}
+        não dependem da arquitetura do processador, exceto a tela de
+        \textit{debug} presente na interface de vídeo, que mostra os nomes dos
+        registradores segundo as convenções da \textit{RISC-V}. No entanto, a tela de
+        \textit{debug} foi projetada de modo a ser relativamente fácil
+        customizá-la para utilização em outra arquitetura.
+    }
+
+    { A Figura~\ref{fig:diagram_fpga_blocks} mostra um diagrama de blocos simplificado
+        da hierarquia dos módulos que compõe o projeto sintetizável. A principal
+        estrutura, a \texttt{fpga\_top} representa a placa de desenvolvimento, enquanto
+        a \texttt{cpu} é o \textit{soft-core} implementado.
+    }
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=0.9\linewidth]{../images/fpga/fpga_simplified_block_diagram.png}
+        \caption{Diagrama de blocos simplificado do sistema}\label{fig:diagram_fpga_blocks}
+    \end{figure}
+
+    {
+        O arquivo \texttt{core/config.v} possui todas as opções de configuração,
+        definição de parâmetros e endereçamento de memória dos módulos, facilitando
+        escolher as extensões, microarquitetura e periféricos sintetizados. Outras
+        pastas e arquivos relevantes serão discutidos nas próximas seções.
+    }
 
 
-\section{Implementação dos \textit{soft-cores}}
+\section{Implementação dos \textit{soft-cores} (Incompleto)}
     { Todos os \textit{soft-cores} implementados possuem execução em ordem, sem
         \textit{branch prediction}, sem \textit{caching} de memória e sem
         \textit{Return Address Stack}. O processador é escalar e possui um
@@ -141,7 +163,7 @@
         registradores e os blocos de memória \textit{M10K}.
     }
 
-    \subsection{Microarquitetura Uniciclo}
+    \subsection{Microarquitetura Uniciclo (Incompleto)}
 
         { Os processsadores uniciclo com extensões I e IM são implementados
             conforme o diagrama da Figura~\ref{fig:diagram_rv32i_uni}. O módulo
@@ -152,9 +174,9 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
+            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
             \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-            microarquitetura uniciclo.}\label{fig:diagram_rv32i_uni}
+            microarquitetura uniciclo}\label{fig:diagram_rv32i_uni}
         \end{figure}
 
         { O processador uniciclo com extensão IMF é implementado conforme o
@@ -168,12 +190,12 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/singlecycle-RV32IMF.png}
+            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/singlecycle-RV32IMF.png}
             \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-            microarquitetura uniciclo.}\label{fig:diagram_rv32imf_uni}
+            microarquitetura uniciclo}\label{fig:diagram_rv32imf_uni}
         \end{figure}
 
-    \subsection{Microarquitetura Multiciclo}
+    \subsection{Microarquitetura Multiciclo (Incompleto)}
         { Os processadores multiciclo com extensões I e IM são implementados
             conforme o diagrama da Figura~\ref{fig:diagram_rv32i_multi}. A
             unidade de controle é implementada utilizando microcódigo para
@@ -184,9 +206,9 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/multicycle-RV32I-RV32IM.png}
+            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/multicycle-RV32I-RV32IM.png}
             \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-            microarquitetura multiciclo.}\label{fig:diagram_rv32i_multi}
+            microarquitetura multiciclo}\label{fig:diagram_rv32i_multi}
         \end{figure}
 
         { O processador multicilo com extensões IMF é implementado conforme o
@@ -202,13 +224,13 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=1\linewidth]{../images/uarch_diagrams/multicycle-RV32IMF.png}
+            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/multicycle-RV32IMF.png}
             \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-            microarquitetura multiciclo.}\label{fig:diagram_rv32imf_multi}
+            microarquitetura multiciclo}\label{fig:diagram_rv32imf_multi}
         \end{figure}
 
 
-    \subsection{Microarquitetura \textit{Pipeline} de 5 Estágios}
+    \subsection{Microarquitetura \textit{Pipeline} de 5 Estágios (Incompleto)}
         { Os processadores \textit{pipeline} com extensões I e IM são
             implementados conforme o diagrama da Figura~\ref{fig:diagram_rv32i_pipe}.
             Seus cinco estágios são:
@@ -227,9 +249,9 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.7\linewidth]{../images/placeholder.jpg}
+            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/pipeline-RV32I-RV32IM.png}
             \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-            microarquitetura \textit{pipeline} de 5 estágios.}\label{fig:diagram_rv32i_pipe}
+            microarquitetura \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32i_pipe}
         \end{figure}
 
         { O processador \textit{pipeline} com extensões IMF é implementado conforme
@@ -238,20 +260,22 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.7\linewidth]{../images/placeholder.jpg}
+            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/pipeline-RV32IMF.png}
             \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-            microarquitetura \textit{pipeline} de 5 estágios.}\label{fig:diagram_rv32imf_pipe}
+            microarquitetura \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32imf_pipe}
         \end{figure}
 
-    \section{Chamadas de sistema}
+
+\clearpage
+\section{Chamadas de sistema}
     { A pasta \texttt{system} contém a implementação das chamadas de sistema do
         processador. O código \textit{assembly} deve incluir o arquivo
-        \texttt{system/MACROSv21.s} no início do programa e o arquivo
-        \texttt{system/SYSTEMv21.s} ao final do programa.
+        \texttt{system/MACROS.s} no início do programa e o arquivo
+        \texttt{system/SYSTEM.s} ao final do programa.
     }
     \begin{lstlisting}
 # Inicio do programa
-.include "MACROSv21.s"
+.include "MACROS.s"
 
 # Dados do programa
 .data
@@ -262,31 +286,32 @@
     ...
 
 # Chamadas de sistema
-.include "SYSTEMv21.s"
+.include "SYSTEM.s"
     \end{lstlisting}
 
-    { O arquivo \texttt{MACROSv21.s} insere macros para testar se o programa
-        está sendo executado no \texttt{Rars} ou na \texttt{FPGA} ou no
+    { O arquivo \texttt{MACROS.s} insere macros que testam se o programa
+        está sendo executado no \texttt{Rars}, na \texttt{FPGA} ou no
         \texttt{ModelSim} para decidir o uso de determinadas \textit{syscalls},
         e também fornece a implementação por \textit{software} de algumas
-        instruções caso a extensão necessária não esteja implementada no processador.
+        instruções caso a extensão necessária não esteja implementada no processador,
+        como instruções de multiplicação. Os endereços de memória dos periféricos
+        acessados por \textit{MMIO} também estão presentes como definições
+        \texttt{.eqv} para facilitar a implementação dos programas.
     }
 
-    { Os endereços de memória dos periféricos acessados por \textit{MMIO} também
-        estão presentes como definições \texttt{.eqv} a fim de facilitar a
-        implementação do programa.
-    }
-    { Por fim, o endereço inicial do nível privilegiado do sistema é gravado no
-        \textit{CSR UTVEC} e as interrupções são ativadas. Como o processador
-        implementado não possui memória reservada para o \textit{kernel}, a
-        posição inicial de memória varia de acordo com o tamanho do programa
-        implementado.
-    }
-
-    { Já o arquivo \texttt{SYSTEMv21.s} implementa o \textit{kernel} do sistema,
+    { Já o arquivo \texttt{SYSTEM.s} implementa o \textit{kernel} do sistema,
         tratando exceções e executando as \textit{syscalls}. As chamadas de
         sistema implementadas são apresentadas na Tabela~\ref{table:syscalls}.
     }
+
+    { Como o processador implementado não possui memória reservada para o
+        \textit{kernel}, sua posição inicial de memória começa imediatamente
+        após a última instrução do programa implementado, e por isso deve ser
+        incluído no final do arquivo. O arquivo de macros deve ser adicionado
+        no início do programa, pois ele é responsável por gravar o endereço inicial
+        do nível privilegiado no \textit{CSR UTVEC} e ativar as interrupções.
+    }
+
     \begin{longtable}{|l|c|p{3cm}|l |}
         \caption{Tabela de \textit{syscalls} implementadas.}\label{table:syscalls}\\
         \hline
@@ -420,6 +445,49 @@
         o programa é executado na \textit{FPGA}.
     }
 
+
+    \section{Utilizando o RARS}
+    { Brevemente apresentado na Seção~\ref{rars_cap2}, a \textit{IDE RARS} é uma
+        ferramenta essencial da \textit{toolchain} desse trabalho. Presente na
+        pasta \texttt{tools/rars}, há duas versões customizadas do programa.
+        As customizações permitem simular a saída de vídeo (exceto o menu \textit{OSD})
+        e entrada do teclado da mesma forma que na \textit{FPGA}.
+    }
+
+    { Além da sua interface de edição de texto mostrada na Figura~\ref{fig:rars},
+        há também a visualização do simulador. Nela é mostrado o código montado,
+        os bancos de registradores e outras ferramentas como o simulador de
+        \textit{display}, como visto na Figura~\ref{fig:rars_debug}. É possível
+        executar o código instrução por instrução, fazer o ``\textit{rewind}''
+        da execução e definir \textit{breakpoints}. Suas funções de \textit{debug}
+        são importantes tanto para validar o código produzido quando para executar
+        passo-a-passo junto com a \textit{FPGA} para identificar discrepâncias
+        na implementação do \textit{hardware}.
+    }
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/rars_debug.png}
+        \caption{Exibição do \textit{frame} de vídeo da \textit{FPGA}}
+        \label{fig:rars_debug}
+    \end{figure}
+
+    { O \textit{RARS} também é usado para gerar os arquivos \texttt{.mif} para
+        inicializar a memória da \textit{FPGA} clicando no menu \texttt{File > Dump Memory}
+        ou usando o atalho de teclado \texttt{Ctrl+d}. São gerados dois arquivos,
+        um contendo a memória de dados e o outro a memória de texto.
+    }
+
+    { Os arquivos \texttt{core/default\_data.mif} e \texttt{core/default\_text.mif}
+        são os arquivos gravados na memória da \textit{FPGA} quando é realizada a
+        síntese do processador. Esses arquivos também podem ser alterados a tempo
+        de execução usando a ferramenta \texttt{Tools > In-System Memory Content
+        Editor} do \textit{Quartus}. A pasta \texttt{test/assembly\_testbenches}
+        possui alguns programas em \textit{assembly} para testar a \textit{FPGA}.
+        Já na pasta \texttt{test/mif\_library}, existem testes já montados prontos
+        para gravação na placa de desenvolvimento.
+    }
+
     \section{Interface de vídeo e depuração}
     { A interface de vídeo possui resolução de 320x240 \textit{pixels} com 8
         \textit{bits} de cor para cada pixel. Efetivamente, a interface de vídeo
@@ -444,8 +512,8 @@
     }
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.7\linewidth]{../images/osd/display.jpg}
-        \caption{Exibição do \textit{frame} de vídeo da \textit{FPGA}.}
+        \includegraphics[width=.9\linewidth]{../images/osd/display.jpg}
+        \caption{Exibição do \textit{frame} de vídeo da \textit{FPGA}}
         \label{fig:display_cats}
     \end{figure}
 
@@ -458,24 +526,24 @@
     }
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.7\linewidth]{../images/osd/display_osd.jpg}
-        \caption{\textit{Menu OSD} exibindo os valores dos registradores do processador.}
+        \includegraphics[width=.9\linewidth]{../images/osd/display_osd.jpg}
+        \caption{\textit{Menu OSD} exibindo os valores dos registradores do processador}
         \label{fig:display_cats_osd}
     \end{figure}
 
     { O \textit{menu OSD} é implementado como uma matriz de 52x24 caracteres
         monoespaçados. Na matriz, os caracteres que não mudam com o tempo, como
-        é o caso do nome dos registradores, são representados com um parâmetro
+        é o caso do nome dos registradores, são representados por um parâmetro
         correspondente ao próprio caracter. Já os valores que se alteram, como
         o valor dos registradores, são representados por um parâmetro
-        \textit{placeholder} e o valor a ser mostrado na tela é obtido usando
+        \textit{placeholder}, e o valor a ser mostrado na tela é obtido usando
         uma tabela de \textit{lookup}. O projeto do \textit{menu OSD} foi pensado
         de forma que possa ser modificado para expansão ou utilização em outras
         arquiteturas de processadores de maneira simples.
     }
 
-
-    \section{Configuração e síntese do processador pelo Quartus}
+\clearpage
+\section{Configuração e síntese do processador pelo Quartus}
     { O \textit{software} utilizado para a síntese do processador, fornecimento
         de \textit{IPs} como as de memória e operações de ponto flutuante,
         gravação do \textit{soft-core}, dentre outras funcionalidades é o
@@ -487,7 +555,7 @@
     \centering
         \includegraphics[width=.9\linewidth]{../images/quartus/files_config.png}
         \caption{\textit{Intel Quartus Lite v18.1} com a janela de configurações
-            do projeto.}\label{fig:quartus_files_config}
+            do projeto}\label{fig:quartus_files_config}
     \end{figure}
 
     { Todas as configurações do projeto também podem ser alteradas manualmente
@@ -497,18 +565,18 @@
         de configuração, comentando ou descomentando a declaração dos pinos.
     }
 
-    { Para realizar a síntese completa do processador para poder utilizá-lo
-        na \textit{FPGA}, basta acessar o menu \texttt{Processing > Start Compilation}
-        ou utilizar o atalho \texttt{Ctrl + L} ou clicar no ícone de \textit{"Play"}
+    { Para realizar a síntese completa do processador para utilizá-lo na \textit{FPGA},
+        basta acessar o menu \texttt{Processing > Start Compilation} ou utilizar
+        o atalho \texttt{Ctrl + L} ou clicar no ícone de \textit{"Play"}
         na barra de tarefas do programa. Assim, as etapas de Análise e Síntese,
         \textit{Placing} e \textit{Routing}, \textit{Assembler} e
-        \textit{Timing Analysis} serão realizadas, e no caso de não ocorrerem
-        erros durante o processo, o \textit{soft-core} estará pronto para ser
+        \textit{Timing Analysis} serão realizadas, e, caso não ocorram erros
+        durante o processo, o \textit{soft-core} estará pronto para ser
         gravado na \textit{FPGA} utilizando o arquivo \textit{.mif} gerado.
     }
 
 
-    \section{Simulação do processador pelo Quartus e ModelSim}
+\section{Simulação do processador pelo Quartus e ModelSim}
     { O projeto possui um \textit{testbench} em \textit{Verilog} para simular as
         entradas e saídas da \textit{FPGA} que o usuário operaria, como os botões
         e \textit{switches}. Ele configura a rotina de reinicialização da placa
@@ -533,11 +601,19 @@
         \textit{FPGAs Cyclone V} a nível de portas lógicas, somente sendo possível
         fazer a simulação \textit{RTL}. Por outras limitações no programa, o
         \textit{script .do} produzido manualmente só é executado usando o
-        \textit{menu} \texttt{Tools > Run Simulation Tool > Gate Level Simulation...},
-        que apesar do nome, executará uma simulação \textit{RTL}. A opção
-        \texttt{Tools > Run Simulation Tool > RTL Simulation}, utiliza o script
-        gerado automaticamente e não funciona corretamente.
+        \textit{menu} \texttt{Tools > Run Simulation Tool > Gate Level Simulation},
+        que, apesar do nome, executará uma simulação \textit{RTL}. A opção
+        \texttt{Tools > Run Simulation Tool > RTL Simulation} utiliza o \textit{script}
+        .do gerado automaticamente, e falha ao ser processado.
     }
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.75\linewidth]{../images/quartus/quartus_modelsim.png}
+        \caption{O \textit{script NativeLink} invoca o \textit{ModelSim} passando
+            o \textit{script .do} com as informações de como simular o sistema}
+        \label{fig:quartus_modelsim}
+    \end{figure}
 
     { Ao executar a simulação, os \textit{scripts NativeLink} iniciarão o
         programa \textit{ModelSim}, carregando o \textit{script .do} customizado,
@@ -546,29 +622,53 @@
         em \textit{softwares} de visualização de formatos de onda, como o
         \textit{GTKWave} ou o próprio \textit{ModelSim}.
     }
+
+    { Ao carregar um arquivo \texttt{.vcd} no \textit{GTKWave}, a hierarquia
+        dos módulos é mostrada em uma árvore no canto superior esquerdo da tela.
+        Ao clicar no nó desejado da árvore, os sinais do módulo serão mostrados
+        no canto inferior esquerdo da tela. Para visualizá-lo, basta clicar e
+        arrastar o sinal para a área \textit{Signals}. A Figura~\ref{fig:gtkwave_generic}
+        mostra uma visualização dos sinais escolhidos. Na pasta \texttt{test/gtkwave}
+        do projeto, existe um arquivo \texttt{.gtkw} para cada uma das nove
+        configurações do \textit{soft-core} com sinais predefinidos.
+    }
+
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.9\linewidth]{../images/quartus/quartus_modelsim.png}
-        \caption{O \textit{script NativeLink} invoca o \textit{ModelSim} passando
-            o \textit{script .do} com as informações de como simular o sistema.}
-        \label{fig:quartus_modelsim}
+        \includegraphics[width=.9\linewidth]{../images/gtkwave/random.png}
+        \caption{Visualização das formas de onda no GTKWave}
+        \label{fig:gtkwave_generic}
     \end{figure}
 
-    \section{Script \texttt{make.sh}}
+    { É possível escolher as cores dos sinais para melhor destaque, bem como
+        utilizar arquivos e programas para a tradução de valores dos sinais.
+        Na pasta \texttt{test/gtkwave/translation\_files} se encontram arquivos
+        \texttt{.txt} para tradução dos códigos hexadecimais dos seletores de
+        registradores e de controle das unidades de lógica e aritmética. Assim,
+        a visualização da forma de onda mostra os mnemônicos dos sinais, facilitando
+        sua compreensão. O programa \texttt{riscv-decode} presente em
+        \texttt{tools/riscv-disassembler/build} desmonta as instruções e as exibe
+        na visualização.
+    }
+
+
+\section{Script \texttt{make.sh}}
     { A pasta \texttt{test/sof\_library} contém os arquivos \texttt{.sof} com
         as nove variações da última versão do processador, prontos para serem
         gravados na \textit{FPGA}. Para facilitar a geração das nove variantes,
         o \textit{bash script} \texttt{make.sh} foi criado para automatizar a
-        síntese e salvar a nova versão na pasta \texttt{test/sof\_library}.
+        síntese, salvando as novas versões na pasta \texttt{test/sof\_library}.
         O \textit{script} também permite realizar somente a etapa de
         análise das variantes para confirmar que alterações feitas no código não
         introduziram erros de compilação, uma vez que é um processo muito mais
         ágil que realizar a síntese completa.
     }
 
-    { O \textit{script} também faz a simulação \textit{RTL} de todas as variantes
-        do processador, salvando os \textit{logs} e arquivos \textit{.vcd} na
-        pasta \texttt{test/simulation}, que é ignorada pelo \textit{git}.
+    { Além disso, o \textit{script} também possui opção para simular \textit{RTL}
+        todas as variantes do processador, salvando os \textit{logs} e arquivos
+        \textit{.vcd} na pasta \texttt{test/simulation}. A pasta \texttt{test/simulation}
+        é ignorada pelo \textit{git}, pois os arquivos de forma de onda podem
+        ficar grandes demais a ponto de inviabilizar seu versionamento.
     }
 
     \section{Uso da FPGA DE1-SoC}
@@ -634,5 +734,14 @@
         de pouca memória disponível na \textit{FPGA}, enviando novos dados e
         instruções à medida em que forem necessários e/ou requisitados pelo
         processador.
+    }
+
+
+\section{Observações finais do sistema proposto}
+    { No presente capítulo vimos o detalhamento da implementação e das ferramentas
+        utilizadas no ambiente de aprendizado, e como utilizá-las. No próximo
+        capítulo, trataremos dos resultados do trabalho, apresentando tabelas
+        comparativas entre as implementações, análise de performance e visualizações
+        das formas de onda do sistema simulado.
     }
 
