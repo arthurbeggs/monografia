@@ -180,9 +180,12 @@
         \end{figure}
 
         { A instrução recuperada da memória de instruções \texttt{core/memory/CodeMemory\_Interface}
-            no endereço do registrador \texttt{PC} é lida pela unidade de controle
-            \texttt{core/risc\_v/Control\_UNI.v}, que gera todos os sinais de
-            controle enviados ao caminho de dados \texttt{core/risc\_v/Datapath\_Uni.v}.
+            no endereço apontado pelo registrador \texttt{PC} é lida pela unidade de controle
+            \texttt{core/risc\_v/Control\_UNI .v}, que gera todos os sinais de
+            controle enviados ao \textit{datapath} \texttt{core/risc\_v/Datapath\_Uni.v}.
+        }
+
+        {
             O banco de registradores \texttt{core/risc\_v/Registers.v} também
             recebe alguns \textit{bits} da instrução (para endereçamento dos
             registradores) e os dados para possivelmente serem escritos no registrador
@@ -191,6 +194,9 @@
 
         { A unidade de lógica e aritmética \texttt{core/risc\_v/ALU.v} possui um
             multiplexador em cada uma de suas entradas para selecionar os operandos.
+        }
+
+        {
             Já a memória de dados \texttt{core/memory/DataMemory\_Interface.v}
             recebe o endereço de escrita/leitura vindo da saída da ULA, e suas
             operações de \textit{load/store} são comandadas pelos controladores
@@ -225,10 +231,9 @@
             do processador continua limitada pela operação mais lenta.
         }
 
-        { Exceto o roteamento extra do banco de registadores de ponto flutuante
-            \texttt{core/risc\_v/FRegisters.v} e da ULA de ponto flutuante de
-            precisão simples \texttt{core/risc\_v/FPULA/FPALU.v}, o restante do
-            circuito segue as mesmas conexões.
+        { Exceto o roteamento extra do banco de registadores \texttt{core/risc\_v/FRegisters.v}
+            de ponto flutuante e da ULA de ponto flutuante de precisão simples
+            \texttt{core/risc\_v/FPULA/FPALU.v}, o restante do circuito segue as mesmas conexões.
         }
 
         \begin{figure}[H]
@@ -238,13 +243,42 @@
             microarquitetura uniciclo}\label{fig:diagram_rv32imf_uni}
         \end{figure}
 
-    \subsection{Microarquitetura Multiciclo (Incompleto)}
+    \subsection{Microarquitetura Multiciclo}
         { Os processadores multiciclo com extensões I e IM são implementados
             conforme o diagrama da Figura~\ref{fig:diagram_rv32i_multi}. A
             unidade de controle é implementada utilizando microcódigo para
             executar as instruções. Com isso, a frequência de operação do
             processador depende da operação mais lenta do microcódigo, e não da
             execução da instrução completa.
+        }
+
+        { Enquanto as outras implementações usam arquitetura de memória \textit{Harvard},
+            onde a memória de dados e a de instruções são separadas~\cite{harvard_arch},
+            o multiciclo utiliza arquitetura \textit{von Neumann}, onde não há
+            separação entre a memória de dados e a de texto~\cite{von_neumann_arch}.
+        }
+
+        {
+            O módulo de memória \texttt{core/memory/Memory\_Interface.v} tem seu
+            acesso controlado pelos blocos \texttt{core/memory/MemLoad.v} e
+            \texttt{core/memory/MemStore}, além dos sinais vindos da unidade de
+            controle \texttt{core/risc\_v/Control\_Multi.v}.
+        }
+
+        { A outra grande diferença em relação à implementação do uniciclo é que a
+            saída do bloco de memória, dos dados do banco de registradores, da saída
+            da ULA e do banco de registradores de controle e estado. Há também
+            o registrador \texttt{PCBack} que salva o contador de programa atual.
+        }
+
+        { Além de alguns sinais em posições diferentes nos multiplexadores de seleção
+            das entradas da ULA, de novo contador de programa e de \textit{write back},
+            a atualização do contador de programa depende de uma comparação lógica.
+        }
+
+        { Com o controlador \texttt{core/risc\_v/Control\_Multi.v} implementado
+            por microcódigo, as instruções possuem variação na quantidade de
+            ciclos para serem completadas.
         }
 
         \begin{figure}[H]
@@ -265,6 +299,17 @@
             que em outras operações.
         }
 
+        { A diferença entre o conjunto de instruções com e sem a extensão \textbf{F}
+            é a presença do banco de registradores e a unidade de ponto flutuante,
+            que também possuem suas saídas registradas.
+        }
+
+        { A presença dos registradores nas saídas dos módulos de onde dados são
+            lidos servem para criar um atraso de um ciclo de \textit{clock} nesses
+            valores. Como a unidade de controle utiliza microcódigo, o dado lido
+            no ciclo atual só será utilizado no próximo ciclo.
+        }
+
         \begin{figure}[H]
         \centering
             \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/multicycle-RV32IMF.png}
@@ -273,43 +318,110 @@
         \end{figure}
 
 
-    \subsection{Microarquitetura \textit{Pipeline} de 5 Estágios (Incompleto)}
+    \subsection{Microarquitetura \textit{Pipeline} de 5 Estágios}
         { Os processadores \textit{pipeline} com extensões I e IM são
             implementados conforme o diagrama da Figura~\ref{fig:diagram_rv32i_pipe}.
             Seus cinco estágios são:
             \begin{enumerate}
-                \item \textit{Instruction Fetch}
-                \item \textit{Instruction Decode}
-                \item \textit{Execution}
-                \item \textit{Memory Stage}
-                \item \textit{Write Back}
+                \item \textit{IF - Instruction Fetch}
+                \item \textit{ID - Instruction Decode}
+                \item \textit{EX - Execution}
+                \item \textit{MEM - Memory Stage}
+                \item \textit{WB - Write Back}
             \end{enumerate}
         }
-        { A frequência máxima do seu \textit{clock} é limitada pela operação
-            mais lenta da unidade lógica e aritmética na terceira etapa do
-            \textit{pipeline}.
+
+        { No primeiro estágio (\textit{IF}) estão presentes o contador de programa,
+            a memória de instruções e um somador que incrementa o \texttt{PC} em 4
+            bytes, que será o endereço da instrução seguinte caso não ocorra um
+            \textit{branch, jump}, exceção ou \textit{syscall}.
+        }
+
+        { Entre os estágios de \textit{Instruction Fetch} e \textit{Instruction
+            Decode}, existe um grupo de registradores (\textit{IFID}) responsável
+            por passar os valores do primeiro estágio para o seguinte.
         }
 
         \begin{figure}[H]
         \centering
             \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/pipeline-RV32I-RV32IM.png}
-            \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-            microarquitetura \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32i_pipe}
+            \caption{Diagrama das \textit{ISAs} RV32I e RV32IM na microarquitetura
+                \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32i_pipe}
         \end{figure}
 
-        { O processador \textit{pipeline} com extensões IMF é implementado conforme
-            o diagrama da Figura~\ref{fig:diagram_rv32imf_pipe}.
+        { No segundo estágio (\textit{ID}) ocorre a decodificação da instrução.
+            Também é o estágio onde ficam localizados o banco de registradores,
+            os registradores de controle e estado, a unidade de geração de imediatos,
+            a de controle de \textit{branches} e \textit{jumps}, além da unidade
+            de \textit{forwards} e \textit{hazards} \texttt{core/risc\_v/FwdHazardUnitM.v}.
+        }
+
+        { A unidade de \textit{forwards} e \textit{hazards} é essencial para o
+            bom funcionamento e desempenho do \textit{pipeline}. Brevemente discutida
+            na Seção~\ref{cap2_fwd_hzd}, \textit{hazards} ocorrem quando uma instrução
+            a partir do segundo estágio tem como entrada um dado que ainda não foi
+            calculado. É o caso do código a seguir:
+        }
+        \begin{lstlisting}
+    0x00400000:     la  t1, 8
+    0x00400004:     lw  t0, 0(t1)
+        \end{lstlisting}
+
+        { Quando a instrução \texttt{lw  t0, 0(t1)} está calculando o endereço
+            do \textit{load} \texttt{(t1 + 0)}, o valor de \texttt{t1} ainda
+            não foi salvo no banco de registradores, e por isso não pode ser
+            lido. Os \textit{forwards} identificam situações como essa e injetam
+            o sinal calculado, ``furando'' a ordem do \textit{pipeline}.
+            Já em casos onde não é possível recuperar o valor necessário de uma
+            etapa seguinte, ocorreu um \textit{hazard} e um \texttt{nop} precisa
+            ser inserido no \textit{pipeline}, passando um ou mais ciclos sem
+            processar novas instruções.
+        }
+
+        { Entre os estágios de \textit{Instruction Decode} e \textit{Execution},
+            existe um grupo de registradores (\textit{IDEX}) responsável por passar
+            os valores do segundo estágio para o terceiro. No terceiro estágio
+            (\textit{EX}) ocorrem as operações lógicas e aritméticas.
+            Os seletores das entradas da ULA recebem diversos sinais para
+            possibilitar os \textit{forwards} de dados.
+        }
+
+        { A frequência máxima do \textit{clock} do processador é limitada pela
+            operação mais lenta da unidade lógica e aritmética.
+        }
+
+        { Entre os estágios de \textit{Execution} e \textit{Memory Stage},
+            existe um grupo de registradores (\textit{EXMEM}) responsável por passar
+            os valores do terceiro estágio para o quarto. No quarto estágio
+            (\textit{MEM}) é feito o acesso à memória. A unidade
+            de controle de exceções também se encontra nesse estágio. A leitura
+            da memória ocorre no ciclo positivo do relógio, enquanto a escrita
+            é feita na borda de descida.
+        }
+
+        { Entre os estágios de \textit{Memory Stage} e \textit{Write Back},
+            existe um grupo de registradores (\textit{MEMWB}) responsável por passar
+            os valores do quarto estágio para o quinto e último estágio. No quinto
+            estágio (\textit{WB}) é feita a escrita no banco de registradores.
+            O sinal com o dado a ser escrito, bem como o endereço do registrador,
+            é injetado no estágio \textit{ID}, finalizando o ciclo de vida da
+            instrução dentro do \textit{pipeline}.
         }
 
         \begin{figure}[H]
         \centering
             \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/pipeline-RV32IMF.png}
-            \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
-            microarquitetura \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32imf_pipe}
+            \caption{Diagrama da \textit{ISA} RV32IMF na microarquitetura
+                \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32imf_pipe}
         \end{figure}
 
+        { O processador \textit{pipeline} com extensões \textbf{IMF} é implementado
+            conforme o diagrama da Figura~\ref{fig:diagram_rv32imf_pipe}. Sua
+            diferença entre o sistema descrito anteriormente é a presença do
+            banco de registradores de ponto flutuante no estágio \textit{ID} e
+            da \textit{FPALU} no estágio \textit{EX}.
+        }
 
-\clearpage
 \section{Chamadas de sistema}
     { A pasta \texttt{system} contém a implementação das chamadas de sistema do
         processador. O código \textit{assembly} deve incluir o arquivo
