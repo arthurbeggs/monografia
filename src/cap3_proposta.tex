@@ -697,7 +697,6 @@
         arquiteturas de processadores de maneira simples.
     }
 
-\clearpage
 \section{Configuração e síntese do processador pelo Quartus}
     { O \textit{software} utilizado para a síntese do processador, fornecimento
         de \textit{IPs} como as de memória e operações de ponto flutuante,
@@ -752,6 +751,14 @@
         \label{fig:quartus_simulation_config}
     \end{figure}
 
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.6\linewidth]{../images/quartus/quartus_modelsim.png}
+        \caption{O \textit{script NativeLink} invoca o \textit{ModelSim} passando
+            o \textit{script .do} com as informações de como simular o sistema}
+        \label{fig:quartus_modelsim}
+    \end{figure}
+
     { Por limitações do \textit{Quartus}, não é possível simular
         \textit{FPGAs Cyclone V} a nível de portas lógicas, somente sendo possível
         fazer a simulação \textit{RTL}. Por outras limitações no programa, o
@@ -761,14 +768,6 @@
         \texttt{Tools > Run Simulation Tool > RTL Simulation} utiliza o \textit{script}
         .do gerado automaticamente, e falha ao ser processado.
     }
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=.75\linewidth]{../images/quartus/quartus_modelsim.png}
-        \caption{O \textit{script NativeLink} invoca o \textit{ModelSim} passando
-            o \textit{script .do} com as informações de como simular o sistema}
-        \label{fig:quartus_modelsim}
-    \end{figure}
 
     { Ao executar a simulação, os \textit{scripts NativeLink} iniciarão o
         programa \textit{ModelSim}, carregando o \textit{script .do} customizado,
@@ -831,20 +830,13 @@
         é mostrada na Figura~\ref{fig:de1_soc}.
     }
 
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=.9\linewidth]{../images/fpga/de1_soc_subs.png}
-        \caption[Placa de desenvolvimento \textit{terasIC DE1-SoC}.]{Placa de
-        desenvolvimento \textit{terasIC DE1-SoC}.\quad Fonte:~\cite{terasic_de1_soc}}
-        \label{fig:de1_soc}
-    \end{figure}
-
     { Os botões e \textit{switches} mostrados na Figura~\ref{fig:de1_soc} são
         utilizados para controlar as características do \textit{clock} do
         processador, fazer seu \textit{reset} e controlar o \textit{menu OSD}
         de depuração. A função de cada \textit{input} é:
     }
     \begin{itemize}
+        \setlength\itemsep{0em}
         \item \texttt{KEY0}: Reset do processador;
         \item \texttt{KEY1}: Seletor de divisor de \textit{clock} lento ou rápido;
         \item \texttt{KEY2}: Seletor de \textit{clock} manual ou automático;
@@ -860,6 +852,14 @@
         \item \texttt{SW8}: Sem função;
         \item \texttt{SW9}: Habilita o \textit{menu OSD};
     \end{itemize}
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/fpga/de1_soc_subs.png}
+        \caption[Placa de desenvolvimento \textit{terasIC DE1-SoC}.]{Placa de
+        desenvolvimento \textit{terasIC DE1-SoC}.\quad Fonte:~\cite{terasic_de1_soc}}
+        \label{fig:de1_soc}
+    \end{figure}
 
     { O procedimento recomendado para inicialização do processador após o
         \textit{Programmer} do \textit{Quartus} programar a \textit{FPGA} com
@@ -884,12 +884,12 @@
         \textit{polling} do endereço do \textit{buffer} do teclado.
     }
 
-    { A interface \textit{RS-232} também pode ser utilizada para enviar e receber
-        dados provenientes de outro computador, permitindo contornar a limitação
-        de pouca memória disponível na \textit{FPGA}, enviando novos dados e
-        instruções à medida em que forem necessários e/ou requisitados pelo
-        processador.
-    }
+%     { A interface \textit{RS-232} também pode ser utilizada para enviar e receber
+%         dados provenientes de outro computador, permitindo contornar a limitação
+%         de pouca memória disponível na \textit{FPGA}, enviando novos dados e
+%         instruções à medida em que forem necessários e/ou requisitados pelo
+%         processador.
+%     }
 
 
 \section{Observações Finais do Sistema Proposto}
