@@ -161,8 +161,6 @@
         desenvolvimento, e também não faz uso de memória secundária, as operações
         de \textit{load} e \textit{store} transferem dados diretamente entre os
         registradores e os blocos de memória \textit{M10K}.
-        Os diagramas das microarquiteturas apresentados a seguir podem ser vistos
-        em maior resoução no Anexo~\ref{anexo_diagramas}.
     }
 
     \subsection{Microarquitetura Uniciclo}
@@ -176,7 +174,7 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
+            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
             \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
             microarquitetura uniciclo}\label{fig:diagram_rv32i_uni}
         \end{figure}
@@ -240,11 +238,12 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/singlecycle-RV32IMF.png}
+            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/singlecycle-RV32IMF.png}
             \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
             microarquitetura uniciclo}\label{fig:diagram_rv32imf_uni}
         \end{figure}
 
+    \clearpage
     \subsection{Microarquitetura Multiciclo}
         { Os processadores multiciclo com extensões I e IM são implementados
             conforme o diagrama da Figura~\ref{fig:diagram_rv32i_multi}. A
@@ -283,13 +282,6 @@
             ciclos para serem completadas.
         }
 
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/multicycle-RV32I-RV32IM.png}
-            \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
-            microarquitetura multiciclo}\label{fig:diagram_rv32i_multi}
-        \end{figure}
-
         { O processador multicilo com extensões IMF é implementado conforme o
             diagrama da Figura~\ref{fig:diagram_rv32imf_multi}. A unidade lógica
             e aritmética de ponto flutuante utiliza uma frequência de \textit{clock}
@@ -314,7 +306,14 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/multicycle-RV32IMF.png}
+            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/multicycle-RV32I-RV32IM.png}
+            \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
+            microarquitetura multiciclo}\label{fig:diagram_rv32i_multi}
+        \end{figure}
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/multicycle-RV32IMF.png}
             \caption{Diagrama da implementação da \textit{ISA} RV32IMF na
             microarquitetura multiciclo}\label{fig:diagram_rv32imf_multi}
         \end{figure}
@@ -343,13 +342,6 @@
             Decode}, existe um grupo de registradores (\textit{IFID}) responsável
             por passar os valores do primeiro estágio para o seguinte.
         }
-
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/pipeline-RV32I-RV32IM.png}
-            \caption{Diagrama das \textit{ISAs} RV32I e RV32IM na microarquitetura
-                \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32i_pipe}
-        \end{figure}
 
         { No segundo estágio (\textit{ID}) ocorre a decodificação da instrução.
             Também é o estágio onde ficam localizados o banco de registradores,
@@ -388,6 +380,13 @@
             possibilitar os \textit{forwards} de dados.
         }
 
+        \begin{figure}[H]
+        \centering
+            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/pipeline-RV32I-RV32IM.png}
+            \caption{Diagrama das \textit{ISAs} RV32I e RV32IM na microarquitetura
+                \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32i_pipe}
+        \end{figure}
+
         { A frequência máxima do \textit{clock} do processador é limitada pela
             operação mais lenta da unidade lógica e aritmética.
         }
@@ -410,19 +409,19 @@
             instrução dentro do \textit{pipeline}.
         }
 
-        \begin{figure}[H]
-        \centering
-            \includegraphics[width=.9\linewidth]{../images/uarch_diagrams/pipeline-RV32IMF.png}
-            \caption{Diagrama da \textit{ISA} RV32IMF na microarquitetura
-                \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32imf_pipe}
-        \end{figure}
-
         { O processador \textit{pipeline} com extensões \textbf{IMF} é implementado
             conforme o diagrama da Figura~\ref{fig:diagram_rv32imf_pipe}. Sua
             diferença entre o sistema descrito anteriormente é a presença do
             banco de registradores de ponto flutuante no estágio \textit{ID} e
             da \textit{FPALU} no estágio \textit{EX}.
         }
+
+        \begin{figure}[H]
+        \centering
+            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/pipeline-RV32IMF.png}
+            \caption{Diagrama da \textit{ISA} RV32IMF na microarquitetura
+                \textit{pipeline} de 5 estágios}\label{fig:diagram_rv32imf_pipe}
+        \end{figure}
 
 \section{Chamadas de sistema}
     { A pasta \texttt{system} contém a implementação das chamadas de sistema do
@@ -855,14 +854,6 @@
         \item \texttt{SW9}: Habilita o \textit{menu OSD};
     \end{itemize}
 
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=.9\linewidth]{../images/fpga/de1_soc_subs.png}
-        \caption[Placa de desenvolvimento \textit{terasIC DE1-SoC}.]{Placa de
-        desenvolvimento \textit{terasIC DE1-SoC}.\quad Fonte:~\cite{terasic_de1_soc}}
-        \label{fig:de1_soc}
-    \end{figure}
-
     { O procedimento recomendado para inicialização do processador após o
         \textit{Programmer} do \textit{Quartus} programar a \textit{FPGA} com
         um novo arquivo \textit{.mif} é: Pressionar e soltar a \texttt{KEY2}
@@ -880,18 +871,25 @@
         possível ver a progressão dos registradores do processador instrução por
         instrução.
     }
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.9\linewidth]{../images/fpga/de1_soc_subs.png}
+        \caption[Placa de desenvolvimento \textit{terasIC DE1-SoC}.]{Placa de
+        desenvolvimento \textit{terasIC DE1-SoC}.\quad Fonte:~\cite{terasic_de1_soc}}
+        \label{fig:de1_soc}
+    \end{figure}
 
     { O processador também pode receber \textit{inputs} do usuário utilizando
         um teclado \textit{PS/2}. A leitura do teclado é realizada por meio de
         \textit{polling} do endereço do \textit{buffer} do teclado.
     }
 
-%     { A interface \textit{RS-232} também pode ser utilizada para enviar e receber
-%         dados provenientes de outro computador, permitindo contornar a limitação
-%         de pouca memória disponível na \textit{FPGA}, enviando novos dados e
-%         instruções à medida em que forem necessários e/ou requisitados pelo
-%         processador.
-%     }
+     { A interface \textit{RS-232} também pode ser utilizada para enviar e receber
+         dados provenientes de outro computador, permitindo contornar a limitação
+         de pouca memória disponível na \textit{FPGA}, enviando novos dados e
+         instruções à medida em que forem necessários e/ou requisitados pelo
+         processador.
+     }
 
 
 \section{Observações Finais do Sistema Proposto}
