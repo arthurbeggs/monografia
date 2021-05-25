@@ -3,7 +3,10 @@
 \beamertemplatenavigationsymbolsempty
 \usepackage[utf8]{inputenc}
 \usepackage[brazilian]{babel}
+\usepackage{subfigure}
+\usepackage{subcaption}
 \usepackage{pmboxdraw}
+\usepackage{ragged2e}
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{listings}
@@ -21,15 +24,43 @@
 
 \setbeamertemplate{footline}{
     \leavevmode
-    \hbox{\begin{beamercolorbox}[wd=.175\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{author in head/foot}
+    \hbox{\begin{beamercolorbox}[wd=.175\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{title in head/foot}
         \usebeamerfont{title in head/foot}\insertshorttitle
     \end{beamercolorbox}
-    \begin{beamercolorbox}[wd=.825\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}
+    \begin{beamercolorbox}[wd=.75\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{institute in head/foot}
         \usebeamerfont{institute in head/foot}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=.075\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}
+        \usebeamerfont{title in head/foot}\insertframenumber/\inserttotalframenumber
     \end{beamercolorbox}}
     \vskip0pt
 }
 \makeatother
+
+\setbeamertemplate{title page}{
+    \begin{figure}[H]
+        \begin{subfigure}
+        \raggedright
+            \includegraphics[width=.35\textwidth,height=.1\textheight,keepaspectratio]{../images/unb/unb.jpg}
+        \end{subfigure}
+        \hspace{.4\textwidth}
+        \begin{subfigure}
+        \raggedleft
+            \includegraphics[width=.35\textwidth,height=.08\textheight,keepaspectratio]{../images/unb/ft.png}
+        \end{subfigure}
+    \end{figure}
+    \bigskip
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+        \usebeamerfont{title}\inserttitle\par\\
+        \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+    \end{beamercolorbox}
+    \bigskip
+    \vfill
+    \usebeamerfont{author}\insertauthor\par
+    \usebeamerfont{date}\insertdate\par
+    \vfill
+}
 
 \AtBeginSection[]{
     {
@@ -59,7 +90,7 @@
 \title{RISC-V SiMPLE}
 \subtitle{Projeto e Desenvolvimento de processadores RISC-V com a \textit{ISA RV32IMF} usando as microarquiteturas Uniciclo, Multiciclo e \textit{Pipeline} em \textit{FPGA}}
 \author{Arthur Matos}
-\institute{Universidade de Brasília - UnB}
+\institute{Universidade de Brasília - UnB --- Faculdade de Tecnologia - FT}
 \date{26 de maio de 2021}
 
 \makeatletter
@@ -351,8 +382,8 @@
         \vfill
         \begin{block}{Microcontroladores de \textit{hardware}}
             \begin{itemize}
-                \item Contorladores de \textit{HDD/SSD} da Western Digital
-                \item Controladores de \textit{GPU} da Nvidia
+                \item Controladores de \textit{HDD/SSD} da \textit{Western Digital}
+                \item Controladores de \textit{GPU} da \textit{Nvidia}
             \end{itemize}
         \end{block}
         \vfill
@@ -618,7 +649,7 @@
             \cline{2-9}
             \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 7047  & 3179  & 103   & 2805792   & 12    & 1     & 12.5MHz   \\*
             \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9411  & 5558  & 103   & 2853408   & 18    & 1     & 3.5Mhz    \\
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9411  & 5558  & 103   & 2853408   & 18    & 1     & 3.5MHz    \\
             \hline
             \multicolumn{1}{|c}{\multirow{3}{*}{{Multiciclo}}}      & \multicolumn{1}{|c|}{RV32I}   & 4102  & 3444  & 103   & 2805792   & 0     & 1     & 25MHz     \\*
             \cline{2-9}
@@ -677,15 +708,15 @@
                                                                     &                               & RV32I       & RV32IM      & RV32IMF   \\
             \hline
             \endhead
-            \multicolumn{1}{|c}{\multirow{2}{*}{{Uniciclo}}}        & \multicolumn{1}{|c|}{time}    & 0x0000001E  & 0x00000012  & 0x00000034 \\
+            \multicolumn{1}{|c}{\multirow{2}{*}{{Uniciclo}}}        & \multicolumn{1}{|c|}{time}    & 30 ms       & 18 ms       & 52 ms \\
             \cline{2-5}
             \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{clock}   & 12.5MHz     & 12.5MHz     & 3.5MHz \\
             \hline
-            \multicolumn{1}{|c}{\multirow{2}{*}{{Multiciclo}}}      & \multicolumn{1}{|c|}{time}    & 0x00000048  & 0x0000002E  & 0x0000003D \\
+            \multicolumn{1}{|c}{\multirow{2}{*}{{Multiciclo}}}      & \multicolumn{1}{|c|}{time}    & 72 ms       & 46 ms       & 61 ms \\
             \cline{2-5}
             \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{clock}   & 25MHz       & 25MHz       & 25MHz \\
             \hline
-            \multicolumn{1}{|c}{\multirow{2}{*}{\textit{Pipeline}}} & \multicolumn{1}{|c|}{time}    & 0x00000015  & 0x00000010  & erro \\
+            \multicolumn{1}{|c}{\multirow{2}{*}{\textit{Pipeline}}} & \multicolumn{1}{|c|}{time}    & 21 ms       & 16 ms       & erro \\
             \cline{2-5}
             \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{clock}   & 25MHz       & 25MHz       & 25MHz \\
             \hline
