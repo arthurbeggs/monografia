@@ -77,9 +77,26 @@
 
 \section{Motivação e Objetivos}
     \begin{frame}
-        \frametitle{Motivação e Objetivos}
+        \frametitle{Motivação}
         \vfill
-        {}
+        \begin{itemize}
+            \item Atualmente, a \textit{ISA MIPS32} tem pouca presença no mercado;
+            \item É estimulante aprender uma tecnologia atual;
+            \item A \textit{ISA RISC-V} é \textit{open-source} por natureza;
+            \item A \textit{RISC-V Foundation} é patrocinada por gigantes como \textit{Google, Nvidia e Samsung}.
+        \end{itemize}
+        \vfill
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Objetivos}
+        \vfill
+        \begin{itemize}
+            \item Implementar as \textit{ISAs RV32I, RV32IM e RV32IMF} em três microarquiteturas distintas;
+            \item Documentar a implementação;
+            \item Permitir o reuso da plataforma para outros projetos;
+            \item Melhorar as ferramentas de verificação do sistema.
+        \end{itemize}
         \vfill
     \end{frame}
 
@@ -98,7 +115,16 @@
     \begin{frame}
         \frametitle{RISC vs CISC}
         \vfill
-        {}
+        \begin{description}
+            \item[RISC] Reduced Instruction Set Computer
+            \item[CISC] Complex Instruction Set Computer
+        \end{description}
+        \vfill
+        \begin{block}{Principal diferença entre \textit{ISAs RISC e CISC}}
+        {Enquanto arquiteturas \textit{RISC} acessam a memória por instruções de
+            \textit{load/store}, as \textit{CISC} têm instruções de acesso direto.
+        }
+        \end{block}
         \vfill
     \end{frame}
 
@@ -116,14 +142,24 @@
     \begin{frame}
         \frametitle{Módulo Base}
         \vfill
-        {Falar sobre módulo I32/64/128 e E}
+        \begin{block}{Único módulo mandatório}
+            { O único módulo mandatório na implementação de um processador \textit{RISC-V}
+                é o módulo \textbf{I}, podendo ter barramento de 32, 64 ou \textit{128 bits.}
+            }
+        \end{block}
+        \vfill
+        \begin{exampleblock}{Opção para sistemas embarcados}
+            { A extensão \textbf{E} pode substituir a extensão \textbf{I}, tendo somente metade
+                dos registradores.
+            }
+        \end{exampleblock}
         \vfill
     \end{frame}
 
     \begin{frame}
         \frametitle{Extensões da arquitetura}
         \vfill
-        {}
+        {TODO: Montar tabela}
         \vfill
     \end{frame}
 
@@ -306,7 +342,40 @@
     \begin{frame}
         \frametitle{O Estado da Arte da \textit{ISA RISC-V}}
         \vfill
-        {}
+        \begin{block}{\textit{Soft-cores}}
+            \begin{itemize}
+                \item \textit{BOOM - Berkeley Out-of-Order Machine}
+                \item \textit{Shakti - IIT-Madras}
+            \end{itemize}
+        \end{block}
+        \vfill
+        \begin{block}{Microcontroladores de \textit{hardware}}
+            \begin{itemize}
+                \item Contorladores de \textit{HDD/SSD} da Western Digital
+                \item Controladores de \textit{GPU} da Nvidia
+            \end{itemize}
+        \end{block}
+        \vfill
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{O Estado da Arte da \textit{ISA RISC-V}}
+        \vfill
+        \begin{block}{\textit{Single Board Computers}}
+            \begin{itemize}
+                \item \textit{BeagleV}
+                \item \textit{HiFive Unmatched}
+            \end{itemize}
+        \end{block}
+        \vfill
+        \begin{block}{Suporte de \textit{software}}
+            \begin{itemize}
+                \item Compiladores: \textit{gcc} e \textit{clang}
+                \item Sistemas Operacionais \textit{Linux}: \textit{Fedora e Alpine}
+                \item SOs \textit{mobile}: Android
+                \item SOs robustos: \textit{Haiku-OS e se4L}
+            \end{itemize}
+        \end{block}
         \vfill
     \end{frame}
 
