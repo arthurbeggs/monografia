@@ -115,7 +115,7 @@
         \begin{itemize}
             \item Atualmente, a \textit{ISA MIPS32} tem pouca presença no mercado;
             \item É estimulante aprender uma tecnologia atual;
-            \item A \textit{ISA RISC-V} é \textit{open-source} por natureza;
+            \item A \textit{ISA RISC-V} é \textit{open-source} e \textit{royalty free};
             \item A \textit{RISC-V Foundation} é patrocinada por gigantes como \textit{Google, Nvidia e Samsung}.
         \end{itemize}
         \vfill
@@ -168,7 +168,7 @@
         \frametitle{\textit{\textbf{ISA RISC-V}}}
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.9\textwidth,height=.9\textheight,keepaspectratio]
+            \includegraphics[width=.8\textwidth,height=.8\textheight,keepaspectratio]
             {../images/riscv_logo.png}
         \end{figure}
         \vfill
@@ -193,9 +193,32 @@
 
     \begin{frame}
         \frametitle{Extensões da arquitetura}
-        \vfill
-        {TODO: Montar tabela}
-        \vfill
+        \begin{longtable}{cc|l|}
+            \cline{2-3}
+                                                                & \multicolumn{1}{|c|}{Extensão}   & Descrição \\
+            \hline
+            \endhead
+            \multicolumn{1}{|c}{\multirow{6}{*}{\textbf{G}}}    & \multicolumn{1}{|c|}{M}         & Multiplicação e Divisão  \\
+            \cline{2-3}
+            \multicolumn{1}{|c}{ }                              & \multicolumn{1}{|c|}{A}         & Instruções Atômicas  \\
+            \cline{2-3}
+            \multicolumn{1}{|c}{ }                              & \multicolumn{1}{|c|}{F}         & Ponto flutuante de precisão simples  \\
+            \cline{2-3}
+            \multicolumn{1}{|c}{ }                              & \multicolumn{1}{|c|}{D}         & Ponto flutuante de precisão dupla  \\
+            \cline{2-3}
+            \multicolumn{1}{|c}{ }                              & \multicolumn{1}{|c|}{Zicsr}     & Registradores de Controle e Estado (\textit{CSRs})  \\
+            \cline{2-3}
+            \multicolumn{1}{|c}{ }                              & \multicolumn{1}{|c|}{Zifencei}  & \textit{Fencing} dentro de um \textit{hart}   \\
+            \hline
+            \multicolumn{1}{c}{ }                               & \multicolumn{1}{|c|}{C}         & Instruções compactas de 16 \textit{bits} \\
+            \cline{2-3}
+            \multicolumn{1}{c}{ }                               & \multicolumn{1}{|c|}{Q}         & Ponto flutuante de precisão quádrupla  \\
+            \cline{2-3}
+            \multicolumn{1}{c}{ }                               & \multicolumn{1}{|c|}{V}         & Operação com vetores  \\
+            \cline{2-3}
+            \multicolumn{1}{c}{ }                               & \multicolumn{1}{|c|}{B}         & Manipulação de \textit{bits}  \\
+            \cline{2-3}
+        \end{longtable}
     \end{frame}
 
     \begin{frame}
@@ -203,7 +226,7 @@
         \vfill
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.9\textwidth,height=.9\textheight,keepaspectratio]
+            \includegraphics[width=.8\textwidth,height=.8\textheight,keepaspectratio]
             {../images/instructions/rv_encoding.png}
         \end{figure}
         \vfill
@@ -214,7 +237,7 @@
         \vfill
         \begin{figure}[H]
         \centering
-            \includegraphics[width=.9\textwidth,height=.9\textheight,keepaspectratio]
+            \includegraphics[width=.8\textwidth,height=.8\textheight,keepaspectratio]
             {../images/instructions/rv32_instructions.png}
         \end{figure}
         \vfill
@@ -304,13 +327,25 @@
     \begin{frame}
         \frametitle{Alguns conceitos de microarquiteturas}
         \vfill
-        \begin{itemize}
-            \item Uniciclo
-            \item Multiciclo
-            \item \textit{Pipeline}
-            \item Superescalar
-            \item \textit{Out-of-Order Execution}
-        \end{itemize}
+        \begin{block}{Uniciclo}
+            {Cada instrução demora apenas um ciclo de \textit{clock} entre ser recuperada
+                da memória, decodificada, executada e finalizada.
+            }
+        \end{block}
+        \begin{block}{Multiciclo}
+            { Implementa microcódigo, onde as instruções são ``quebradas'' em partes
+                menores, e a unidade de controle é uma máquina de estados. Instruções
+                diferentes podem levar uma quantidade diferente de ciclos para serem
+                executadas.
+            }
+        \end{block}
+        \begin{block}{\textit{Pipeline}}
+            { O caminho de dados é dividido em estágios separados por uma barreira
+                de registradores, e em cada estágio uma instrução diferente é executada.
+                Não ocorrendo \textit{hazards}, uma instrução é completada a cada ciclo
+                de \textit{clock}.
+            }
+        \end{block}
         \vfill
     \end{frame}
 
@@ -475,6 +510,27 @@
 
     \subsection{Implementação dos \textit{soft-cores}}
     \begin{frame}
+        \frametitle{Instruções Implementadas}
+        \begin{block}{Módulo \textbf{I}}
+            {34 instruções implementadas;\\
+                Instruções de \texttt{fence} e \texttt{hint}s não são implementadas,
+                nem a \textit{Return Address Stack}.
+            }
+        \end{block}
+        \begin{block}{Extensão \textbf{M}}
+            {13 instruções implementadas.}
+        \end{block}
+        \begin{block}{Extensão \textbf{F}}
+            {24 instruções são implementadas;\\
+                Instruções de \texttt{fm[n]add} e \texttt{fm[n]sub} não são implementadas.
+            }
+        \end{block}
+        \begin{block}{Extensão \textbf{Zicsr}}
+            {6 instruções são implementadas.}
+        \end{block}
+    \end{frame}
+
+    \begin{frame}
         \frametitle{Uniciclo \textit{RV32I} e \textit{RV32IM}}
         \vfill
         \begin{figure}[H]
@@ -569,7 +625,7 @@
         \begin{figure}[H]
         \centering
             \includegraphics[width=.9\textwidth,height=.85\textheight,keepaspectratio]
-            {../images/rars.png}
+            {../images/rars2.png}
             \caption{\textit{IDE RARS}}
         \end{figure}
         \vfill
@@ -643,58 +699,49 @@
         \vfill
     \end{frame}
 
-    \subsection{\textit{Scripts}}
     \begin{frame}
-        \frametitle{\textit{Scripts} do projeto}
+        \frametitle{\textit{Zoom} da visualização da forma de onda pelo \textit{GTKWave}}
         \vfill
-        \begin{itemize}
-            \item \texttt{gtkwave.sh}
-            \item \texttt{inst-decode.sh}
-            \item \texttt{make.sh}
-            \item \texttt{rars.sh}
-        \end{itemize}
+        \begin{figure}[H]
+        \centering
+            \includegraphics[width=.9\textwidth,height=.85\textheight,keepaspectratio]
+            {../images/gtkwave/gtkwave_zoom.png}
+        \end{figure}
         \vfill
     \end{frame}
+
 
 \section{Resultados}
     \subsection{Síntese dos \textit{soft-cores}}
     \begin{frame}
         \frametitle{\textit{Reports} do \textit{Quartus}}
         \vfill
-        \begin{footnotesize}
-        \begin{longtable}{cc|c|c|c|c|c|c|c|}
-            \cline{3-9}
-                                                                    &                               & ALMs  & Regs  & Pins  & Mem Bits  & DSPs  & PLLs  & Max Clk   \\
-            \cline{2-9}
-                                                                    & \multicolumn{1}{|c|}{Máximo}  & 32070 & XXXXX & 457   & 4065280   & 87    & 1     & 50MHz     \\
-            \hline
-            \endfirsthead
-            \cline{3-9}
-                                                                    &                               & ALMs  & Regs  & Pins  & Mem Bits  & DSPs  & PLLs  & Max Clk   \\
-            \cline{2-9}
-                                                                    & \multicolumn{1}{|c|}{Máximo}  & 32070 & XXXXX & 457   & 4065280   & 87    & 1     & 50MHz     \\
+        \begin{longtable}{cc|c|c|c|c|c|}
+            \cline{3-7}
+                                                                    &                               & ALMs  & Regs  & Mem Bits  & DSPs  & Max Clk   \\
+            \cline{2-7}
+                                                                    & \multicolumn{1}{|c|}{Máximo}  & 32070 & XXXXX & 4065280   & 87    & 50MHz     \\
             \hline
             \endhead
-            \multicolumn{1}{|c}{\multirow{3}{*}{{Uniciclo}}}        & \multicolumn{1}{|c|}{RV32I}   & 4123  & 3160  & 103   & 2805792   & 0     & 1     & 12.5MHz   \\*
-            \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 7047  & 3179  & 103   & 2805792   & 12    & 1     & 12.5MHz   \\*
-            \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9411  & 5558  & 103   & 2853408   & 18    & 1     & 3.5MHz    \\
+            \multicolumn{1}{|c}{\multirow{3}{*}{{Uniciclo}}}        & \multicolumn{1}{|c|}{RV32I}   & 4123  & 3160  & 2805792   & 0     & 12.5MHz   \\*
+            \cline{2-7}
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 7047  & 3179  & 2805792   & 12    & 12.5MHz   \\*
+            \cline{2-7}
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9411  & 5558  & 2853408   & 18    & 3.5MHz    \\
             \hline
-            \multicolumn{1}{|c}{\multirow{3}{*}{{Multiciclo}}}      & \multicolumn{1}{|c|}{RV32I}   & 4102  & 3444  & 103   & 2805792   & 0     & 1     & 25MHz     \\*
-            \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 6726  & 3471  & 103   & 2805792   & 12    & 1     & 25MHz     \\*
-            \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9108  & 5737  & 103   & 2853408   & 18    & 1     & 25MHz     \\
+            \multicolumn{1}{|c}{\multirow{3}{*}{{Multiciclo}}}      & \multicolumn{1}{|c|}{RV32I}   & 4102  & 3444  & 2805792   & 0     & 25MHz     \\*
+            \cline{2-7}
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 6726  & 3471  & 2805792   & 12    & 25MHz     \\*
+            \cline{2-7}
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9108  & 5737  & 2853408   & 18    & 25MHz     \\
             \hline
-            \multicolumn{1}{|c}{\multirow{3}{*}{\textit{Pipeline}}} & \multicolumn{1}{|c|}{RV32I}   & 4605  & 4139  & 103   & 2805792   & 0     & 1     & 25MHz     \\*
-            \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 7376  & 4145  & 103   & 2805792   & 12    & 1     & 25MHz     \\*
-            \cline{2-9}
-            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9750  & 6568  & 103   & 2853408   & 18    & 1     & 25MHz*    \\
+            \multicolumn{1}{|c}{\multirow{3}{*}{\textit{Pipeline}}} & \multicolumn{1}{|c|}{RV32I}   & 4605  & 4139  & 2805792   & 0     & 25MHz     \\*
+            \cline{2-7}
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IM}  & 7376  & 4145  & 2805792   & 12    & 25MHz     \\*
+            \cline{2-7}
+            \multicolumn{1}{|c}{ }                                  & \multicolumn{1}{|c|}{RV32IMF} & 9750  & 6568  & 2853408   & 18    & 25MHz*    \\
             \hline
         \end{longtable}
-        \end{footnotesize}
         \vfill
     \end{frame}
 
@@ -765,6 +812,7 @@
             \item Código simplificado;
             \item 8 das 9 implementações funcionam conforme o esperado;
             \item Adição e melhoria de ferramentas para o desenvolvimento de \textit{hardware} e \textit{software};
+            \item A plataforma pode ser adaptada para outros \textit{soft-cores} com certa facilidade.
         \end{itemize}
         \vfill
     \end{frame}
@@ -776,7 +824,7 @@
         \begin{itemize}
             \item Deixar a implementação do \textit{pipeline RV32IMF bug-free};
             \item Simplificar partes do projeto de \textit{hardware} para melhorar o desempenho do sistema;
-            \item Implementar versões de 64 \textit{bits} do sistema;
+            \item Implementar versões de 64 \textit{bits} da \textit{ISA};
             \item Implementar uma \textit{ISA} diferente utilizando a plataforma como base.
         \end{itemize}
         \vfill
