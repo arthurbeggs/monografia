@@ -9,6 +9,7 @@
 \usepackage{ragged2e}
 \usepackage{longtable}
 \usepackage{multirow}
+\usepackage{hyperref}
 \usepackage{listings}
 \lstset{
     %frame=tb,
@@ -62,6 +63,10 @@
     \usebeamerfont{author}\insertauthor\par
     \usebeamerfont{date}\insertdate\par
     \vfill
+    \begin{beamercolorbox}[center,bg=]{links}
+        \url{https://github.com/LAICO-UnB/riscv-simple}
+        \url{https://github.com/arthurbeggs/monografia}
+    \end{beamercolorbox}
 }
 
 \AtBeginSection[]{
@@ -456,7 +461,7 @@
                 \item Compiladores: \textit{gcc} e \textit{clang}
                 \item Sistemas Operacionais \textit{Linux}: \textit{Fedora e Alpine}
                 \item SOs \textit{mobile}: Android
-                \item SOs robustos: \textit{Haiku-OS e se4L}
+                \item SOs robustos: \textit{Haiku-OS e seL4}
             \end{itemize}
         \end{block}
         \vfill

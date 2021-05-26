@@ -1,6 +1,13 @@
 1 ------------------------------------------------------------
     Capa
 
+    Sejam todos bem vindos. Apresentarei o trabalho RISC-V SiMPLE, Projeto e
+        desenvolvimento de processadores RISC-V com a ISA RV32IMF usando as
+        microarquiteturas uniciclo, multiciclo e pipeline.
+    O código do projeto, de licença livre, está disponível no link abaixo.
+    Os arquivos .pdf da monografia e dessa apresentação, bem como seu código
+        fonte e imagens estão disponíveis nesse outro link.
+
 2 ------------------------------------------------------------
     Motivação e Objetivos
 
@@ -9,7 +16,6 @@
     - A ISA MIPS32, comumente utilizada no ensino de OAC já não tem mais impacto
         no mercado, sendo que a própria empresa MIPS, detentora dos royalties,
         anunciou que migrará para o RISC-V;
-
     - É estimulante aprender uma tecnologia atual;
     - A ISA RISC-V é open-source e royalty free, o que permite que qualquer
         indivíduo ou empresa a implemente;
@@ -67,7 +73,7 @@
 
 12
     As extensões M de multiplicação e divisão, A de operações atômicas, F de
-        operações de ponto flutuante IEEE 754-2008 de precisão simples, D de
+        operações de ponto flutuante IEEE 754 de precisão simples, D de
         ponto flutuante de precisão dupla, Zicsr de registradores de controle e
         estado e Zifencei de barreiras dentro de uma thread, junto do módulo I,
         são considerados um grupo para processadores de propósito geral, e o
@@ -78,15 +84,15 @@
 
 13
     A ISA prevê instruções de tamanho variável, codificando o seu tamanho nos
-        primeiros 16 bits.
+        primeiros 16 bits da instrução.
     Todas as instruções do conjunto G são de 32 bits, enquanto as da extensão C
         são de 16 bits. Os outros tamanhos de instrução são novamente pensando
         em possíveis necessidades futuras.
 
 14
-    A imagem mostra os seis tipos de instruções de 32 bits que geram imediatos.
-        Existem outros formatos que utilizam os campos de imediatos para codificar
-        outras funções.
+    A imagem mostra seis tipos de instruções de 32 bits, sendo que 5 possuem
+        campos de imediatos. Existem outros formatos que utilizam os campos de
+        imediatos para codificar outras funções.
 
 15
     Imediatos são operandos de uma instrução que não são recuperados do banco
@@ -187,12 +193,12 @@
 
 33
     Single Board Computers como o famoso Raspberry Pi também estão sendo
-        desenvolvidos, com o BeagleV e o HiFive Unmatched em fase de pré-compra.
+        desenvolvidos. O BeagleV e o HiFive Unmatched estão em fase de pré-compra.
     A ISA também já é supertada por diversos softwares:
         - os compiladores gcc e clang já compilam código em C e C++ para RISC-V;
         - sistemas operacionais linux como o Fedora e o Alpine já rodam em
             processadores RISC-V. Outros sistemas operacionais como o Android,
-            Haiku e se4L também já suportam a arquitetura.
+            Haiku e seL4 também já suportam a arquitetura.
 
 34 -----------------------------------------------------------
     Sistema Proposto
@@ -212,12 +218,13 @@
             instrução em seu mnemônico em assembly;
         - vendor, contendo as licenças de softwares de terceiros utilizados no
             projeto;
-        - script make.sh, que sintetiza e/ou simula todas as 9 variantes do
+        - e o script make, que sintetiza e/ou simula todas as 9 variantes do
             sistema;
     A pasta core é dividida em:
         - clock, onde estão todos os arquivos de lógica de temporização;
         - memory, com os blocos de memória e suas interfaces;
-        - misc, com somadores e multiplexadores de tamanho variável;
+        - misc, com módulos miscelâneos como somadores e multiplexadores de
+            tamanho variável;
         - peripherals, onde os controladores e interfaces dos periféricos da
             placa de desenvolvimento são implementados;
         - risc_v, que contém o processador desenvolvido no trabalho, sendo o
@@ -237,14 +244,14 @@
     Implementação dos soft-cores
 
 37
-    Todas as nove implementações possuem o módulo I de 32 bits, implementando
-        34 instruções, e a extensão Zicsr que implementa outras 6 instruções.
+    Todas as nove variantes possuem o módulo I de 32 bits, implementando
+        34 instruções, e a extensão Zicsr que implementa outras 6.
         As instruções de fence e hints, além da Return Address Stack não são
             implementadas. Assim, o processador não é 100% compatível com a
             especificação.
-    A extensão M implementa 13 instruções;
-    A extensão F implementa 24 instruções, deixando de fora as fm[n]add/fm[n]sub
-        e o arredondamento dinâmico;
+    A extensão M implementa outras 13 instruções;
+    E, por fim, a extensão F implementa 24 instruções, deixando de fora as
+         de multiply and add e o arredondamento dinâmico;
 
 38
     O diagrama mostra o caminho de dados do processador uniciclo RV32I e RV32IM.
@@ -255,7 +262,8 @@
         microarquiteturas.
 
 39
-    No diagrama são adicionados o banco de registradores e a ULA de ponto flutuante.
+    No diagrama do RV32IMF são adicionados o banco de registradores e a ULA de
+        ponto flutuante.
 
 40
     O diagrama mostra o caminho de dados do processador multiciclo RV32I e RV32IM.
@@ -263,18 +271,19 @@
         memórias de dados e de texto.
 
 41
-    No diagrama são adicionados o banco de registradores e a ULA de ponto flutuante.
+    No diagrama do RV32IMF são adicionados o banco de registradores e a ULA de
+        ponto flutuante.
 
 42
     O diagrama mostra o caminho de dados do processador pipeline de 5 estágios
-        implementando as ISAs RV32I e RV32IM.
-    É utilizada a arquitetura de memória Harvard, onde a memória de dados e
-        a de instruções são separadas.
-    Seus cinco estágios são Instruction Fetch, Instruction Decode, Execution
+        implementando as ISAs RV32I e RV32IM, que utiliza a arquitetura de
+        memória Harvard.
+    Seus cinco estágios são Instruction Fetch, Instruction Decode, Execution,
         Memory Access e Write Back.
 
 43
-    No diagrama são adicionados o banco de registradores e a ULA de ponto flutuante.
+    No diagrama do RV32IMF são adicionados o banco de registradores e a ULA de
+        ponto flutuante.
 
 44
     Chamadas de sistema
@@ -348,11 +357,11 @@
         aumenta quando mais extensões são implementadas. Também é possível notar
         que as implementações do pipeline utilizam mais registradores que nas
         outras microarquiteturas devido às barreiras entre os estágios.
-    As ISAs RV32I não utilizaram nenhum DSP, mas as RV32I e RV32IMF os utilizam
+    As ISAs RV32I não utilizaram nenhum DSP, mas as RV32IM e RV32IMF os utilizam
         para as operações de multiplicação.
     Enquanto o clock máximo alcançável sem gerar erros de execução em todas as
         ISAs multiciclo e pipeline foi de 25MHz, o clock máximo do uniciclo foi
-        de 12.5MHz para as ISAs RV32I e RV32IM, e de 3.5MHz para a ISA RV32IMF.
+        de 12.5MHz para as ISAs RV32I e RV32IM, e de 3.5MHz para a RV32IMF.
     A implementação da ISA RV32IMF em pipeline, apesar de também funcionar em
         25MHz, ainda apresenta bugs em sua unidade de forwards e hazards, gerando
         valores incorretos para algumas operações e não há como provar que ela
@@ -362,19 +371,38 @@
     Visualização das formas de onda das ISAs RV32IMF
 
 61
-    A figura mostra a visualização da forma de onda do uniciclo RV32IMF.
+    A figura mostra a visualização da forma de onda do uniciclo RV32IMF, onde
+        vemos que cada instrução leva um ciclo de clock para ser executada.
 
 62
-    A imagem mostra a visualização da forma de onda do multiciclo RV32IMF.
+    A imagem mostra a visualização da forma de onda do multiciclo RV32IMF, e
+        podemos ver que as instruções demoram mais de um ciclo para serem executadas.
 
 63
-    Por fim, a figura mostra a visualização da forma de onda do pipeline RV32IMF.
+    Por fim, a figura mostra a visualização da forma de onda do pipeline RV32IMF,
+        onde são mostrados estágios normais do pipeline, bem como o stall devido
+        a um hazard.
 
 64
     Benchmarks
 
 65
-    TODO
+    Um código de benchmark foi criado para cada ISA. Neles são realizados 1000
+        loops das instruções implementadas, e caso nenhum assert falhe, o código
+        finaliza com uma mensagem de sucesso. O valor do csr time, que indica o
+        tempo de execução em milissegundos, é utilizado para comparar o desempenho
+        entre as implementações. Assim, as comparações são feitas entre as três
+        microarquiteturas implementando a mesma ISA, e resultados da mesma
+        microarquitetura para ISAs diferentes não são comparáveis.
+    Pelos resultados, vemos que apesar do processador multiciclo ter frequência
+        de operação mais alta que o uniciclo, seu desempenho foi inferior. Se
+        a carga de trabalho utiliza muitas instruções que passam por diversos
+        estágios da máquina de estados do microcódigo, os ganhos com o uso de
+        frequências mais altas são anulados.
+    Também é possível ver que o pipeline de 5 estágios obteve o melhor desempenho
+        no benchmark realizado. No caso da ISA RV32IMF, ainda há bugs na unidade
+        de forwards e hazards, o que causou a falha de asserções, e com isso o
+        tempo total de execução sem erros não foi obtido.
 
 66 -----------------------------------------------------------
     Conclusões
@@ -397,3 +425,4 @@
 
 69
     Obrigado
+
