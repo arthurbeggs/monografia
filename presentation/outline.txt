@@ -1,0 +1,399 @@
+1 ------------------------------------------------------------
+    Capa
+
+2 ------------------------------------------------------------
+    Motivação e Objetivos
+
+3
+    A motivação para o trabalho vem dos seguintes pontos:
+    - A ISA MIPS32, comumente utilizada no ensino de OAC já não tem mais impacto
+        no mercado, sendo que a própria empresa MIPS, detentora dos royalties,
+        anunciou que migrará para o RISC-V;
+
+    - É estimulante aprender uma tecnologia atual;
+    - A ISA RISC-V é open-source e royalty free, o que permite que qualquer
+        indivíduo ou empresa a implemente;
+    - A RISC-V possui o apoio de empresas como Google, Nvidia e Samsung.
+
+4
+    Os objetivos desse trabalho são:
+        - Implementar as ISAs RV32I, RV32IM e RV32IMF
+        em três microarquiteturas distintas, a uniciclo, a multiciclo e a pipeline;
+        - Documentar o projeto;
+        - Executá-lo de forma a permitir o reuso da plataforma em outros projetos;
+        - E por fim, melhorar as ferramentas de verificação do sistema.
+
+5 ------------------------------------------------------------
+    Revisão teórica
+
+6
+    Arquitetura de Computadores
+
+7
+    A arquitetura de computadores trata da forma com que um processador interpreta
+        e executa um conjunto de bits, chamados de instruções. Além disso, uma
+        Arquitetura do Conjunto de Instruções, ou ISA, define partes da estrutura
+        do hardware.
+    A figura mostra a abstração de um processador, onde instruções são lidas da
+        memória, interpretadas pela unidade de controle, e então executadas.
+
+8
+    Entre as ISAs, existe uma diferença histórica entre arquiteturas RISC (Reduced
+        Instruction Set Computer) e CISC (Complex Instruction Set Computer). Hoje,
+        a principal diferença entre as duas é que as ISAs RISC acessam a memória
+        de dados por instruções de load/store, enquanto as CISC têm instruções
+        que operam diretamente na memória.
+
+9 ------------------------------------------------------------
+    ISA RISC-V
+
+10
+    Como dito anteriormente, a ISA RISC-V, objeto de estudo desse trabalho,
+        é uma arquitetura open-source que não cobra royalties para suas
+        implementações.
+    É uma arquitetura modular, e foi projetada para atender do microcontrolador
+        mais simples ao superprocessador mais robusto, e acomoda possíveis
+        necessidades futuras, sem ter que criar novas versões da ISA.
+
+11
+    O único módulo mandatório em um processador RISC-V é o módulo I, que especifica
+        operações lógicas e aritméticas de inteiros, load/store para acesso à memória,
+        jumps, branches e chamadas de sistema.
+    Seus 32 registradores podem ter largura de 32, 64 ou 128 bits. A especificação
+        de largura de 128 bits é pensando em um futuro onde se precise de mais de
+        64 bits para endereçar a memória do sistema.
+    Opcionalmente, o módulo E pode ser implementado, fazendo com que o banco de
+        registradores passe a ter somente 16 registradores.
+
+12
+    As extensões M de multiplicação e divisão, A de operações atômicas, F de
+        operações de ponto flutuante IEEE 754-2008 de precisão simples, D de
+        ponto flutuante de precisão dupla, Zicsr de registradores de controle e
+        estado e Zifencei de barreiras dentro de uma thread, junto do módulo I,
+        são considerados um grupo para processadores de propósito geral, e o
+        conjunto IMFADZicsr_Zifencei é chamado de G.
+    Existem outras extensões, como a C para instruções compactadas em 16 bits,
+        a Q para ponto flutuante com precisão quádrupla, V para operar vetores,
+        B para manipulação de bits, entre outras.
+
+13
+    A ISA prevê instruções de tamanho variável, codificando o seu tamanho nos
+        primeiros 16 bits.
+    Todas as instruções do conjunto G são de 32 bits, enquanto as da extensão C
+        são de 16 bits. Os outros tamanhos de instrução são novamente pensando
+        em possíveis necessidades futuras.
+
+14
+    A imagem mostra os seis tipos de instruções de 32 bits que geram imediatos.
+        Existem outros formatos que utilizam os campos de imediatos para codificar
+        outras funções.
+
+15
+    Imediatos são operandos de uma instrução que não são recuperados do banco
+        de registradores ou da memória, mas sim da própria instrução, como no
+        trecho de código assembly mostrado.
+    As imagens a seguir mostram como os imediatos são transformados em números
+        de 32 bits para cada tipo de instrução.
+
+16
+    Para instruções do tipo I;
+
+17
+    Para instruções do tipo S;
+
+18
+    Para instruções do tipo B;
+
+19
+    Para instruções do tipo U;
+
+20
+    Para instruções do tipo J;
+
+21
+    Organização de Computadores
+
+22
+    Enquanto a arquitetura de computadores trata do conjunto de instruções, a
+        organização de computadores trata dos padrões de implementação de
+        arquiteturas, também chamados de microarquiteturas.
+    A figura apresentada mostra um processador com microarquitetura uniciclo.
+
+23
+    As três microarquiteturas apresentadas nesse trabalho são a uniciclo, a
+        multiciclo e a pipeline.
+    Em um processador uniciclo, cada instrução demora apenas um ciclo de clock
+        entre ser recuperada da memória, decodificada, executada e finalizada.
+    Já em um multiciclo, as istruções são quebradas em partes menores chamdas
+        de microcódigo, e a unidade de controle é uma máquina de estados.
+        Instruções diferentes podem levar uma quantidade diferente de ciclos para
+        serem executadas.
+    Em um processador pipeline, o caminho de dados é dividido em estágios
+        separados por uma barreira de registradores, e em cada estágio uma
+        instrução diferente é executada. Não ocorrendo hazards, uma instrução é
+        completada a cada ciclo do clock.
+    Hazards são situações onde o operando de uma instrução ainda não foi calculado
+        e o pipeline precisa esperar finalizar as instruções anteriores para poder
+        prosseguir com a execução.
+
+24
+    Representação de hardware
+
+25
+    Um hardware pode ser representado por:
+    - Programação visual, onde blocos são conectados por fios em um diagrama;
+    - Linguagens de descrição de hardware como o Verilog e o VHDL;
+    - Síntese de alto nível, onde um algoritmo em linguagens como C++ ou Matlab
+        é transformado em uma implementação de hardware.
+    O presente trabalho utiliza o Verilog como linguagem principal, tendo alguns
+        módulos em VHDL;
+
+26
+    Síntese de hardware
+
+27
+    Para transformar o código Verilog em uma netlist, estrutura que contém a lista
+        de componentes eletrônicos do design e a descrição de como eles se
+        conectam, softwares de síntese são utilizados.
+    O Intel Quartus Prime é a IDE de desenvolvimento e síntese utilizada.
+
+28
+    FPGAs
+
+29
+    Field Programmable Logic Arrays são chips que permitem a implementação de
+        um hardware sem produzir um chip específico, um ASIC. Sua estrutura
+        possui blocos lógicos capazes de implementar registradores e operações
+        lógicas e aritméticas, e switch boxes que ligam esses blocos, criando
+        o circuito desejado.
+
+30
+    No projeto, a FPGA Altera Cyclone V foi utilizada. A figura da esquerda mostra
+        sua arquitetura. Seus blocos lógicos são chamados de Adaptative Logic
+        Modules, ou ALMs. A estrutura de um ALM é mostrada na figura da direita,
+        podendo realizar operações com entradas de 8 bits, além de possuir
+        somadores e registradores.
+
+31
+    Estado da Arte
+
+32
+    Alguns soft-cores notáveis são o BOOM, Berkeley Out of Order Machine, produzido
+        pelo grupo de pesquisa criador da arquitetura RISC-V, e o Shakti, plataforma
+        indiana que possui projetos desde microcontroladores simples a processadores
+        de alta performance com 32 núcleos.
+    Fabricantes como a Western Digital e a Nvidia já anunciaram o uso de
+        controladores RISC-V em seus produtos.
+
+33
+    Single Board Computers como o famoso Raspberry Pi também estão sendo
+        desenvolvidos, com o BeagleV e o HiFive Unmatched em fase de pré-compra.
+    A ISA também já é supertada por diversos softwares:
+        - os compiladores gcc e clang já compilam código em C e C++ para RISC-V;
+        - sistemas operacionais linux como o Fedora e o Alpine já rodam em
+            processadores RISC-V. Outros sistemas operacionais como o Android,
+            Haiku e se4L também já suportam a arquitetura.
+
+34 -----------------------------------------------------------
+    Sistema Proposto
+
+35
+    O projeto é versionado utilizando o git e segue a seguinte organização de pastas:
+        - core, contendo o código que implementa os processadores;
+        - doc, onde ficam os documentos do projeto;
+        - project, onde os arquivos de projeto do Quartus são organizados;
+        - system, que possui o código em assembly que implementa as chamadas
+            de sistema;
+        - test, onde arquivos de teste como benchmarks em assembly e arquivos de
+            configuração do GTKWave são armazenados;
+        - tools, contendo uma versão customizada da IDE RARS, um conversor de
+            imagens para um formato que o processador saiba interpretar e um
+            disassembler que permite transformar o código hexadecimal de uma
+            instrução em seu mnemônico em assembly;
+        - vendor, contendo as licenças de softwares de terceiros utilizados no
+            projeto;
+        - script make.sh, que sintetiza e/ou simula todas as 9 variantes do
+            sistema;
+    A pasta core é dividida em:
+        - clock, onde estão todos os arquivos de lógica de temporização;
+        - memory, com os blocos de memória e suas interfaces;
+        - misc, com somadores e multiplexadores de tamanho variável;
+        - peripherals, onde os controladores e interfaces dos periféricos da
+            placa de desenvolvimento são implementados;
+        - risc_v, que contém o processador desenvolvido no trabalho, sendo o
+            arquivo CPU.v o módulo de mais alto nível do soft-core. Também
+            contém os módulos de controle e caminho de dados de cada microarquitetura,
+            e demais módulos, como banco de registradores.
+        - config.v, onde são definidos qual microarquitetura, ISA e periféricos
+            serão sintetizados, e com defines dos endereços de memória dos
+            periféricos;
+        - arquivos .mif padrões para inicialização dos blocos de memória;
+        - fpga_top.sdc que define restrições de temporização utilizados na
+            síntese pelo Quartus;
+        - fpga_top.v que é o módulo de mais alto nível e conecta os pinos da
+            FPGA com a lógica interna;
+
+36
+    Implementação dos soft-cores
+
+37
+    Todas as nove implementações possuem o módulo I de 32 bits, implementando
+        34 instruções, e a extensão Zicsr que implementa outras 6 instruções.
+        As instruções de fence e hints, além da Return Address Stack não são
+            implementadas. Assim, o processador não é 100% compatível com a
+            especificação.
+    A extensão M implementa 13 instruções;
+    A extensão F implementa 24 instruções, deixando de fora as fm[n]add/fm[n]sub
+        e o arredondamento dinâmico;
+
+38
+    O diagrama mostra o caminho de dados do processador uniciclo RV32I e RV32IM.
+    É utilizada a arquitetura de memória Harvard, onde a memória de dados e
+        a de instruções são separadas.
+    A diferença entre as duas implementações ocorre na unidade de controle e
+        na unidade de lógica e aritmética. O mesmo ocorre nas outras duas
+        microarquiteturas.
+
+39
+    No diagrama são adicionados o banco de registradores e a ULA de ponto flutuante.
+
+40
+    O diagrama mostra o caminho de dados do processador multiciclo RV32I e RV32IM.
+    É utilizada a arquitetura de memória VonNeumann, onde não há separação das
+        memórias de dados e de texto.
+
+41
+    No diagrama são adicionados o banco de registradores e a ULA de ponto flutuante.
+
+42
+    O diagrama mostra o caminho de dados do processador pipeline de 5 estágios
+        implementando as ISAs RV32I e RV32IM.
+    É utilizada a arquitetura de memória Harvard, onde a memória de dados e
+        a de instruções são separadas.
+    Seus cinco estágios são Instruction Fetch, Instruction Decode, Execution
+        Memory Access e Write Back.
+
+43
+    No diagrama são adicionados o banco de registradores e a ULA de ponto flutuante.
+
+44
+    Chamadas de sistema
+
+45
+    As syscalls são implementadas pelo arquivo SYSTEM.s e sua posição de memória
+        é passada ao processador pelo código do arquivo MACROS.s. Assim, os
+        programas devem iniciar incluindo o arquivo MACROS.s, declarando suas
+        seções .data e .text, e finalizar incluindo o arquivo SYSTEM.s
+
+46
+    Ambiente de programação em assembly RISC-V
+
+47
+    Para programar, simular e gerar os arquivos .mif de inicialização de memória,
+        a IDE RARS é utilizada.
+
+48
+    Na pasta "tools" há versões custom do RARS, que incluem um display bitmap e
+        uma interface de teclado que funcionam da mesma forma implementada na
+        FPGA.
+
+49
+    Execução de programas na FPGA
+
+50
+    O projeto utiliza a placa de desenvolvimento terasIC DE1-SoC. Os botões,
+        switches, saída de vídeo e entrada de teclado são os periféricos mais
+        utilizados.
+
+51
+    A saída de vídeo possui dois framebuffers com resolução 320x240px, com a cor
+        de cada pixel sendo representada por 8 bits.
+
+52
+    Ela também possui um menu OSD ativável por um dos switches da placa que mostra
+        em tempo real os valores dos registradores do sistema. O menu foi projetado
+        de forma que o nome dos registradores possa ser mudado facilmente, e é
+        independente das memórias de vídeo. Assim, um sistema sem framebuffers
+        também pode utilizar a saída de vídeo para acompanhar os valores dos
+        registradores.
+
+53
+    Simulação de forma de onda
+
+54
+    Os arquivos value change dump, .vcd, são gerados pela simulação no Modelsim.
+
+55
+    O resultado da simulação é visualizado no GTKWave, sendo que a pasta test
+        possui algumas visualizações preconfiguradas para as microarquiteturas
+        do sistema.
+56
+    Ampliando a visualização, é possível ver que as instruções passam pelo
+        disassembler e são mostradas como seus mnemônicos em assembly. Os
+        registradores também são mostrados por seus mnemônicos, facilitando a
+        depuração do sistema simulado.
+
+57 -----------------------------------------------------------
+    Resultados
+
+58
+    Síntese dos soft-cores
+
+59
+    Foram extraídos dos relatórios de síntese do Quartus as informações de
+        utilização de ALMs, de registradores, de bits de memória e de DSPs para
+        cada uma das 9 implementações. O clock máximo para cada implementação
+        foi encontrado pela execução de benchmarks.
+    Analisando a tabela, é possível ver que a quantidade de ALMs necessários
+        aumenta quando mais extensões são implementadas. Também é possível notar
+        que as implementações do pipeline utilizam mais registradores que nas
+        outras microarquiteturas devido às barreiras entre os estágios.
+    As ISAs RV32I não utilizaram nenhum DSP, mas as RV32I e RV32IMF os utilizam
+        para as operações de multiplicação.
+    Enquanto o clock máximo alcançável sem gerar erros de execução em todas as
+        ISAs multiciclo e pipeline foi de 25MHz, o clock máximo do uniciclo foi
+        de 12.5MHz para as ISAs RV32I e RV32IM, e de 3.5MHz para a ISA RV32IMF.
+    A implementação da ISA RV32IMF em pipeline, apesar de também funcionar em
+        25MHz, ainda apresenta bugs em sua unidade de forwards e hazards, gerando
+        valores incorretos para algumas operações e não há como provar que ela
+        realmente funciona nessa frequência.
+
+60
+    Visualização das formas de onda das ISAs RV32IMF
+
+61
+    A figura mostra a visualização da forma de onda do uniciclo RV32IMF.
+
+62
+    A imagem mostra a visualização da forma de onda do multiciclo RV32IMF.
+
+63
+    Por fim, a figura mostra a visualização da forma de onda do pipeline RV32IMF.
+
+64
+    Benchmarks
+
+65
+    TODO
+
+66 -----------------------------------------------------------
+    Conclusões
+
+67
+    Dos objetivos alcançados:
+    - Das 9 implementações, 8 funcionam conforme o esperado.
+    - O ferramental para desenvolvimento e validação do hardware e software foi
+        melhorado, o que facilitará o desenvolvimento futuro na plataforma.
+    - A estruturação da plataforma deve permitir a adaptação para outros
+        soft-cores com certa facilidade;
+
+68
+    Trabalhos futuros podem tratar de:
+        - Deixar a implementação do pipeline RV32IMF sem bugs;
+        - Simplificar partes do projeto de hardware para melhorar o desempenho
+            do sistema;
+        - Implementar versões de 64 bits da ISA RISC-V;
+        - Imlementar uma ISA diferente utilizando a plataforma como base.
+
+69
+    Obrigado
