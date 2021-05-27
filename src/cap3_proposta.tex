@@ -11,17 +11,51 @@
 { Cada uma das combinações da \textit{ISA} pode ser realizada em três
     microarquiteturas diferentes: unicicilo, multiciclo ou \textit{pipeline} de
     cinco estágios. Assim, o processador pode ser sintetizado em nove
-    combinações diferentes.
+    combinações diferentes. Como base para o trabalho, os \textit{soft-cores RISC-V}
+    desenvolvidos ao longo de vários semestres pela turma A de OAC foram utilizados.
 }
+
+{ A Figura~\ref{fig:diagram_fpga_blocks} mostra um diagrama de blocos simplificado
+    da hierarquia dos módulos que compõe o projeto sintetizável. A principal
+    estrutura, a \texttt{fpga\_top} representa o \textit{chip} da \textit{FPGA},
+    enquanto a \texttt{cpu} é o \textit{soft-core} implementado.
+}
+
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.9\linewidth]{../images/fpga/fpga_simplified_block_diagram.png}
+    \caption{Diagrama de blocos simplificado do sistema}\label{fig:diagram_fpga_blocks}
+\end{figure}
 
 { O projeto utiliza a placa de desenvolvimento \textit{terasIC DE1-SoC} contendo
     diversos periféricos e um \textit{SoC Intel Altera Cyclone-V}. A maioria dos
     periféricos presentes na plataforma tem controladores implementados com
     Entradas e Saídas Mapeadas em Memória (\textit{MMIO}) para que o
     \textit{soft-core} possa utilizá-los. A síntese dos controladores dos
-    periféricos, como a saída de vídeo, entrada de teclado e barramento
-    \textit{RS-232} é opcional.
+    periféricos é opcional.
 }
+
+{ Os periféricos disponíveis são: interface de vídeo VGA com \textit{menu OSD}
+    para acompanhamento dos valores dos registradores, teclado PS/2, \textit{codec}
+    de áudio, sintetizador de áudio, emissor e receptor de infravermelho,
+    comunicação RS-232 e gerador de números pseudoaleatórios.
+}
+
+{ Alguns blocos de \textit{IP} do \textit{Quartus} são usados, sendo eles: o
+    controlador de \textit{PLLs}, os blocos de memória, os blocos de operações
+    de ponto flutuante e um conversor analógico-digital. Os blocos de memória e
+    de operações de ponto flutuante funcionam com \textit{clock} de 50MHz,
+    enquanto a frequência so \textit{soft-core} é variável.
+}
+
+{ Os \textit{softwares} utilizados são o \textit{Quartus Prime Lite} para a
+    síntese dos \textit{soft-cores}, o \textit{ModelSim Intel Edition} para
+    simulação, o \textit{GTKWave} para visualização dos resultados da simulação
+    e o \textit{RARS} para desenvolver, montar e simular código em assembly
+    \textit{RISC-V}.
+}
+
+
 
 \section{Organização do projeto}
     { O projeto é organizado seguindo o seguinte arranjo de pastas:
@@ -131,18 +165,6 @@
         customizá-la para utilização em outra arquitetura.
     }
 
-    { A Figura~\ref{fig:diagram_fpga_blocks} mostra um diagrama de blocos simplificado
-        da hierarquia dos módulos que compõe o projeto sintetizável. A principal
-        estrutura, a \texttt{fpga\_top} representa a placa de desenvolvimento, enquanto
-        a \texttt{cpu} é o \textit{soft-core} implementado.
-    }
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=0.9\linewidth]{../images/fpga/fpga_simplified_block_diagram.png}
-        \caption{Diagrama de blocos simplificado do sistema}\label{fig:diagram_fpga_blocks}
-    \end{figure}
-
     {
         O arquivo \texttt{core/config.v} possui todas as opções de configuração,
         definição de parâmetros e endereçamento de memória dos módulos, facilitando
@@ -174,7 +196,7 @@
 
         \begin{figure}[H]
         \centering
-            \includegraphics[angle=90,width=1\textwidth,height=1\textheight,keepaspectratio]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
+            \includegraphics[angle=90,width=1\textwidth,height=.73\textheight,keepaspectratio]{../images/uarch_diagrams/singlecycle-RV32I-RV32IM.png}
             \caption{Diagrama da implementação das \textit{ISAs} RV32I e RV32IM na
             microarquitetura uniciclo}\label{fig:diagram_rv32i_uni}
         \end{figure}
@@ -465,7 +487,8 @@
         após a última instrução do programa implementado, e por isso deve ser
         incluído no final do arquivo. O arquivo de macros deve ser adicionado
         no início do programa, pois ele é responsável por gravar o endereço inicial
-        do nível privilegiado no \textit{CSR UTVEC} e ativar as interrupções.
+        do nível privilegiado no \textit{CSR UTVEC} e ativar as interrupções,
+        mantendo o endereço inicial do código do usuário no endereço \texttt{0x00400000}.
     }
 
     \begin{longtable}{|l|c|p{3cm}|l |}
@@ -707,6 +730,16 @@
         menos sistemas operacionais e/ou não possuem todos os \textit{IPs}
         necessários para a síntese do processador.
     }
+
+    { A Figura~\ref{fig:quartus_files_config} mostra a janela do \textit{Quartus}
+        e a janela de configuração do projeto. Todas as configurações do projeto
+        também podem ser alteradas manualmente no arquivo
+        \texttt{project/de1\_soc/ fpga\_top.qsf}. Para ativar ou desativar
+        os pinos do \textit{chip} da \textit{FPGA} que conectam os periféricos
+        da placa, é preferível que a edição seja feita diretamente no arquivo
+        de configuração, comentando ou descomentando a declaração dos pinos.
+    }
+
     \begin{figure}[H]
     \centering
         \includegraphics[width=.9\linewidth]{../images/quartus/files_config.png}
@@ -714,12 +747,6 @@
             do projeto}\label{fig:quartus_files_config}
     \end{figure}
 
-    { Todas as configurações do projeto também podem ser alteradas manualmente
-        no arquivo \texttt{project/de1\_soc/fpga\_top.qsf}. Para ativar ou desativar
-        os pinos do \textit{chip} da \textit{FPGA} que conectam os periféricos
-        da placa, é preferível que a edição seja feita diretamente no arquivo
-        de configuração, comentando ou descomentando a declaração dos pinos.
-    }
 
     { Para realizar a síntese completa do processador para utilizá-lo na \textit{FPGA},
         basta acessar o menu \texttt{Processing > Start Compilation} ou utilizar
@@ -744,22 +771,33 @@
         necessário para realizar a simulação de forma correta. O \textit{script}
         gerado automaticamente pelo \textit{Quartus} apresenta problemas que
         impedem que a simulação seja executada corretamente, além de não gerar
-        o arquivo de saída da simulação no formato desejado.
+        o arquivo de saída da simulação no formato desejado, o \texttt{.vcd}.
+        A Figura~\ref{fig:quartus_simulation_config} mostra a janela de configuração
+        da simulação.
     }
+
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.6\linewidth]{../images/quartus/simulation_config.png}
+        \includegraphics[width=.65\linewidth]{../images/quartus/simulation_config.png}
         \caption{Janela de configuração da simulação no \textit{Quartus}.}
         \label{fig:quartus_simulation_config}
     \end{figure}
 
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.6\linewidth]{../images/quartus/quartus_modelsim.png}
+        \includegraphics[width=.95\linewidth]{../images/quartus/quartus_modelsim.png}
         \caption{O \textit{script NativeLink} invoca o \textit{ModelSim} passando
             o \textit{script .do} com as informações de como simular o sistema}
         \label{fig:quartus_modelsim}
     \end{figure}
+
+    { Ao executar a simulação, os \textit{scripts NativeLink} iniciarão o
+        programa \textit{ModelSim}, carregando o \textit{script .do} customizado,
+        conforme mostrado na Figura~\ref{fig:quartus_modelsim}. Ao finalizar a
+        simulação, um arquivo \texttt{.vcd} será gerado e poderá ser analisado
+        em \textit{softwares} de visualização de formatos de onda, como o
+        \textit{GTKWave} ou o próprio \textit{ModelSim}.
+    }
 
     { Por limitações do \textit{Quartus}, não é possível simular
         \textit{FPGAs Cyclone V} a nível de portas lógicas, somente sendo possível
@@ -769,14 +807,6 @@
         que, apesar do nome, executará uma simulação \textit{RTL}. A opção
         \texttt{Tools > Run Simulation Tool > RTL Simulation} utiliza o \textit{script}
         .do gerado automaticamente, e falha ao ser processado.
-    }
-
-    { Ao executar a simulação, os \textit{scripts NativeLink} iniciarão o
-        programa \textit{ModelSim}, carregando o \textit{script .do} customizado,
-        conforme mostrado na Figura~\ref{fig:quartus_modelsim}. Ao finalizar a
-        simulação, um arquivo \texttt{.vcd} será gerado e poderá ser analisado
-        em \textit{softwares} de visualização de formatos de onda, como o
-        \textit{GTKWave} ou o próprio \textit{ModelSim}.
     }
 
     { Ao carregar um arquivo \texttt{.vcd} no \textit{GTKWave}, a hierarquia
