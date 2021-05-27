@@ -128,13 +128,29 @@
         \label{fig:gtkwave_multi}
     \end{figure}
 
-    \begin{figure}[H]
+    \begin{figure}[h]
     \centering
         \includegraphics[width=0.9\linewidth]{../images/gtkwave/gtkwave_pipe.png}
-        \caption{Visualização das formas de onda \textit{soft-core} \textit{RV32IMF} \textit{pipeline}}
+        \caption{visualização das formas de onda \textit{soft-core} \textit{rv32imf} \textit{pipeline}}
         \label{fig:gtkwave_pipe}
     \end{figure}
 
+    { Na Figura~\ref{fig:gtkwave_zoom}, a visualização da forma de onda do
+        multiciclo é ampliada para mostrar os detalhes do sinal \texttt{IR}
+        mostrando o assembly da instrução em vez do seu valor em hexadecimal.
+        Também mostra os seletores de registradores \texttt{wRs1} e \texttt{wRS2}
+        exibindo o mnemônico dos registradores. Os demais sinais permitem entender
+        o funcionamento interno do processador e identificar erros de lógica.
+    }
+
+    \begin{figure}[h]
+    \centering
+        \includegraphics[width=1\linewidth]{../images/gtkwave/gtkwave_zoom.png}
+        \caption{\textit{Zoom} da visualização das formas de onda do multiciclo \textit{RV32IMF}}
+        \label{fig:gtkwave_zoom}
+    \end{figure}
+
+\clearpage
 \section{\textit{Benchmarks}}
     { Para analisar o desempenho das diferentes implementações, três \textit{benchmarks}
         foram realizados. Cada um dos \textit{benchmarks} foi criado para rodar
