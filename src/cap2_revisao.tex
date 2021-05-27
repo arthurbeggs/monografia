@@ -54,12 +54,12 @@
 }
 
 { A Figura~\ref{fig:cpu_abstraction} é uma representação simplificada de um
-    processador. A unidade de controle lê uma instrução da memória e a
-    decodifica; o circuito de lógica combinacional lê os dados dos
-    registradores, entrada e memória conforme necessário, executa a instrução
-    decodificada e escreve no banco de registradores, na memória de dados ou
-    na saída se for preciso; a unidade de controle lê uma nova instrução e o
-    ciclo se repete até o fim do programa. A posição de memória da instrução
+    processador. A unidade de controle lê uma instrução da memória, a
+    decodifica e comanda o processador; o circuito de lógica combinacional lê
+    os dados dos registradores, entrada e memória conforme necessário, executa
+    a instrução decodificada e escreve no banco de registradores, na memória de
+    dados ou na saída se for preciso; a unidade de controle lê uma nova instrução
+    e o ciclo se repete até o fim do programa. A posição de memória da instrução
     que está sendo executada fica armazenada em um registrador especial chamado
     de Contador de Programa (\textit{PC}). Algumas instruções modificam o
     \textit{PC} condicionalmente ou diretamente, criando a estrutura para
@@ -209,16 +209,10 @@
 }
 
 { O \textit{design} do módulo visa reduzir o \textit{hardware} necesário para
-    uma implementação mínima, bem como ser um alvo de compilação satisfatório,
-    sendo capaz de emular por \textit{software} as extensões \textbf{M}
-    (de \textit{\textbf{M}ultiplication and Division}), \textbf{F} (de
-    \textit{Single-Precision \textbf{F}loating-Point}) e \textbf{D} (de
-    \textit{\textbf{D}ouble-Precision Floating-Point}). Para isso, são
-    implementadas instruções de \textit{load/store} para transferir dados
-    entre a memória e os registradores, operações lógicas e aritméticas
-    entre dados de registradores, instruções para transferência de controle
-    (\textit{jumps} e \textit{branches} condicionais) e chamadas de sistema
-    (\textit{syscalls}).
+    uma implementação mínima, sendo capaz de emular por \textit{software} as
+    extensões \textbf{M} (de \textit{\textbf{M}ultiplication and Division}),
+    \textbf{F} (de \textit{Single-Precision \textbf{F}loating-Point}) e \textbf{D}
+    (de \textit{\textbf{D}ouble-Precision Floating-Point}).
 }
 
 { Diferente de outras arquiteturas como a \textit{ARM}, as instruções de
@@ -242,7 +236,7 @@
 
 \begin{figure}[H]
 \centering
-    \includegraphics[width=.8\linewidth]
+    \includegraphics[width=.7\linewidth]
     {../images/instructions/rv_encoding.png}
     \caption{Codificação de instruções de tamanho variável da arquitetura
                 \textit{RISC-V}}\label{fig:riscv_var_length}
@@ -316,20 +310,18 @@
     { Existem propostas de adição de algumas extensões na especificação da
         \textit{ISA}, como a \textbf{B} para manipulação de \textit{\textbf{B}its}
         e a \textbf{V} para operar \textbf{V}etores, mas ainda não foram
-        ratificadas.
-    }
-
-    {Há também a possibilidade de se desenvolver extensões próprias. A regra
-        de nomenclatura para esse caso é iniciar o nome da extensão com um
-        \textbf{X} seguido por um nome alfabético e.g. \textbf{Xhwacha}.
+        ratificadas. Há também a possibilidade de se desenvolver extensões
+        próprias. A regra de nomenclatura para esse caso é iniciar o nome da
+        extensão com um \textbf{X} seguido por um nome alfabético e.g.
+        \textbf{Xhwacha}.
     }
 
     \subsection{Arquitetura Privilegiada}
     { Para a \textit{ISA RISC-V}, existem quatro níveis de privilégio de acesso,
         sendo eles: o de máquina (nível \textit{bare-metal} que em implementações
-        mais simples trata \textit{syscalls}), o de usuário (o nível onde a
-        aplicação do usuário é executada), o de supervisor (nível do sistema
-        operacional) e o de hipervisor (virtualização).
+        mais simples trata \textit{syscalls}), o de usuário (nível da
+        aplicação do usuário), o de supervisor (sistema operacional)
+        e o de hipervisor (virtualização).
     }
 
     { O nível privilegiado de máquina adiciona alguns \textit{CSRs} importantes
@@ -347,9 +339,7 @@
     { As instruções da arquitetura podem ser separadas em subgrupos de acordo com
         os operadores necessários para o processador interpretá-la. A
         Figura~\ref{fig:riscv_formats} apresenta os formatos das instruções do
-        módulo I da \textit{ISA RISC-V}, e, para efeitos de comparação, a
-        Figura~\ref{fig:mips_formats} mostra os formatos de instruções equivalentes
-        na arquitetura \textit{MIPS32}.
+        módulo I da \textit{ISA RISC-V}.
     }
 
     { Apesar dos formatos das instruções da \textit{RISC-V} serem mais
@@ -371,13 +361,6 @@
         \includegraphics[width=.9\linewidth]
         {../images/instructions/rv32_instructions.png}
         \caption{Formatos de Instruções da \textit{ISA RISC-V}}\label{fig:riscv_formats}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        \includegraphics[width=.9\linewidth]
-        {../images/instructions/mips32_formats.png}
-        \caption{Formatos de Instruções da \textit{ISA MIPS32}}\label{fig:mips_formats}
     \end{figure}
 
     \subsection{Formatos de Imediatos}
@@ -436,7 +419,7 @@
 }
 \begin{figure}[H]
 \centering
-    \includegraphics[width=.9\linewidth]{../images/rars.png}
+    \includegraphics[width=.95\linewidth]{../images/rars2.png}
     \caption{\textit{IDE RARS}}\label{fig:rars}
 \end{figure}
 
@@ -532,7 +515,7 @@
 
     \begin{figure}[H]
     \centering
-        \includegraphics[width=.65\linewidth]{../images/pipeline_4_stage.png}
+        \includegraphics[width=.5\linewidth]{../images/pipeline_4_stage.png}
         \caption[\textit{Pipeline} genérico com 4 estágios]{\textit{Pipeline}
             genérico com 4 estágios. \quad Fonte:~\cite{pipe_generic}}\label{fig:pipe_generic}
     \end{figure}
@@ -727,7 +710,7 @@
 
     \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]
+    \includegraphics[width=.75\linewidth]
         {../images/altera_cyclone_v_soc_architectural_downscale.jpg}
         \caption[Arquitetura da FPGA Intel Cyclone V SoC]
             {Arquitetura da \textit{FPGA Altera Cyclone V SoC}.\quad Fonte:~\cite{cyclone_v_soc}}
@@ -744,7 +727,7 @@
 
         \begin{figure}[H]
         \centering
-        \includegraphics[width=.7\linewidth]
+        \includegraphics[width=.65\linewidth]
             {../images/intel_alm_high_level.png}
             \caption[Diagrama de blocos de um ALM]
                 {Diagrama de blocos de um ALM.\quad Fonte:~\cite{cyclone_alm}}

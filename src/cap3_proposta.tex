@@ -160,7 +160,7 @@
         \textit{SRAM} e \textit{DRAM} externas presentes na placa de
         desenvolvimento, e também não faz uso de memória secundária, as operações
         de \textit{load} e \textit{store} transferem dados diretamente entre os
-        registradores e os blocos de memória \textit{M10K}.
+        registradores e os blocos de memória internos da \textit{FPGA}.
     }
 
     \subsection{Microarquitetura Uniciclo}
@@ -674,7 +674,8 @@
     \end{figure}
 
     { Acionando um \textit{switch} da \textit{FPGA}, é mostrado por cima do
-        \textit{frame} um \textit{menu On Screen Display} que mostra o valor
+        \textit{frame} o \textit{menu On Screen Display} apresentado na
+        Figura~\ref{fig:display_cats_osd} que mostra o valor
         atual contido nos bancos de registradores do processador, incluindo os
         \textit{CSRs} e, caso a extensão F esteja implementada, outro
         \textit{switch} permite alternar entre a visualização dos registradores
